@@ -1,14 +1,13 @@
 #include <stdio.h>
 
 int main() {
-    int a;
+    int input;
     
-    scanf("%d", &a);
-    
-    if ( a % 2 != 0 ) {
-        a -= 1;
+    scanf("%d", &input);
+    if ( input % 2 != 0 ) {
+        printf("%d\n", input-1);
+    } else {
+        printf("%d\n", input);
     }
-    printf("%d\n", a);
-    
     return 0;
 }

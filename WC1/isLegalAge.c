@@ -1,18 +1,14 @@
-//Code works
-// Если вбить отрицательное число, показывает yes.
-
 #include <stdio.h>
 
 int main() {
-    unsigned int age;
+    int age;
     
-    scanf("%u", &age);
+    scanf("%d", &age);
     
-    if ( age >= 21 ) {
+    if ( age > 20 ) {
         printf("yes\n");
     } else {
         printf("no\n");
     }
-    
     return 0;
 }
