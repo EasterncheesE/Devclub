@@ -5,7 +5,7 @@ public class DateMain {
         System.out.println(a);
         
         try {
-            Date b = new Date(-5,-5,-5);
+            Date b = new Date(1,1,1);
         } catch (InvalidDateException e) {
             System.out.println(e);
         }

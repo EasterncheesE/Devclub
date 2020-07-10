@@ -56,6 +56,6 @@ void Car::refill(double fuel) {
 }
 
 std::ostream& operator<<(std::ostream& out, const Car& car) {
-    out << "Car model is " << car.getModel() << std::endl << "Current fuel = " << car.getFuelAmount() << "/" << car.getFuelCapacity() << std::endl << "Fuel consumption = " << car.getFuelConsumption() << std::endl << "Car location = " << car.getLocation();
+    out << "Car model is: " << car.getModel() << std::endl << "Current fuel: " << car.getFuelAmount() << "/" << car.getFuelCapacity() << std::endl << "Fuel consumption: " << car.getFuelConsumption() << std::endl << "Car location: " << car.getLocation();
     return out;
 }

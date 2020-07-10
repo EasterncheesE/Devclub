@@ -14,11 +14,10 @@ int Pen::getInkCapacity() const {
 }
 
 void Pen::write(Paper& paper, const std::string& message) {
-    int length = message.size();
     int paperCapacity = paper.getMaxSymbols() - paper.getSymbols();
 
-    if ( this->inkAmount >= length && paperCapacity >= length ) {
-        this->inkAmount -= length;
+    if ( this->inkAmount >= message.size() && paperCapacity >= message.size() ) {
+        this->inkAmount -= message.size();
         paper.addContent(message);
         return;
     } else if ( this->inkAmount > paperCapacity ) {
@@ -31,12 +30,19 @@ void Pen::write(Paper& paper, const std::string& message) {
         std::string cutMessage = message.substr(0,this->inkAmount);
 
         this->inkAmount = 0;
+        try {
         paper.addContent(cutMessage);
+        } catch (OutOfSpace obj)  {
+            std::cout << "OutOfSpace" << std::endl;
+        }
         throw OutOfInk();
     }
     this->inkAmount = 0;
+    try {
     paper.addContent(message);
-    std::cout << "NOPE" << std::endl;
+    } catch (OutOfSpace obj)  {
+        std::cout << "OutOfSpace" << std::endl;
+    }
     throw OutOfInk();
 }
 

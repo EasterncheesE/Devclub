@@ -12,31 +12,31 @@ public class Point implements Cloneable {
     }
 
     public double getX() {
-        return x;
+        return this.x;
     }
 
     public double getY() {
-        return y;
+        return this.y;
     }
 
     public void setX(double value) {
-        x = value;
+        this.x = value;
     }
 
     public void setY(double value) {
-        y = value;
+        this.y = value;
     }
 
     public boolean equals(Point other) {
-        return x == other.x && y == other.y;
+        return this.x == other.x && this.y == other.y;
     }
 
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return "(" + this.x + ", " + this.y + ")";
     }
 
     public double distance(Point other) {
-        return Math.hypot(x-other.x, y-other.y);
+        return Math.hypot(this.x - other.x, this.y - other.y);
     }
 
     public Point clone() throws CloneNotSupportedException {

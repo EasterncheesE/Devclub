@@ -38,7 +38,7 @@ const std::string& Unit::getName() const {
 void Unit::addHitPoints(int hp) {
     try { 
         this->ensureIsAlive();
-    } catch ( UnitIsDead obj ) {
+    } catch (UnitIsDead obj) {
         std::cout << this->name <<" is dead. Cannot heal dead unit" << std::endl;
         return; 
     }
@@ -55,15 +55,15 @@ void Unit::addHitPoints(int hp) {
 void Unit::takeDamage(int dmg) {
     try { 
         this->ensureIsAlive();
-    } catch ( UnitIsDead obj ) {
+    } catch (UnitIsDead obj) {
         std::cout << "Unit " << this->name << " is dead, cannot take damage." << std::endl;
         return; 
     }
-    if ( dmg < 0 ) {
+    if (dmg < 0) {
         std::cout << "Maybe you wanted to heal him instead?" << std::endl;
         return;
     }
-    if ( dmg > this->hitPoints ) {
+    if (dmg > this->hitPoints) {
         this->hitPoints = 0;
         std::cout << "Unit " << this->name << " received " << dmg << " points of damage. Current hp = " << this->hitPoints << "/" << this->hitPointsLimit << ". Unit " << this->name << " is now dead." << std::endl;
     } else {
@@ -77,13 +77,11 @@ void Unit::attack(Unit& enemy) {
         this->ensureIsAlive();
     } catch ( UnitIsDead obj ) {
         std::cout << "Attacker is dead, cannot attack" << std::endl;
-        return;
     }
     try {
         enemy.ensureIsAlive();
     } catch ( UnitIsDead obj ) {
         std::cout << "Target is dead, cannot attack" <<std::endl;
-        return;
     }
     std::cout << this->name << " tries to attack " << enemy.getName() << std::endl;
 

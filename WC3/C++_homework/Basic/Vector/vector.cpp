@@ -23,7 +23,7 @@ void Vector::setY(double value) {
 }
 
 double Vector::len() const {
-    return hypot(this->x,this->y);
+    return hypot(this->x, this->y);
 }
 
 bool Vector::operator==(const Vector& other) const {

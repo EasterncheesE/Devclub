@@ -13,7 +13,6 @@ public class Complex implements Cloneable {
     public double getReal() {
         return this.real;
     }
-    
     public double getImaginary() {
         return this.imaginary;
     }
@@ -21,7 +20,6 @@ public class Complex implements Cloneable {
     public void setReal(double value) {
         this.real = value;
     }
-    
     public void setImaginary(double value) {
         this.imaginary = value;
     }
@@ -29,21 +27,17 @@ public class Complex implements Cloneable {
     public boolean equals(Complex other) {
         return this.real == other.real && this.imaginary == other.imaginary;
     }
-    
     public boolean notEqual(Complex other) {
         return !(this.equals(other));
     }
-    
     public void increment(Complex other) {
         this.real += other.real;
         this.imaginary += other.imaginary;
     }
-    
     public void decrement(Complex other) {
         this.real -= other.real;
         this.imaginary -= other.imaginary;
     }
-    
     public void multiply(Complex other) {
         Complex multiple = new Complex();
         
@@ -53,24 +47,19 @@ public class Complex implements Cloneable {
         this.imaginary = multiple.imaginary;
     }
     
-    
     public Complex sum(Complex other) {
-        Complex result = new Complex();
-        
-        result.real = this.real + other.real;
-        result.imaginary = this.imaginary + other.imaginary;
-        return result;
+        return new Complex(this.real + other.real, this.imaginary + other.imaginary);
     }
     public Complex diff(Complex other) {
-        Complex result = new Complex();
-        
-        result.real = this.real - other.real;
-        result.imaginary = this.imaginary - other.imaginary;
-        return result;
+        return new Complex(this.real - other.real, this.imaginary - other.imaginary);
     }
     
     public String toString() {
-        return "(" + this.real + " + " + this.imaginary + "i)";
+        if (this.imaginary < 0) {
+            return "(" + this.real + " - " + -this.imaginary + "i)";
+        } else {
+            return "(" + this.real + " + " + this.imaginary + "i)";
+        }
     }
     
     public Complex clone() throws CloneNotSupportedException {

@@ -29,7 +29,7 @@ int Gun::getTotalShots() const {
 }
 
 void Gun::prepare() {
-    this->isReady = !(this->ready);
+    this->isReady = !(this->ready());
 }
 
 void Gun::reload() {
@@ -49,7 +49,7 @@ void Gun::shoot() {
     }
 }
 
-std::ostream& Gun::operator<<(std::ostream& out, const Gun& gun) {
+std::ostream& operator<<(std::ostream& out, const Gun& gun) {
     std::string isSafe;
     if ( gun.ready() != true) {
         isSafe = "yes";

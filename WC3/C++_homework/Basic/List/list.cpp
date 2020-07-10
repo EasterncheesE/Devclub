@@ -5,9 +5,9 @@ List::List(int capacity, double multiplier) {
         capacity = 0;
     }
     
-    this.capacity = capacity;
-    this.current = 0;
-    this.multiplier = multiplier;
+    this->capacity = capacity;
+    this->current = 0;
+    this->multiplier = multiplier;
     array = (int*)malloc(capacity*sizeof(int)); 
     
     if ( array == NULL ) {
@@ -27,7 +27,7 @@ int List::max_size() const {
 }
 
 void List::erase(int index) {
-    if ( index < 0 || index >= this.current ) {
+    if ( index < 0 || index >= this->current ) {
         return;
     } else {
     
@@ -38,7 +38,7 @@ void List::erase(int index) {
     }
 }
 void List::insert(int value, int index) {
-    int newCurrent = current + 1;
+    int newCurrent = this->current + 1;
     
     if ( newCurrent > this->capacity ) {
         int newCapacity = this->capacity * this->multiplier;
@@ -52,7 +52,7 @@ void List::insert(int value, int index) {
         this->array = newArray;
     }
     
-    for ( int i = this->current - 1, j = i - 1; i > index; i--, j-- ) {
+    for ( int i = this->current, j = i - 1; i > index; i--, j-- ) {
         this->array[i] = this->array[j];
     }
     this->array[index] = value;

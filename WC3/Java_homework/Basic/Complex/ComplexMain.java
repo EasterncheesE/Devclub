@@ -1,7 +1,7 @@
 public class ComplexMain {
     public static void main(String[] args) throws CloneNotSupportedException {
-        Complex a = new Complex(2,5);
-        Complex b = new Complex(5,2);
+        Complex a = new Complex(5,-2);
+        Complex b = new Complex(2,-5);
         Complex c = a.clone();
         Complex d = a.sum(b);
         

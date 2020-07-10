@@ -1,6 +1,9 @@
 #include "Paper.h"
 
 Paper::Paper(int maxSymbols) {
+    if (maxSymbols < 0) {
+        maxSymbols = 0;
+    }
     this->maxSymbols = maxSymbols;
     this->symbols = 0;
     this->content.resize(maxSymbols);
@@ -17,9 +20,9 @@ int Paper::getSymbols() const {
 
 void Paper::addContent(const std::string& message) {
     int length = message.size();
+    int paperCapacity = this->maxSymbols - this->symbols;
 
-    if ( this->maxSymbols - this->symbols < length ) {
-        int paperCapacity = this->maxSymbols - this->symbols;
+    if ( paperCapacity < length ) {
 
         this->content = message.substr(0, paperCapacity);
         this->symbols += paperCapacity;
