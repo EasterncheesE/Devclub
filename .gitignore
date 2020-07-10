@@ -1,5 +1,7 @@
 *.out
 *.in
 *.DS_Store
+*.o
+
 
 
