@@ -1,6 +1,13 @@
 #include "List.h"
 
-List::List(int capacity, double multiplier) : capacity(capacity), current(0), multiplier(multiplier) {
+List::List(int capacity, double multiplier) {
+    if (capacity < 0) {
+        capacity = 0;
+    }
+    
+    this.capacity = capacity;
+    this.current = 0;
+    this.multiplier = multiplier;
     array = (int*)malloc(capacity*sizeof(int)); 
     
     if ( array == NULL ) {
@@ -9,53 +16,52 @@ List::List(int capacity, double multiplier) : capacity(capacity), current(0), mu
 }
 
 List::~List() {
-    free(array);
+    free(this->array);
 }
 
 int List::size() const {
-    return current;
+    return this->current;
 }
 int List::max_size() const {
-    return capacity;
+    return this->capacity;
 }
 
 void List::erase(int index) {
-    if ( index < 0 || index >= current ) {
+    if ( index < 0 || index >= this.current ) {
         return;
     } else {
     
-    for ( int i = index, j = i + 1; j < current; i++, j++ ) {
-        array[i] = array[j];
+    for ( int i = index, j = i + 1; j < this->current; i++, j++ ) {
+        this->array[i] = this->array[j];
     }
-    pop_back();
+    this->pop_back();
     }
 }
 void List::insert(int value, int index) {
     int newCurrent = current + 1;
     
-    if ( newCurrent > capacity ) {
-        int newCapacity = capacity * multiplier;
-        std::cout << "newCap = " << newCapacity << std::endl;
-        int* newArray = (int*)realloc(array, newCapacity*sizeof(int));
+    if ( newCurrent > this->capacity ) {
+        int newCapacity = this->capacity * this->multiplier;
+        int* newArray = (int*)realloc(this->array, newCapacity*sizeof(int));
         
         if ( newArray == NULL ) {
             throw OutOfMemoryException();
         }
         
-        capacity = newCapacity;
-        array = newArray;
+        this->capacity = newCapacity;
+        this->array = newArray;
     }
     
-    for ( int i = current - 1, j = i - 1; i > index; i--, j-- ) {
-        array[i] = array[j];
+    for ( int i = this->current - 1, j = i - 1; i > index; i--, j-- ) {
+        this->array[i] = this->array[j];
     }
-    array[index] = value;
-    current = newCurrent;
+    this->array[index] = value;
+    this->current = newCurrent;
 }
 
 int List::find(int value) const {
-    for ( int i = 0; i < current; i++ ) {
-        if ( array[i] == value ) {
+    for ( int i = 0; i < this->current; i++ ) {
+        if ( this->array[i] == value ) {
             return i;
         }
     }
@@ -63,48 +69,48 @@ int List::find(int value) const {
 }
 
 void List::push_back(int value) { 
-    int newCurrent = current + 1;
+    int newCurrent = this->current + 1;
     
-    if ( newCurrent > capacity ) {
-        int newCapacity = capacity * multiplier;
-        int* newArray = (int*)realloc(array, newCapacity * sizeof(int));
+    if ( newCurrent > this->capacity ) {
+        int newCapacity = this->capacity * this->multiplier;
+        int* newArray = (int*)realloc(this->array, newCapacity * sizeof(int));
         
-        capacity = newCapacity;
+        this->capacity = newCapacity;
         if ( newArray == NULL ) {
             throw OutOfMemoryException();
         }
-        array = newArray;
+        this->array = newArray;
     }
-    array[current] = value;
-    current = newCurrent;
+    this->array[this->current] = value;
+    this->current = newCurrent;
 }
 
 int List::pop_back() {
-    if ( current == 0 ) {
+    if ( this->current == 0 ) {
         throw  ZeroLenException();
     }
-    current -= 1;
-    return array[current];
+    this->current -= 1;
+    return this->array[this->current];
 }
 void List::sort() {
-    for ( int i = 0; i < current; i++ ) {
+    for ( int i = 0; i < this->current; i++ ) {
         int buffer = i;
         
-        for ( int j = i + 1; j < current; j++ ) {
-            if ( array[j] < array[buffer] ) {
+        for ( int j = i + 1; j < this->current; j++ ) {
+            if ( this->array[j] < this->array[buffer] ) {
                 buffer = j;
             }
         }
-        if ( array[buffer] != array[i] ) {
-            int temp = array[buffer];
-            array[buffer] = array[i];
-            array[i] = temp;
+        if ( this->array[buffer] != this->array[i] ) {
+            int temp = this->array[buffer];
+            this->array[buffer] = this->array[i];
+            this->array[i] = temp;
         }
     }
 }
 
 int List::operator[](int index) const {
-    return array[index];
+    return this->array[index];
 }
 
 bool List::operator==(const List& other) const {
@@ -127,10 +133,9 @@ bool List::operator!=(const List& other) const {
     return !((*this) == other);
 }
 
-
 std::ostream& operator<<(std::ostream& out, const List& list) {
     if ( list.size() < 1) {
-        std::cout << "List is empty" << std::endl;
+        out << "List is empty" << std::endl;
         return out;
     } else {
     int last = list.size() - 1;
@@ -146,4 +151,3 @@ std::ostream& operator<<(std::ostream& out, const List& list) {
     return out;
     }
 }
-

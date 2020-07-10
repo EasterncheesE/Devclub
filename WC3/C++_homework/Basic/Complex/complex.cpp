@@ -1,5 +1,5 @@
 #include <iostream>
-#include "complex.h"
+#include "Complex.h"
 
 Complex::Complex(double real, double imaginary) {
     this->real = real;
@@ -26,7 +26,7 @@ void Complex::operator+=(const Complex& other) {
 }
 void Complex::operator-=(const Complex& other) {
     this->real -= other.real;
-    this->real -= other.real;
+    this->imaginary -= other.imaginary;
 }
 Complex Complex::operator+(const Complex& other) const {
     return Complex(this->real+other.real, this->imaginary+other.imaginary);
@@ -35,29 +35,14 @@ Complex Complex::operator-(const Complex& other) const {
     return Complex(this->real-other.real, this->imaginary-other.imaginary);
 }
 Complex Complex::operator*(const Complex& other) const {
-    return Complex(this->real*other.real, this->imaginary*other.imaginary);
+    return Complex(this->real * other.real - this->imaginary * other.imaginary, this->imaginary * other.real + this->real * other.imaginary);
 }
 std::ostream& operator<<(std::ostream& out, const Complex& complex) {
+    if (complex.getImaginary() < 0 ) {
+        out << "(" << complex.getReal() << " - " << -complex.getImaginary() << "i)";
+        return out;
+    } else {
     out << "(" << complex.getReal() << " + " << complex.getImaginary() << "i)";
     return out;
-}
-
-int main() {
-    Complex a = Complex(50,5);
-    Complex b = Complex(50,5);
-
-    if ( a == b ) {
-        std::cout << a << " EQUAL TO " << b << std::endl;
-    } else {
-        std::cout << a << " NOT EQUAL TO " << b << std::endl;
     }
-    a += b;
-    std::cout << a << std::endl;
-    a -= b; 
-    std::cout << a << std::endl;
-    std::cout << a + b << std::endl;
-    std::cout << a - b << std::endl;
-    std::cout << a * b << std::endl;
-
-    return 0;
 }

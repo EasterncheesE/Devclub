@@ -1,6 +1,9 @@
 #include "Gun.h"
 
 Gun::Gun(const std::string& model, int capacity) {
+    if ( capacity < 1 ) {
+        capacity = 1;
+    }
     this->amount = 0;
     this->capacity = capacity;
     this->isReady = false;
@@ -26,12 +29,11 @@ int Gun::getTotalShots() const {
 }
 
 void Gun::prepare() {
-    std::cout << "Preparing the gun to shoot" << std::endl;
-    this->isReady = true;
+    this->isReady = !(this->ready);
 }
 
 void Gun::reload() {
-    std::cout << "Reloading the gun" << std::endl;
+    this->isReady = false;
     this->amount = this->capacity;
 }
 
@@ -54,6 +56,6 @@ std::ostream& Gun::operator<<(std::ostream& out, const Gun& gun) {
     } else {
         isSafe = "no";
     }
-    out << "Model = " << gun.getModel() << std::endl << "Ammo = " << gun.getAmount() << "/" << gun.getCapacity() << std::endl << "Is safe: " << isSafe << std::endl << "TotalShots fired = " << gun.getTotalShots() << std::endl;
+    out << "Model: " << gun.getModel() << std::endl << "Ammo: " << gun.getAmount() << "/" << gun.getCapacity() << std::endl << "Is safe: " << isSafe << std::endl << "TotalShots fired: " << gun.getTotalShots() << std::endl;
     return out;
 }

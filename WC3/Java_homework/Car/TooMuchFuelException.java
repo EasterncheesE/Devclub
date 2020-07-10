@@ -1,0 +1,1 @@
+public class TooMuchFuelException extends Exception {}

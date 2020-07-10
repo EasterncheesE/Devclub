@@ -3,6 +3,7 @@
 Paper::Paper(int maxSymbols) {
     this->maxSymbols = maxSymbols;
     this->symbols = 0;
+    this->content.resize(maxSymbols);
     this->content = "";
 }
 Paper::~Paper() {}
@@ -15,16 +16,20 @@ int Paper::getSymbols() const {
 }
 
 void Paper::addContent(const std::string& message) {
-    int length;
-    
-    for ( ; strcmp(message) == "\0"; length++ );
-    if ( this->maxSymbols - this->symbols > 0 ) {
-        this->content += message;
-        this->symbols += length;
+    int length = message.size();
+
+    if ( this->maxSymbols - this->symbols < length ) {
+        int paperCapacity = this->maxSymbols - this->symbols;
+
+        this->content = message.substr(0, paperCapacity);
+        this->symbols += paperCapacity;
+        throw OutOfSpace();
     } else {
-        throw Outofspace();
+        this->content += message + "\n";
+        this->symbols += message.size();
+        
     }
 }
 void Paper::show() const {
-    std::cout << this->content << std::endl;
+    std::cout <<  "Paper contents = " << this->content << std::endl;
 }
