@@ -2,6 +2,7 @@
 *.in
 *.DS_Store
 *.o
+*.class
 
 
 

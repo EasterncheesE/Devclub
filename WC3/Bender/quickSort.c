@@ -1,29 +1,26 @@
 #include <stdio.h>
 
+void swap(int *a, int *b) {
+    int buffer = *a;
+    
+    *a = *b;
+    *b = buffer;
+}
+
 int partition(int array[], int lo, int hi) {
     int tail = lo;
     int mid = (lo + hi) / 2;
-    int pivot = array[mid];
     
-    printf("Part working\n");
-
-    array[mid] = array[hi];
-    array[hi] = pivot;
+    swap(&array[mid], &array[hi]);
     
     for ( ; array[tail] < array[hi]; tail++ );
     for ( int i = tail + 1; i < hi; i++ ) {
         if ( array[i] < array[hi] ) {
-            pivot = array[tail];
-            
-            array[tail] = array[i];
-            array[i] = pivot;
+            swap(&array[tail], &array[i]);
             tail += 1;
         }
     }
-    pivot = array[hi];
-    array[hi] = array[tail];
-    array[tail] = pivot;
-    
+    swap(&array[hi], &array[tail]);
     return tail;
 }
 
@@ -44,13 +41,17 @@ void arrayFill(int len, FILE *in) {
     int hi = len - 1;
     FILE *out;
 
-    printf("A fill working");
+    // printf("A fill working");
     out = fopen("task.out", "w");
 
-    for ( int i = 0; fscanf(in, "%d", &buffer) != EOF && i < len; i++ ) {
-        array[i] = buffer;
+    // for ( int i = 0; fscanf(in, "%d", &buffer) != EOF && i < len; i++ ) {
+    //     array[i] = buffer;
+    // }
+    
+    for (int i = 0; i < len; i++) {
+        array[i] = len - i;
     }
-    printf("Sending to Qsort\n");
+    // printf("Sending to Qsort\n");
     quickSort(array, lo, hi);
 
     for ( int i = 0; i < len - 1; i++ ) {
@@ -60,11 +61,11 @@ void arrayFill(int len, FILE *in) {
 }
 
 int main() {
-    int len;
+    int len = 500000;
     FILE *in;
 
-    in = fopen("task.in", "r");
-    fscanf(in, "%d", &len);
+    // in = fopen("task.in", "r");
+    // fscanf(in, "%d", &len);
     
     arrayFill(len, in);
     
