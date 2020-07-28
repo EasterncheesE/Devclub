@@ -13,7 +13,7 @@ class BaseState {
     public:
         BaseState();
         BaseState(std::string title);
-        BaseState(std::string title, HP::UNIT, HP::UNIT);
+        BaseState(std::string title, int(HP::UNIT), int(HP::UNIT);
         virtual ~BaseState();
         
         bool checkIfDead();

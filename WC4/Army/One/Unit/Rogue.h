@@ -5,6 +5,7 @@
 #include "Unit.h"
 #include "../States/RogueState.h"
 #include "../Attacks/RogueAttack.h"
+#include "../Setup.h"
 
 class RogueState;
 class RogueAttack;

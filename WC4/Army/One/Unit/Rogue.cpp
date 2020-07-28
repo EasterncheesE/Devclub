@@ -1,13 +1,11 @@
 #include "Rogue.h"
 
 Rogue::Rogue(std::string title) {
-    this->_state = new BaseState(title, HP::ROGUE, HP::ROGUE);
-    this->_attack = new RogueAttack(DMG::ROGUE);
+    this->Unit = new Unit(title, HP::ROGUE, HP:ROGUE, DMG::ROGUE);
 }
 
 Rogue::Rogue(std::string title, int hp, int dmg) {
-    this->_state = new BaseState(title, hp);
-    this->_attack = new RogueAttack(this, dmg);
+    this->Unit = new Unit(title, 400, 400, 150);
     
 }
 Rogue::~Rogue() {
