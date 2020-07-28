@@ -1,16 +1,16 @@
 #include "Unit.h"
 
 Unit::Unit(std::string title) {
-    this->baseState = new BaseState(title);
-    this->baseAttack = new BaseAttack(this);
+    this->_state = new BaseState(title);
+    this->_attack = new BaseAttack(this);
 };
 Unit::Unit(std::string title, int HP, int physDMG) {
-    this->baseState = new BaseState(title, HP);
-    this->baseAttack = new BaseAttack(this, physDMG);
+    this->_state = new BaseState(title, HP);
+    this->_attack = new BaseAttack(this, physDMG);
 };
 Unit::~Unit() {
-    delete this->baseState;
-    delete this->baseAttack;
+    delete this->_state;
+    delete this->_attack;
 }
 
 bool Unit::checkIfDead() {
@@ -22,31 +22,31 @@ bool Unit::checkIfDead() {
 }
 
 std::string Unit::getTitle() {
-    return this->baseState->getTitle();
+    return this->_state->getTitle();
 }
 int Unit::getHP() {
-    return this->baseState->getHP();
+    return this->_state->getHP();
 }
 int Unit::getMaxHP() {
-    return this->baseState->getMaxHP();
+    return this->_state->getMaxHP();
 }
 int Unit::getDMG() {
-    return this->baseAttack->getPhysDMG();
+    return this->_attack->getPhysDMG();
 }
     
     
 void Unit::attack(Unit& target) {
-    this->baseAttack->attack(target);
+    this->_attack->attack(target);
 }
 void Unit::counterAttack(Unit& target) {
-    this->baseAttack->counterAttack(target);
+    this->_attack->counterAttack(target);
 }
 
 void Unit::addHP(int hp) {
-    this->baseState->addHP(hp);
+    this->_state->addHP(hp);
 }
 void Unit::takeDMG(int dmg) {
-    this->baseState->takeDMG(dmg);
+    this->_state->takeDMG(dmg);
 }
 
 std::ostream& operator<<(std::ostream& out, Unit& unit) {

@@ -3,10 +3,15 @@
 
 #include <iostream>
 #include "Unit.h"
+#include "../States/RogueState.h"
+#include "../Attacks/RogueAttack.h"
 
-class Rogue : public Unit {
+class RogueState;
+class RogueAttack;
+
+class Rogue : virtual public Unit {
     protected:
-        RogueState* _state;
+        BaseState* _state;
         RogueAttack* _attack;
     public:
         Rogue(std::string title);
@@ -14,7 +19,6 @@ class Rogue : public Unit {
         virtual ~Rogue();
         
         void attack(Unit* target);
-        void counterattack(Unit* target);
 };
 
 

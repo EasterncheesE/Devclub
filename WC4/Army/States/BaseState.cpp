@@ -1,11 +1,13 @@
 #include "BaseState.h"
 
+BaseState::BaseState() {}
+
 BaseState::BaseState(std::string title) {
     this->title = title;
-    this->HP = 500;
-    this->maxHP = 500;
+    this->HP = HP::UNIT;
+    this->maxHP = HP::UNIT;
 }
-BaseState::BaseState(std::string title, int HP) {
+BaseState::BaseState(std::string title, HP) {
     this->title = title;
     this->HP = HP;
     this->maxHP = HP;

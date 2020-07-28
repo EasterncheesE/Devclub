@@ -3,6 +3,7 @@
 #define BASE_STATE_H
 
 #include <iostream>
+#include "../Setup.h"
 
 class BaseState {
     protected:
@@ -10,8 +11,9 @@ class BaseState {
         int HP;
         int maxHP;
     public:
+        BaseState();
         BaseState(std::string title);
-        BaseState(std::string title, int HP);
+        BaseState(std::string title, HP::UNIT, HP::UNIT);
         virtual ~BaseState();
         
         bool checkIfDead();
