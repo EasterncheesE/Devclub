@@ -24,14 +24,14 @@ void VampireAttack::attack(Unit* target) {
         std::cout << "Vampire healed for " << this->dmg*0.25 << " hitpoints." << std::endl;
         this->owner->addHP(this->dmg/4);
     
-    //TURNING INTO VAMPIRE
-    if ( randomN == 1 && target->getIsVampire() == false ) {
-        std::string title = target->getTitle();
-        delete(target);
-        target = new Vampire(title, 750, 200);
-        std::cout << "Unit " << target->getTitle() << " was turned into vampire." << std::endl;
-        std::cout << *target << std::endl;
-    }
+    // //TURNING INTO VAMPIRE
+    // if ( randomN == 1 && target->getIsVampire() == false ) {
+    //     std::string title = target->getTitle();
+    //     delete(target);
+    //     target = new Vampire(title, 750, 200);
+    //     std::cout << "Unit " << target->getTitle() << " was turned into vampire." << std::endl;
+    //     std::cout << *target << std::endl;
+    // }
     
     
     // TARGET DAMAGE AND COUNTERATTACK
@@ -40,6 +40,7 @@ void VampireAttack::attack(Unit* target) {
     }
 }
 void VampireAttack::counterAttack(Unit* target) {
+    // CHECKING IF BOTH ATTACKER AND TARGET ARE ALIVE
     if ( owner->checkIfDead() ) {
         std::cout << owner->getTitle() << " is dead and cannot counterattack." << std::endl;
         return;
@@ -49,6 +50,7 @@ void VampireAttack::counterAttack(Unit* target) {
         return;
     }
     std::cout << owner->getTitle()  << " is counterattacking " << target->getTitle() << std::endl;
+    //VAMPIRE HEALING
     if ( target->getHP() < this->dmg/8 ) {
         this->owner->addHP(target->getHP());
         std::cout << "Vampire healed for " << target->getHP() << " hitpoints." << std::endl;
