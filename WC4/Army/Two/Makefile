@@ -1,18 +1,24 @@
-compile:
+CC=g++
+CFLAGS=-c -std=c++11
+
+SOURCES=$(shell find . -type f -name '*.cpp' )
+OBJECTS=$(SOURCES:.cpp=.o)
+EXEC=a.out
+
+all:$(EXEC)
 	clear
 	clear
-	g++ -std=c++11 ./Attacks/*.cpp -c
-	g++ -std=c++11 ./Attacks/*.cpp -c
-	g++ -std=c++11 ./States/*.cpp -c
-	g++ -std=c++11 ./States/*.cpp -c
-	g++ -std=c++11 ./Unit/*.cpp -c
-	g++ -std=c++11 ./Unit/*.cpp -c
-	g++ -std=c++11 ./Interface/*.cpp -c
-	g++ -std=c++11 ./Interface/*.cpp -c
-	
-all: compile
-	g++ -std=c++11 run.cpp *.o
-	rm *.o
 	./a.out
-	rm a.out
+	rm -r a.out
+
+$(EXEC): $(OBJECTS)
+	$(CC) $(OBJECTS) -o $(EXEC)
 	
+%.o: %.cpp
+	$(CC) $(CFLAGS) $< -o $@
+	
+clean:
+	rm -fv $(OBJECTS)
+	
+purge:
+	find . -type \( -name '*.o' -o -name '*.out' \) -exec rm -fv {} \;

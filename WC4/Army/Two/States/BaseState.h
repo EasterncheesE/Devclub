@@ -10,6 +10,7 @@ class BaseState {
         std::string title;
         int HP;
         int maxHP;
+        bool isVampire;
     public:
         BaseState();
         BaseState(std::string title, int hp);
@@ -19,6 +20,9 @@ class BaseState {
         std::string getTitle();
         int getHP();
         int getMaxHP();
+        
+        bool getIsVampire();
+        void setIsVampire();
         
         virtual void addHP(int hp);
         virtual void takeDMG(int dmg);
