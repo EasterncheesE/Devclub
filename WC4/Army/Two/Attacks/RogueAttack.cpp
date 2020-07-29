@@ -15,7 +15,6 @@ void RogueAttack::attack(Unit* target) {
     
     std::cout << owner->getTitle() << " is attacking " << target->getTitle() << std::endl;
     target->takeDMG(this->dmg);
-    std::cout << "Damage must be taken" << std::endl;
 }
 
 void RogueAttack::counterAttack(Unit* target) {
