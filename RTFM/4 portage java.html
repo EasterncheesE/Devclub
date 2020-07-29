@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html lang="ru" class="ie7">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="ru" class="ie8">
+<![endif]-->
+<!--[if (lt IE 7)|(gt IE 8)]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <title>Портируем C++ на Java</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/31437201/article.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <article class="page">
+        <h1>Портируем C++ на Java</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="#syntax">Немного синтаксиса</a></li>
+                    <li><a href="#classes">Классы</a></li>
+                    <li><a href="#other">Все остальное</a></li>
+                </ol>
+            </div>
+        </aside>
+        <section>
+            <h2 id="syntax">Немного синтаксиса</h2>
+            <p>
+                Цель данного мануала — не сделать из вас Java-программистов. И даже не дать вам полное и целостное понимание программирования на языке Java. Цель данной затеи — сделать вас способными портировать имеющийся у вас код на языке C++ в код на языке Java.
+            </p>
+            <p>
+                Вполне очевидно, что у вас появится желание ознакомиться с Java более целостно и полноценно. Поверьте на слово, у вас будет такая возможность. Никто не скроет от вас информацию. Но сейчас, не рассуждайте и не мудрствуйте лукаво, а просто возьмите и выполните задачу.
+            </p>
+            <p>
+                Немного всяких Wiki:
+            </p>
+            <ul>
+                <li><a href="http://ru.wikipedia.org/wiki/Java">Википедия о Java</a></li>
+                <li><a href="http://www.oracle.com/technetwork/java/javase/documentation/index.html">Документация от Oracle</a></li>
+                <li><a href="http://developer.android.com/reference/packages.html">Документация от Google для Android</a></li>
+            </ul>
+            <h3 id="compilation">Компиляция и запуск</h3>
+            <p>
+                Ключевой особенностью является то, что в Java существует всего <a href="http://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html">8 примитивных типов данных</a>, а всё остальное — объекты. Это означает, что нам прийдется писать много классов. По сути всё, что вы будете писать на Java — будет классами.
+            </p>
+            <p>
+                Теперь мы вооружены и настроены. Сразу к делу: напишем &quot;Hello, World&quot;. Для этого в <a htef="http://www.sublimetext.com/3">текстовом редакторе</a> создадим файл <code>Hello.java</code>. С большой буквы, потому что писать мы будем класс (welcome to Java), расширение <code>.java</code>, потому что код будет, внезапно!, на языке программирования Java. Внимание, код:
+            </p>
+            <code data-lang="c" data-file="Hello.java">public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}</code>
+            <p>
+                Компилируем и запускаем:
+            </p>
+            <kbd>javac Hello.java &amp;&amp; ls
+Hello.java Hello.class</kbd>
+            <p>
+                После компиляции появился файл с расширением <code>.class</code>. Это исполняемый файл, который мы будем запускать. <a href="http://ru.wikipedia.org/wiki/Javac">Javac</a> — это компилятор языка Java, включенный в состав Java Development Kit.
+            </p>
+            <p>
+                Запускаем поделку:
+            </p>
+            <kbd>java Hello
+Hello, world!</kbd>
+            <p>
+                Теперь немного разберемся с тем, что мы написали. Как уже говорилось — писать будем классы, так как Java является 100% объектно-ориентированным языком. Функция <code>main()</code>, если отбросить слово <code>static</code>, ничем особо не отличается, именно с вызова этой функции начнется работа программы. Функция <code>main()</code> ничего не возвращает (вы же обратили внимание на то, что она типа <code>void</code>) и принимает массив строк в качестве аргумента. Запись <code>String[] args</code> полностью эквивалентна записи <code>String args[]</code>. Но так как <code>[]</code> имеет скорее отношение к типу, чем к значению, то записывать будем как <code>String[] args</code>. На этом знакомство с Java можно считать оконченным.
+            </p>
+            <h3 id="in-out">Чтение и вывод</h3>
+            <p>
+                Отлично, теперь разберемся немного с чтением и выводом. Давайте изобразим простенькую программулину на C++. Функционал программы будет прост, необходимо считать два числа и вывести их сумму. Напишем:
+            </p>
+            <code data-lang="c" data-file="sum.c">#include &lt;iostream&gt;
+
+int main() {
+    int x, y;
+
+    std::cin &gt;&gt; x &gt;&gt; y;
+
+    std::cout &lt;&lt; x+y &lt;&lt; std::endl;
+
+    return 0;
+}</code>
+            <p>
+                Теперь портируем этот код на Java. Страшно? Вот и я думаю, что не страшно. Немного подумаем и сделаем. Что нужно для того, чтобы считать пару целочисленных значений? Обратимся к документации и увидим класс <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/Scanner.html">Scanner</a>. Что нас должно заинтересовать при прочтении:
+            </p>
+            <ul>
+                <li>где находится класс (нужно ли его импортировать)</li>
+                <li>конструкторы класса</li>
+                <li>методы класса</li>
+            </ul>
+            <p>
+                На остальное словоблудие в документации я рекомендую пока не обращать внимание. Наша задача — портировать код. Портировать и добиться работоспособности. Все остальное мы узнаем позже. Произведем исследование:
+            </p>
+            <p>
+                Класс <code>Scanner</code> является частью <code>java.util</code>. Соответственно его небходимо импортировать. Импортировать не нужно только те классы, которые находятся в <code>java.lang</code>, ибо это сделано по умолчанию.
+            </p>
+            <p>
+                В классе вполне присутствует конструктор <code>Scanner(InputStream source)</code>, что дает нам возможность создать экземпляр класса и читать необходимые данные из потока ввода. Напишем немного кода:
+            </p>
+            <code data-lang="c" data-file="Sum.java">import java.util.Scanner; // импортируем сканнер
+
+public class Sum {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in); //создаем экземпляр сканнера
+        int x, y;
+
+        x = in.nextInt(); //считываем целое число
+        y = in.nextInt();
+
+        System.out.println(x+y);
+
+        in.close(); //закрываем поток
+    }
+}</code>
+            <kbd>javac Sum.java &amp;&amp; java Sum
+10 42
+52</kbd>
+            <p>
+                Что нужно для счастья? Прочитать про <code>Scanner</code>, ознакомиться с его методами и разобраться что и как считывать. Совсем не страшно, я проверял. Единственное, что может взбудоражить пытливый ум, так это <code>import</code>. На деле, это то же что и <code>include</code>, только уже решает проблему с повторным подключением и циклическими зависимостями.
+            </p>
+            <h3 id="loops">Циклы</h3>
+            <p>
+                Разберемся с циклами:
+            </p>
+            <code data-lang="c" data-file="Loops.java">import java.util.Scanner;
+
+public class Loops {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int limit = in.nextInt();
+
+        for ( int i = 0; i &lt; limit; i++ ) {
+            System.out.print(i+" ");
+        }
+        System.out.println(limit);
+
+        in.close();
+    }
+}</code>
+            <p>
+                Какой непонятный код, правда? Java — это очень сложно. Я думаю, что комментарии излишни. Разве что... почитайте немного про <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/System.html">System</a>. Ну или не читайте. Вспомните, что такое <code>stdin</code>, <code>stdout</code> и <code>stderr</code>. А теперь попробуйте осознать, что такое <code>System.in</code>, <code>System.out</code> и <code>System.err</code>. Дополнительной задачей на сообразительность будет задача осознать &quot;фундаментальные&quot; отличия методов <code>System.out.print()</code> и <code>System.out.println()</code>.
+            </p>
+            <h3 id="strings">Строки</h3>
+            <p>
+                Поработаем со строками. Это не сложно. Для начала ознакомимся с соответствующим разделом документации, в котором описан класс <a href="http://docs.oracle.com/javase/6/docs/api/java/lang/String.html">String</a>. Из документации необходимо вынести следующее:
+            </p>
+            <blockquote>
+                Strings are constant; their values cannot be changed after they are created. String buffers support mutable strings. Because String objects are immutable they can be shared.
+            </blockquote>
+            <p>
+                По сути, <code>String</code> в Java эквивалентны <code>const char*</code> в С++. По этому, если мы хотим, например, буферизировать вывод, нужно быть осторожными. Рассмотрим следующий код:
+            </p>
+            <code data-lang="c" data-file="Strings.java">public class Strings {
+    public static void main(Strings[] args) {
+        String out = new String();
+
+        for ( int i = 0; i &lt; 10000; i++ ) {
+            out += "some text...";
+        }
+
+        System.out.println(out);
+    }
+}</code>
+            <p>
+                Что произошло? В благородных намерениях буферизировать вывод, мы принимаем логичное решение: собрать все, что подлежит выводу в одну строку и одним вызовом метода вывести это на экран. Но если мы при этом пользуем <code>String</code>, то мы создаем 10000 объектов. Так как объекты <code>String</code> не могут быть изменены после создания, то каждый раз, при выполнении <code>out += "some text...";</code>, мы создаем новый объект строки. Внезапно, эта операция нифига не бесплатна...
+            </p>
+            <p>
+                Документация нам прозрачно намекает, что &quot;String buffers support mutable strings&quot;. Давайте разберемся, что же такое <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/StringBuffer.html">StringBuffer</a> и воспользуемся им для решения нашей проблемы.
+            </p>
+            <code data-lang="c" data-file="Strings.java">public class Strings {
+    public static void main(String[] args) {
+        StringBuffer out = new StringBuffer();
+
+        for ( int i = 0; i &lt; 10000; i++ ) {
+            out.append("some text...");
+        }
+
+        System.out.println(out);
+    }
+}</code>
+            <p>
+                Как показало вскрытие — совсем не сложно. И даже не страшно. Теперь усложним задачу. Проверим, является ли считанная строка <a href="http://ru.wikipedia.org/wiki/Палиндром">палиндромом</a>. Для этого опишем алгоритм словами:
+            </p>
+            <ol>
+                <li>считаем строку</li>
+                <li>скопируем строку и произведем реверс строки</li>
+                <li>сравним считанную и инвертированную строки</li>
+                <li>выведем &quot;yes&quot; либо &quot;no&quot;, в зависимости от результата сравнения</li>
+            </ol>
+            <p>
+                И, соответственно, немного покодим:
+            </p>
+            <code data-lang="c" data-file="IsPali.java">import java.util.Scanner;
+
+public class IsPali {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in); //создаем сканнер
+        String input = in.nextLine(); // считываем строку
+        StringBuffer reversed = new StringBuffer(input); // делаем копию
+
+        reversed.reverse(); // делаем реверс строки
+
+        //сравниваем и выводим результат
+        if ( input.equals(reversed.toString()) ) {
+            System.out.println("yes");
+        } else {
+            System.out.println("no");
+        }
+
+        in.close();
+    }
+}</code>
+            <p>
+                Обратите внимание, что мы нигде не изобретаем велосипед, а пользуемся методами объектов. Так же необходимо учитывать, что Java не позволяет перегружать операторы, поэтому для сравнения мы используем метод <code>equals()</code>. Ну и последний непонятный момент: <code>StringBuffer</code> не строка, поэтому чтобы сравнить его со строкой необходимо воспользоваться методом <code>toString()</code>. Возьмите на вооружение.
+            </p>
+        </section>
+        <section>
+            <h2 id="classes">Классы</h2>
+            <p>
+                Не расслабляемся, реализуем задачу Pen&amp;Paper. Смысл прогревать мозги простыми классами? Со старта в карьер, господа. Итак, класс <code>Pen</code>:
+            </p>
+            <code data-lang="c" data-file="Pen.java">public class Pen {
+    private int inkAmount;
+    private int inkCapacity;
+
+    public Pen(int inkCapacity) {
+        this.inkAmount = inkCapacity;
+        this.inkCapacity = inkCapacity;
+    }
+
+    public Pen() {
+        this(1024); // call Pen(int)
+    }
+
+    public int getInkAmount() {
+        return inkAmount;
+    }
+
+    public int getInkCapacity() {
+        return inkCapacity;
+    }
+
+    public void write(Paper paper, String message) {
+        paper.addContent(message);
+    }
+
+    public void refill() {
+        inkAmount = inkCapacity;
+    }
+}</code>
+            <p>
+                Пока не пошли дальше, хочу заметить, что модификаторы <code>pivate</code> и <code>public</code> мы будем писать перед каждым свойством и методом. Аргументов по умолчанию в Java нет, поэтому каждый раз будем реализовывать весь зоопарк конструкторов. В остальном имеем практически C++, разве что с поправкой на ветер. Учесть нужно тот факт, что в Java все объекты передаются по ссылке, а примитивы копируются. Будьте бдительны. Кстати, не спешите горячиться, я сознательно не подключал <code>Paper</code>. Чуть позже все станет на свои места.
+            </p>
+            <p>
+                Класс <code>Paper</code>:
+            </p>
+            <code data-lang="c" data-file="Paper.java">public class Paper {
+    private StringBuffer content;
+    private int maxSymbols;
+    private int symbols;
+
+    public Paper(int maxSymbols) {
+        this.maxSymbols = maxSymbols;
+        content = new StringBuffer();
+    }
+
+    public Paper() {
+        this(4096); // call Paper(int)
+    }
+
+    public int getMaxSymbols() {
+        return maxSymbols;
+    }
+
+    public int getSymbols() {
+        return symbols;
+    }
+
+    public void addContent(String message) {
+        content.append(message);
+    }
+
+    public void show() {
+        System.out.println(content);
+    }
+}</code>
+            <p>
+                Ну и, конечно же, <code>PPMain.java</code>:
+            </p>
+            <code data-lang="c" data-file="PPMain.java">public class PPMain {
+    public static void main(String[] args) {
+        Paper paper = new Paper();
+        Pen pen = new Pen();
+
+        pen.write(paper, "Hello, world!");
+        paper.show();
+    }
+}</code>
+            <p>
+                Как-то так. Самый простой вариант реализован. Прежде чем перейти к разбору, давайте скомпилируем и запустим.
+            </p>
+            <kbd>javac PPMain.java &amp;&amp; java PPMain
+Hello, world!</kbd>
+            <p>
+                Работает. Это уже ощутимый успех. Собственно, мы не производили никаких подключений, потому что Java умеет автоматически подключать необходимые классы, если они расположены в одной директории и название каждого файла соответствует названию класса, который в нем реализован. Поэтому запоминаем нехитрые правила:
+            </p>
+            <ul>
+                <li>один файл — один класс</li>
+                <li>имя файла == имя реализованного в нем класса</li>
+                <li>все файлы сохраняем в одной директории</li>
+            </ul>
+            <p>
+                Естественно, что эти правила — не институт красоты. Но разбирать сейчас как создавать полноценные <code>packages</code> и использовать все возможности Java неосмысленно. Почему? Потому что наша задача — портировать код с C++ на Java. Все. Остальная Java еще впереди, вне зависимости от вашего желания.
+            </p>
+            <p>
+                Самое время добавить исключения. Для этого напишем пару простых классов. Класс исключения для ручки (обрабатываем проблемы с чернилами):
+            </p>
+            <code data-lang="c" data-file="OutOfInkException.java">public class OutOfInkException extends Exception {}</code>
+            <p>
+                Класс исключения для бумаги (обрабатываем проблемы с пространством на листе):
+            </p>
+            <code data-lang="c" data-file="OutOfSpaceExeption.java">public class OutOfSpaceExeption extends Exception {}</code>
+            <p>
+                Про интерфейсы в Java вы узнаете позже, про наследование тоже. Пока необходимо для создания классов с исключениями расширять уже имеющийся в Java класс <code>Exception</code>. Поэтому запоминаем формулу: &quot;<code>public clacc</code>&quot; + &quot;<strong>ExceptionName</strong>&quot; + &quot;<code>extends Exception {}</code>&quot;. На место ExceptionName необходимо подставить имя вашего класса. Сложно? Не очень, поэтому применим данные классы. Будьте внимательны: имена исключений должны оканчиваться словом <strong>Exception</strong>. Например, OutOfMemory<strong>Exception</strong>, NullPointer<strong>Exception</strong>, etc.
+            </p>
+            <p>
+                Для начала внедрим исключение в класс <code>Pen</code>, конкретнее, в метод <code>write(Paper, String)</code>:
+            </p>
+            <code data-lang="c" data-file="Pen.java">public void write(Paper paper, String message) {
+    if ( inkAmount == 0 ) {
+        throw new OutOfInkException();
+    }
+    if ( message.length() > inkAmount ) {
+        paper.addContent(message.substring(0, inkAmount));
+        inkAmount = 0;
+        return;
+    }
+    paper.addContent(message);
+    inkAmount -= message.length();
+}</code>
+            <p>
+                Реализация метода вполне логична, однако при компиляции получим ошибку и сообщение похожее на это:
+            </p>
+            <pre>Pen.java error: unreported exception OutOfInkException; must be caught or declared to be thrown</pre>
+            <p>
+                Вот теперь можно уверенным тоном заявить: "Здравствуй, Java!". Не можем мы в Java просто взять и бросить исключение! Не можем и все! Давайте ловить исключения, для этого в классе <code>PPMain</code> воспользуемся управляющей конструкцией <code>try {} catch() {}</code>:
+            </p>
+            <code data-lang="c" data-file="PPMain.java">public class PPMain {
+    public static void main(String[] args) {
+        Paper paper = new Paper();
+        Pen pen = new Pen();
+
+        try {
+            pen.write(paper, "Hello, world!");
+        } catch (OutOfInkException obj) {
+            System.out.println("Ink container is empty!");
+        }
+
+        paper.show();
+    }
+}</code>
+            <p>
+                Вроде все логично, и исключение не пролетит, однако при компиляции получаем ошибку:
+            </p>
+            <pre>PPMain.java error: exception OutOfInkException is never thrown in body of corresponding try statement</pre>
+            <p>
+                Забавно, правда? Эта ошибка происходит потому, что метод <code>write(Paper, String)</code> не сообщает о том, что из него может быть брошено исключение. Давайте перепишем:
+            </p>
+            <code data-lang="c" data-file="Pen.java">public void write(Paper paper, String message) throws OutOfInkException {
+    // method implementation
+}</code>
+            <p>
+                Улавливаете суть? Нам не только пришлось реализовать класс исключения, не только воспользоваться специальной управляющей конструкцией, но и рапартовать в сигнатуре метода о исключении, которое может быть из него брошено. Ну ладно, не все так печально. Мы можем и не ловить исключения. Мы же помним как исключения работают. Когда исключение было брошено, оно обрывает работу блока кода из которого бросается и переходит блоком выше (в родительский блок). Поэтому для того, чтобы наша программа работала корректно мы можем рапортовать о том, что метод <code>public static void main(String[])</code> бросается исключениями типа <code>OutOfInkExceptions</code>. Тогда управляющую конструкцию <code>try {} catch() {}</code> можно не использовать:
+            </p>
+            <code data-lang="c" data-file="PPMain.java">public class PPMain {
+    public static void main(String[] args) throws OutOfInkException {
+        Paper paper = new Paper();
+        Pen pen = new Pen();
+
+        pen.write(paper, "Hello, world!");
+        paper.show();
+    }
+}</code>
+            <p>
+                Проверим:
+            </p>
+            <kbd>javac PPMain.java &amp;&amp; java PPMain
+Hello, world!</kbd>
+            <p>
+                Вроде как работает. Давайте разберемся с классом <code>Paper</code> и его методом <code>addContent(String)</code>. При написании кода учтем имеющийся у нас опыт по работе с исключениями в Java:
+            </p>
+            <code data-lang="c" data-file="Paper.java">public void addContent(String message) throws OutOfSpaceExeption {
+    int total = content.length() + message.length();
+
+    if ( content.length() == maxSymbols ) {
+        throw new OutOfSpaceExeption();
+    }
+    if ( total > maxSymbols ) {
+        content.append(message.substring(0, maxSymbols-content.length()));
+        return;
+    }
+    content.append(message);
+}</code>
+            <p>
+                Сразу добавим соответствующие правки в реализацию метода <code>main()</code>:
+            </p>
+            <code data-lang="c" data-file="PPMain.java">public static void main(String[] args) throws OutOfInkException, OutOfSpaceExeption {
+    // method implementation
+}</code>
+            <p>
+                Вроде все хорошо. Попробуем осуществить компиляцию и запуск:
+            </p>
+            <kbd>javac PPMain.java &amp;&amp; java PPMain
+Hello, world!</kbd>
+            <p>
+                Это успех. Но сомнительный... Давайте удалим исполняемые файлы и попробуем скомпилировать заново:
+            </p>
+            <kbd>rm *.class &amp;&amp; javac PPMain.java &amp;&amp; java PPMain
+Pen.java: error: unreported exception OutOfSpaceExeption; must be caught or declared to be thrown</kbd>
+            <p>
+                Теперь это больше похоже на правду. Но вас явно заинтересует, почему ошибки не было, и откуда она взялась после удаления исполняемых файлов и повторной компиляции? Ответ прост: компилятор <code>javac</code> иногда проявляет преступную халатность. Так как мы внесли изменения в <code>Paper</code> и <code>PPMain</code>, то они были перекомпилированы. А <code>Pen</code>, в который изменения не вносились, <code>javac</code> решил не перекомпилировать. Поэтому, прежде чем возрадоваться и отправлять код в продакшн убедитесь, что все компилируется без ошибок.
+            </p>
+            <p>
+                Давайте все же выясним, откуда взялась ошибка. Дело в том, что метод класса <code>Paper</code> <code>addContent(String)</code>, бросающий исключение типа <code>OutOfSpaceExeption</code> вызывается из метода <code>write(Paper, String)</code>, который описан в классе <code>Pen</code>. Поэтому метод <code>write(Paper, String)</code> тоже, косвенно, способен бросить <code>OutOfSpaceExeption</code> исключение. Давайте дополним реализацию метода <code>write(Paper, String)</code>:
+            </p>
+            <code data-lang="c" data-file="Pen.java">public void write(Paper paper, String message) throws OutOfInkException, OutOfSpaceExeption {
+    // method implementation
+}</code>
+            <p>
+                Как то так. Теперь все работает. И как оказалось на практике, реализовать задачу на языке программирования Java было не сложно.
+            </p>
+        </section>
+        <section>
+            <h2 id="other">Все остальное</h2>
+            <p>
+                Paзберем еще несколько моментов, касательно портирования ваших задач на язык программирования Java. Для этого реализуем задачу Point. Давайте посмотрим на прототип класса, который мы уже реализовали на языке C++:
+            </p>
+            <code data-lang="c" data-file="Point.h">#ifndef POINT_H
+#define POINT_H
+
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+
+class Point {
+    private:
+        double x;
+        double y;
+    public:
+        Point(double x=0, double y=0);
+        ~Point();
+
+        int getX() const;
+        int getY() const;
+
+        void setX(double value);
+        void setY(double value);
+
+        double distance(const Point&amp; other) const;
+        bool operator==(const Point&amp; other) const;
+        bool operator!=(const Point&amp; other) const;
+};
+
+std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const Point&amp; point);
+
+#endif // POINT_H</code>
+            <p>
+                Теперь оценим объем работы. Реализовать основные методы будет не сложно. Проблемы начнутся тогда, когда нам необходимо будет реализовать вывод и сравнение точек. В Java нет деструкторов и нет никакой возможности перегрузить операторы. Но давайте решать проблемы по мере их поступления. Для начала реализуем основной функционал:
+            </p>
+            <code data-lang="c" data-file="Point.java">public class Point {
+    private double x;
+    private double y;
+
+    public Point(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Point() {
+        this(0.0, 0.0); //call Point(double, double)
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setX(double value) {
+        x = value;
+    }
+
+    public void setY(double value) {
+        y = value;
+    }
+}</code>
+            <p>
+                И сразу реализуем класс <code>PointMain</code>:
+            </p>
+            <code data-lang="c" data-file="PointMain.java">public class PointMain {
+    public static void main(String[] args) {
+        Point a = new Point(2, 7);
+        Point b = new Point(4, 6);
+
+        System.out.println(a);
+        System.out.println(b);
+    }
+}</code>
+            <p>
+                Базовый функционал реализован. Выполним данный код:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+Point@70dea4e
+Point@5c647e05
+</kbd>
+            <p>
+                Немного странный вывод. Разобравшись немного, можно пийти к выводу, что Java, по умолчанию выводит объект в формате: &lt;Имя класса&gt;@&lt;Адрес&gt;. Это означает, что объект может быть выведен. Забегая наперед, скажу, что все классы которые мы пишем на Java, наследуются от класса <code>Object</code>, в котором уже реализованы некоторые методы. Нам лишь остается переопределить их, чтобы вывод соответствовал условию задачи. Как уже выяснялось ранее, за представление объекта в строковом виде отвечает метод <code>toString()</code>. Реализуем его:
+            </p>
+            <code data-lang="c" data-file="Point.java">public String toString() {
+    return "(" + x + ", " + y + ")";
+}</code>
+            <p>
+                Теперь вывод будет выглядеть так, как мы задумывали:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+(2.0, 7.0)
+(4.0, 6.0)
+</kbd>
+            <p>
+                Далее следует реализовать возможность сравнивать объекты. Давайте попробуем сравнить существующие точки, с заведомо одинаковыми координатами, и при этом не будем ничего реализовывать в классе <code>Point</code>:
+            </p>
+            <code data-lang="c" data-file="PointMain.java">public class PointMain {
+    public static void main(String[] args) {
+        Point a = new Point(2, 7);
+        Point b = new Point(2, 7);
+
+        System.out.println(a);
+        System.out.println(b);
+
+        if ( a.equals(b) ) {
+            System.out.println("points are equals");
+        } else {
+            System.out.println("points are not equals");
+        }
+    }
+}</code>
+            <p>
+                В результате выполнения получим следующее:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+(2.0, 7.0)
+(2.0, 7.0)
+points are not equals
+</kbd>
+            <p>
+                О чем это может нам говорить? Это говорит нам о том, что по умолчанию, метод <code>equals()</code> сравнивает ссылки. То есть мы получим сообщение &quot;points are equals&quot; только в том случае, если будем сравнивать ссылки на один и тот же объект.
+            </p>
+            <p>
+                Реализуем метод <code>equals()</code> для нашего класса.
+            </p>
+            <code data-lang="c" data-file="Point.java"> public boolean equals(Point other) {
+    return x == other.x &amp;&amp; y == other.y;
+}</code>
+            <p>
+                Повторим компиляцию и запуск:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+(2.0, 7.0)
+(2.0, 7.0)
+points are equals
+</kbd>
+            <p>
+                Принимаем поздравления, у нас получилось. Теперь разберемся с методом <code>distance()</code>. Насколько я помню, в языке C++ нам понадобилась библиотека &lt;cmath&gt; и функция <code>hypot()</code>. Что-то мне подсказывает, что нечто подобное должно быть и в Java. После <a href="http://lmgtfy.com/?q=java+hypot" target="blank">простого запроса</a> в Google, мы можем наткнуться на <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Math.html">класс Math</a>, в котором реализован метод <code>hypot()</code>. Так как <code>Math</code> находится в <code>java.lang</code>, то импортировать его не нужно, нам остается просто реализовать метод:
+            </p>
+            <code data-lang="c" data-file="Point.java">public double distance(Point other) {
+    return Math.hypot(x-other.x, y-other.y);
+}</code>
+            <p>
+                Вызовем метод в <code>PointMain</code> и проверим его работоспособность:
+            </p>
+            <code data-lang="c" data-file="PointMain.java">public class PointMain {
+    public static void main(String[] args) {
+        Point a = new Point(2, 7);
+        Point b = new Point(2, 7);
+
+        System.out.println(a);
+        System.out.println(b);
+
+        if ( a.equals(b) ) {
+            System.out.println("points are equals");
+        } else {
+            System.out.println("points are not equals");
+        }
+
+        System.out.println("Distance: " + a.distance(b));
+    }
+}</code>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+(2.0, 7.0)
+(6.0, 8.0)
+points are not equals
+Distance: 4.123105625617661</kbd>
+            <p>
+                Все работает. Мы справились. Ну что, Java это очень сложно? Вот и я говорю, что нет. А если нам очень легко и комфортно — самое время усложнить задачу:
+            </p>
+            <code data-lang="c" data-file="PointMain.java">public class PointMain {
+    public static void main(String[] args) {
+        Point a = new Point(2, 7);
+        Point b = new Point(6, 8);
+        Point c = b;
+
+        System.out.println("b:" + b);
+        System.out.println("c:" + c);
+
+        c.setX(42);
+
+        System.out.println("b:" + b);
+        System.out.println("c:" + c);
+    }
+}</code>
+            <p>
+                Я думаю смысл кода уловили все. Копируем точку, изменяем значение копии и  выводим результат. Выполним этот код:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+b:(6.0, 8.0)
+c:(6.0, 8.0)
+b:(42.0, 8.0)
+c:(42.0, 8.0)
+</kbd>
+            <p>
+                Оказывается, что наша копия — совсем не копия. Мы копировали ссылки, и имеем, по сути, две именованные связи с одним и тем же объектом. Для того, чтобы точка <code>с</code> стала копией точки <code>b</code>, нам необходимо выполнить клонирование. Как это сделать? Для этого нужно реализовать метод <code>clone()</code> и <italic>имплементировать интерфейс</italic> <code>Cloneable</code>.
+            </p>
+            <p>
+                Внесем необходимые изменения в класс <code>Point</code>:
+            </p>
+            <code data-lang="c" data-file="Point.java">public class Point implements Cloneable {
+
+    // class implementation
+
+    public Point clone() throws CloneNotSupportedException {
+        return (Point) super.clone();
+    }
+}</code>
+            <p>
+                Пара правок в классе <code>PointMain</code> и, собственно, клонирование:
+            </p>
+            <code data-lang="c" data-file="PointMain.java">public class PointMain {
+    public static void main(String[] args) throws CloneNotSupportedException {
+        Point a = new Point(2, 7);
+        Point b = new Point(6, 8);
+        Point c = b.clone();
+
+        System.out.println("b:" + b);
+        System.out.println("c:" + c);
+
+        c.setX(42);
+
+        System.out.println("b:" + b);
+        System.out.println("c:" + c);
+    }
+}</code>
+            <p>
+                Контрольный запуск:
+            </p>
+            <kbd>javac PointMain.java &amp;&amp; java PointMain
+b:(6.0, 8.0)
+c:(6.0, 8.0)
+b:(6.0, 8.0)
+c:(42.0, 8.0)</kbd>
+            <p>
+                Как мы видим, изменилась только точка <code>c</code>. Цель достигнута.
+            </p>
+            <p>
+                Теперь вы обладаете всеми необходимыми знаниями и навыками для портирования кода с C++ на Java. Успехов.
+            </p>
+        </section>
+        <footer>
+            <address>
+                Автор caiman.
+            </address>
+            <time datetime="2014-02-10">03.05.2014</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/31437201/code.js"></script>
+</body>
+</html>

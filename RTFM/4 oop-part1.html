@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html lang="ru" class="ie7">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="ru" class="ie8">
+<![endif]-->
+<!--[if (lt IE 7)|(gt IE 8)]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <title>Объектно ориентированное программирование. Начало.</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/31437201/article.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <article class="page">
+        <h1>Объектно ориентированное программирование. Начало.</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="#oop">Понятие «ООП»</a></li>
+                    <li><a href="#entity">Сущность</a></li>
+                    <li><a href="#class">Класс</a></li>
+                    <li><a href="#object">Объект</a></li>
+                    <li><a href="#attribute">Атрибут</a></li>
+                    <li><a href="#method">Метод</a></li>
+                    <li><a href="#struct_to_class">От структуры к классу</a></li>
+                </ol>
+            </div>
+        </aside>
+
+        <section>
+            <h2 id="oop">Понятие «ООП»</h2>
+            <p>
+                Объектно-ориентированное программирование — это подход к построению программного кода, позволяющий рассматривать систему, как совокупность взаимодействующих объектов.
+            </p>
+            <p>
+                Подобный подход отражает в коде наше естественное восприятие предметов и явлений, окружающих нас. Мы привыкли говорить о вещах и явлениях, как о чем-то конкретном и самостоятельном. Мы воспринимаем мир, как множество различных объектов, которые обладают какими-то характеристиками и какими-то функциями.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="entity">Сущность</h2>
+            <p>
+                Сущность — это некая логически целая, законченная, самостоятельная единица информации. Это независимо существующий и однозначно идентифицируемый элемент предметной области.
+            </p>
+            <p>
+                Сущностью может быть как реальный, физически существующий предмет (стол, стул, автомобиль, ручка, осёл), так и нечто абстрактное (точка в пространстве, вектор, категория новостей, запись на форуме, пользователь). Сущностью может быть как целый город, так и отдельное здание в этом городе или отдельный кирпич этого здания. Все зависит от нужного уровня детализации системы.
+            </p>
+            <p>
+                К примеру, если мы говорим о перевозке грузов между городами, то нам совершенно наплевать на массу конкретного кирпича, его цвет и прочность. Нас интересуют некие характеристики города вцелом: общее население, экономические показатели, географическое положение и т.д. Если же наша система должна производить расчет разрушений при сносе зданий, то характеристики отдельных кирпичей нам будут очень даже интересны.
+            </p>
+            <p>
+                Получается, что сущность — действительно абстрактное понятие. И в зависимости от ситуации, сущностью может быть как молекула, так и галактика, как декартова координата, так и математическая функция.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="class">Класс</h2>
+            <p>
+                Многие считают, что класс — это нечто тайное, сложное, непостижимое и изучать его нужно долго и мощно, потому что передаётся это секретное знание только от программиста к программисту и исключительно половым путём. Это не так, хотя не исключено, что некоторые учебные заведения обучают этому таинству именно таким образом.
+            </p>
+            <p>
+                Википедия сообщает следующее:
+            </p>
+            <blockquote>
+                Идея классов пришла из работ по базам знаний, имеющих отношение к исследованиям по искусственному интеллекту. Используемые человеком классификации в зоологии, ботанике, химии, деталях машин, несут в себе основную идею, что любую вещь всегда можно представить частным случаем некоторого более общего понятия. Конкретное яблоко — это в целом некоторое яблоко, вообще яблоко, а любое вообще яблоко — фрукт. Именно поэтому примеры классов в учебных пособиях по объектно-ориентированному программированию так часто упоминают яблоки и груши.
+            </blockquote>
+            <p>
+                Лещ и щука — это разные рыбы. Но и лещ, и щука — это рыба. Овчарка и пудель — это собаки, хоть и разные. Телевизор «Самсунг» и телевизор «Электрон» — это таки телевизор (хотя насчет «Электрона» это утверждение спорно).
+            </p>
+            <p>
+                Другими словами, класс — это некий «шаблон», который описывает общие характеристики. Класс — это «разновидность».
+            </p>
+            <p>
+                Любую сущность можно определить в виде класса. Собственно класс — это и есть представление сущности в виде программного кода.
+            </p>
+            <p>
+                Как производят автомобили? Грубо говоря, есть проект автомобиля, в котором описаны все его функции и характеристики. Эта большая книжка описывает всё: массу, маскимальную скорость, объем топливного бака, возможность поворачивать, ускорять и замедлять движение и многое другое. Используя этот проект можно строить реальные автомобили <i>(создавать объекты)</i>, которые будут обладать всеми описанными характеристиками и функциями.
+            </p>
+            <p>
+                В программировании класс — это пользовательский тип данных, основанный на встроенных типах данных и/или других классах. Класс позволяет единожды описать некую сущность с присущими ей характеристиками и функциями.
+            </p>
+            <p>
+                Для записи имён классов общепринято использовать <a href="http://ru.wikipedia.org/wiki/CamelCase">UpperCamelCase</a>. При этом название класса может быть коротким и состоящем всего из одного слова:
+            </p>
+            <code data-lang="c">class Car {
+
+};</code>
+                <p>
+                    из двух слов:
+                </p>
+            <code data-lang="c">class SniperRifle {
+
+};</code>
+            <p>
+                и более двух слов:
+            </p>
+            <code data-lang="c">class VeryImportantAbstractEntityItemWithVeryLongName {
+
+};</code>
+        </section>
+
+        <section>
+            <h2 id="object">Объект</h2>
+            <p>
+                Что же есть объект? Мы установили, что класс — это шаблон или «чертеж», который описывает что нужно сделать и что должно в итоге получиться. Единожды начертив чертеж автомобиля, мы можем по этому чертежу создавать отдельные автомобили. При этом созданные автомобили будут обладать одинаковыми характеристиками.
+            </p>
+            <p>
+                Один раз написав класс, можно создавать сколько угодно <i>объектов</i> (экземпляров) этого класса. При этом, каждый созданный объект будет соответствовать типу, который описывает класс, а также обладать всеми описанными для класса характеристиками и функциями.
+            </p>
+            <p>
+                Класс — это пользовательский тип данных, поэтому при создании объектов класса, нужно указывать имя класса в качестве типа переменной:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Car {
+
+};
+
+int main() {
+    Car volvo, mazda, toyota;
+    Car cars[] =  { volvo, mazda, toyota };
+
+    for ( int i = 0; i &lt; 3; i++ ) {
+        std::cout &lt;&lt; &cars[i] &lt;&lt; std::endl;
+    }
+
+    return 0;
+}</code>
+        </section>
+
+        <section>
+            <h2 id="attribute">Атрибут</h2>
+            <p>
+                Сущности, как правило, обладают некоторыми характеристиками. Каждый экземпляр сущности обладает тем же набором характеристик. Значения этих характеристик могут отличаться от экземпляра к экземпляру.
+            </p>
+            <p>
+                К характеристикам автомобиля относятся, например, максимальная скорость, текущая скорость, количество пасадочных мест, объем багажника и прочее. У собаки может быть кличка, возраст, масса и что-то ещё.
+            </p>
+            <p>
+                Значения этих характеристик описывают текущее состояние объекта. Например, два абсолютно одинаковых автомобиля могут обладать разным объемом топлива и разным количеством пассажиров. Две шариковые ручки одного цвета могут содержать разное количество чернил, если одной ручкой пользовались чаще.
+            </p>
+            <p>
+                 <i>Атрибуты</i> описывают характеристики объекта. Состояние объекта описывается значениями его атрибутов. Изменив значение атрибута — мы изменяем состояние объекта.
+            </p>
+            <p>
+                В контексте ООП, атрибут — это обычная переменная, которая описывается в классе и создается для каждого объекта. Работать с атрибутами объектов мы можем точно так же, как и с обычными переменными, но из-за того, что атрибуты связаны с конкретным объектом, обращаться к ним мы можем только с указанием объекта:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Car {
+    public:
+        int maxSpeed;
+        int currentSpeed;
+};
+
+int main() {
+    Car car1, car2;
+
+    car1.maxSpeed = 260;
+    car2.maxSpeed = 180;
+
+    car1.currentSpeed = 56;
+    car2.currentSpeed = 82;
+
+
+    std::cout &lt;&lt; "maxSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.maxSpeed &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.maxSpeed &lt;&lt; std::endl;
+    std::cout &lt;&lt; "currentSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.currentSpeed &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.currentSpeed &lt;&lt; std::endl;
+
+    car1.currentSpeed += 43;
+
+    std::cout &lt;&lt; "currentSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.currentSpeed &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.currentSpeed &lt;&lt; std::endl;
+
+    return 0;
+}</code>
+            <p>
+                Помните <code>struct</code>? Практически то же самое, не так ли?
+            </p>
+            <p>
+                В описании класса мы указали <code>int maxSpeed</code> только один раз, а использовали два раза. Это становится возможным благодаря тому, что переменная <code>maxSpeed</code> создается отдельно для каждого объекта класса <code>Car</code>. Это разные переменные. И связаны они с разными объектами. Именно поэтому обращаться к ним нужно указывая объект.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="method">Метод</h2>
+            <p>
+                Сущности, помимо атрибутов, как правило, обладают еще и какими-то функциями. Существует какое-то поведение. Собака умеет поглощать пищу определенного типа и с определенной скоростью, автомобиль может ускоряться и замедляться. При этом выполнение тех или иных действий каким-то образом влияет на внутреннее состояние: поглощение пищи собакой увеличивает её запас сил, передвижение автомобиля уменьшает запас топлива и изменяет его положение в пространстве.
+            </p>
+            <p>
+                Это влияние, эти возможности или функции, описывают поведение объекта. Они задают правила, описывающие каким образом то или иное действие повлияет на состояние объекта.
+            </p>
+            <p>
+                Поведение в классах описывается с помощью <i>методов</i> — обычных функций, которые могут принимать аргументы и возвращать значения. Эти функции описываются внутри класса и, как и атрибуты, связываются с каждым созданным объектом, поэтому вызывать эти функции можно только с указанием конкретного объекта. Вы не можете просто нажать на педаль газа без автомобиля. Вы не можете просто накормить понятие «собака» — нужна конкретная, существующая собака.
+            </p>
+            <p>
+                Объект, у которого вызвали метод, внутри этого метода доступен через специальный указатель — <code>this</code>. С помощью <code>this</code> можно обращаться к собственным атрибутам и вызывать собственные методы:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Car {
+    public:
+        int maxSpeed;
+        int currentSpeed;
+
+        void accelerate() {
+            this-&gt;accelerate(8);         // вызов собственного метода
+        }
+
+        void accelerate(int delta) {
+            this-&gt;currentSpeed += delta; // изменение собственного атрибута
+
+            if ( this-&gt;currentSpeed &gt; this-&gt;maxSpeed ) {
+                this-&gt;currentSpeed = this-&gt;maxSpeed;
+            }
+        }
+
+        void deccelerate() {
+            this-&gt;deccelerate(12);       // вызов собственного метода
+        }
+
+        void deccelerate(int delta) {
+            this-&gt;currentSpeed -= delta; // изменение собственного атрибута
+
+            if ( this-&gt;currentSpeed &lt; 0 ) {
+                this-&gt;currentSpeed = 0;
+            }
+        }
+};
+
+int main() {
+    Car car1, car2;
+
+    car1.maxSpeed = 260;
+    car2.maxSpeed = 180;
+
+    car1.currentSpeed = 50;
+    car2.currentSpeed = 50;
+
+
+    std::cout &lt;&lt; "maxSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.maxSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.maxSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "currentSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.currentSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.currentSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+
+    car1.accelerate();
+    car2.deccelerate();
+    car2.deccelerate(20);
+
+    std::cout &lt;&lt; std::endl &lt;&lt; "currentSpeed:" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car1: " &lt;&lt; car1.currentSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+    std::cout &lt;&lt; "  car2: " &lt;&lt; car2.currentSpeed &lt;&lt; " mph" &lt;&lt; std::endl;
+
+    return 0;
+}</code>
+        </section>
+        <section>
+            <h2 id="struct_to_class">От структуры к классу</h2>
+            <p>
+                Как вы уже наверное поняли, класс очень похож на обычный <code>struct</code>. Давайте посмотрим на «эволюцию» обычного <code>struct</code> до класса.
+            </p>
+            <p>Level 1 — <code>struct</code> с внешними функциями:</p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+struct Car {
+    double fuelCapacity;
+    double fuelAmount;
+    double fuelConsumption;
+};
+
+void drive(Car&amp; car, double distance) {
+    double fuelNeeded = car.fuelConsumption * distance;
+
+    if ( fuelNeeded &gt; car.fuelAmount ) {
+        std::cout &lt;&lt; "Not enough fuel." &lt;&lt; std::endl;
+        return;
+    }
+
+    car.fuelAmount -= fuelNeeded;
+    std::cout &lt;&lt; "Car traveled " &lt;&lt; distance &lt;&lt; " miles." &lt;&lt; std::endl;
+}
+
+void refill(Car&amp; car, double fuel) {
+    double maxRefillVolume = car.fuelCapacity - car.fuelAmount;
+
+    if ( fuel &gt; maxRefillVolume ) {
+        std::cout &lt;&lt; "Max fuel amount exceeded!"&lt;&lt; std::endl;
+        return;
+    }
+
+    car.fuelAmount += fuel;
+    std::cout &lt;&lt; "Car was successfully refilled!" &lt;&lt; std::endl;
+}
+
+void printStatus(Car&amp; car) {
+    std::cout &lt;&lt; "-- fuel capacity: "     &lt;&lt; car.fuelCapacity       &lt;&lt; std::endl;
+    std::cout &lt;&lt; "-- fuel amount: "       &lt;&lt; car.fuelAmount         &lt;&lt; std::endl;
+    std::cout &lt;&lt; "-- fuel consumption: "  &lt;&lt; car.fuelConsumption    &lt;&lt; std::endl;
+}
+
+int main() {
+    Car toyota = {50.0, 50.0, 0.8};
+
+    printStatus(toyota);
+    drive(toyota, 40.0);
+    drive(toyota, 30.0);
+    refill(toyota, 100.0);
+    printStatus(toyota);
+    refill(toyota, 30.0);
+    printStatus(toyota);
+
+    return 0;
+}</code>
+        <p>Level 2 — <code>struct</code> с вложенными функциями:</p>
+        <code data-lang="c">#include &lt;iostream&gt;
+
+struct Car {
+    double fuelCapacity;
+    double fuelAmount;
+    double fuelConsumption;
+
+    void drive(double distance) {
+        double fuelNeeded = fuelConsumption * distance;
+
+        if ( fuelNeeded &gt; fuelAmount ) {
+            std::cout &lt;&lt; "Not enough fuel." &lt;&lt; std::endl;
+            return;
+        }
+        fuelAmount -= fuelNeeded;
+        std::cout &lt;&lt; "Car traveled " &lt;&lt; distance &lt;&lt; " miles." &lt;&lt; std::endl;
+    }
+
+    void refill(double fuel) {
+        double maxRefillVolume = fuelCapacity - fuelAmount;
+
+        if ( fuel &gt; maxRefillVolume ) {
+            std::cout &lt;&lt; "Max fuel amount exceeded!"&lt;&lt; std::endl;
+            return;
+        }
+        fuelAmount += fuel;
+        std::cout &lt;&lt; "Car was successfully refilled!" &lt;&lt; std::endl;
+    }
+
+    void report() {
+        std::cout &lt;&lt; "-- fuel capacity: "     &lt;&lt; fuelCapacity       &lt;&lt; std::endl;
+        std::cout &lt;&lt; "-- fuel amount: "       &lt;&lt; fuelAmount         &lt;&lt; std::endl;
+        std::cout &lt;&lt; "-- fuel consumption: "  &lt;&lt; fuelConsumption    &lt;&lt; std::endl;
+    }
+};
+
+int main() {
+    Car toyota = {50.0, 50.0, 0.8};
+
+    toyota.report();
+    toyota.drive(40.0);
+    toyota.drive(30.0);
+    toyota.refill(100.0);
+    toyota.report();
+    toyota.refill(30.0);
+    toyota.report();
+
+    return 0;
+}</code>
+        <p>Level 3 — <code>class</code>:</p>
+        <code data-lang="c">#include &lt;iostream&gt;
+
+class Car {
+    public:
+        double fuelCapacity;
+        double fuelAmount;
+        double fuelConsumption;
+
+        Car(double capacity, double amount, double consumption) {
+            fuelCapacity = capacity;
+            fuelAmount = amount;
+            fuelConsumption = consumption;
+        }
+
+        void drive(double distance) {
+            double fuelNeeded = fuelConsumption * distance;
+
+            if ( fuelNeeded &gt; fuelAmount ) {
+                std::cout &lt;&lt; "Not enough fuel." &lt;&lt; std::endl;
+                return;
+            }
+            fuelAmount -= fuelNeeded;
+            std::cout &lt;&lt; "Car traveled " &lt;&lt; distance &lt;&lt; " miles." &lt;&lt; std::endl;
+        }
+
+        void refill(double fuel) {
+            double maxRefillVolume = fuelCapacity - fuelAmount;
+
+            if ( fuel &gt; maxRefillVolume ) {
+                std::cout &lt;&lt; "Max fuel amount exceeded!"&lt;&lt; std::endl;
+                return;
+            }
+            fuelAmount += fuel;
+            std::cout &lt;&lt; "Car was successfully refilled!" &lt;&lt; std::endl;
+        }
+
+        void report() {
+            std::cout &lt;&lt; "-- fuel capacity: "     &lt;&lt; fuelCapacity       &lt;&lt; std::endl;
+            std::cout &lt;&lt; "-- fuel amount: "       &lt;&lt; fuelAmount         &lt;&lt; std::endl;
+            std::cout &lt;&lt; "-- fuel consumption: "  &lt;&lt; fuelConsumption    &lt;&lt; std::endl;
+        }
+};
+
+int main() {
+    Car toyota(50.0, 50.0, 0.8);
+
+    toyota.report();
+    toyota.drive(40.0);
+    toyota.drive(30.0);
+    toyota.refill(100.0);
+    toyota.report();
+    toyota.refill(30.0);
+    toyota.report();
+
+    return 0;
+}</code>
+        </section>
+        <footer>
+            <address>
+                Автор X-Treem.
+            </address>
+            <time datetime="2013-11-29">29.11.2013</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/31437201/code.js"></script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Массивы</title>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/31437201/article.css">
+</head>
+<body>
+    <article class="page">
+        <h1>Массивы</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="#intro">Введение</a></li>
+                    <li><a href="#declaration">Объявление массива</a></li>
+                    <li><a href="#init">Инициализация массива</a></li>
+                    <li><a href="#access">Доступ к элементу массива</a></li>
+                    <li><a href="#io">Ввод и вывод значений массива</a></li>
+                    <li><a href="#function">Передача массива в функцию</a></li>
+                    <li><a href="#magic">Массивы и магия</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ol>
+            </div>
+            <div class="links">
+            </div>
+        </aside>
+
+        <section>
+            <h2 id="intro">Введение</h2>
+            <p><dfn>Массив</dfn> (англ. <em>array</em>) — это структура данных, состоящая из однотипных элементов, доступ к которым осуществляется по индексам (ключам). Простейший вариант массива — это одномерный массив (линейный).</p>
+            <p>Если возникает необходимость хранить некоторое количество однотипных данных, и нет смысла заводить для каждого именованную переменную — смело используйте массив.</p>
+        </section>
+        <section>
+            <h2 id="declaration">Объявление массива</h2>
+            <p>Рассмотрим, как пользоваться массивом. Для начала, массив нужно объявить. Это мало чем отличается от объявления переменной:</p>
+            <code data-lang="c">int x;        // объявление переменной
+int array[5]; // объявление массива</code>
+            <p>Взглянем на объявление массива более детально: <code>int</code> — тип хранимых данных, размерность ячейки массива (4 байт для <code>int</code>), <code>array</code> — имя массива, <code>[5]</code> — размер массива, количество ячеек.</p>
+            <p>Строка <code>int array[5]</code> говорит компилятору, что нужно выделить <i>цельный</i> участок памяти длиной 20 байт (5 ячеек по 4 байта каждая). По имени массива можно получить адрес начала массива:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5];
+    
+    printf("Array address: %p\n", array);
+    printf("Size of array: %lu bytes\n", sizeof(array));
+
+    return 0;
+}</code>
+            <samp>Array address: 0x7fff590cdc60
+Size of array: 20 bytes</samp>
+        </section>
+
+        <section>
+            <h2 id="init">Инициализация массива</h2>
+            <p>Как и в случае с переменной, в массив можно записать значения:</p>
+            <code data-lang="c">int numbers[5] = {1, 2, 3, 4, 5};</code>
+            <p>На самом деле, при инициализации массива не обязательно указывать его размер, так как он однозначно задан размером последовательности. То есть, можно и так:</p>
+            <code data-lang="c">int numbers[] = {1, 2, 3, 4, 5};</code>
+            <p>В языке Си массив не может быть безразмерным, быть нулевого размера может, а вот совсем без размера — нет. Угадайте, почему…</p>
+            <code data-lang="c">int array[];  //не работает
+int array[0]; //работает</code>
+        </section>
+
+        <section>
+            <h2 id="access">Доступ к элементу массива</h2>
+            <p>Раз уж можно сохранить значения, значит должна быть возможность обращаться к элементу массива. Это достаточно просто:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int numbers[3] = {1, 2, 3};
+    
+    printf("%d %d %d\n", numbers[0], numbers[1], numbers[2]);
+    
+    return 0;
+}</code>
+            <samp>1 2 3</samp>
+            <p>Индекс первого элемента массива равен нулю, потому что смещение от начала массива к первому элементу — 0. Более детально об этом будет чуть позже.</p>
+
+            <div class="co">
+                <p>Максимальный индекс массива всегда меньше его длины на единицу.</p>
+            </div>
+            <p>А что будет, если попробовать вывести элемент массива не из диапазона доступных? Например, вывести элемент с индексом 3? Посмотрим:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int numbers[3] = {1, 2, 3};
+    
+    printf("%d\n", numbers[3]);
+
+    return 0;
+}</code>    
+            <kbd>gcc array.c
+warning: array index 3 is past the end of the array (which contains 3 elements)</kbd>
+            <p>Даже компилятор намекает на то, что что-то пошло не так. Но это — всего лишь предупреждение, а предупреждения не остановят настоящего воина. Запускаем:</p>
+            <samp>0</samp>
+            <p>Этот код, в лучшем случае, вернёт случайное число из памяти. А в худшем — сгенерирует ошибку <em>Segmentation Fault</em> (под Windows — окошко с предложением закрыть программу и отправить отчет), потому что <a href="https://dl.dropboxusercontent.com/u/31437201/Articles/pointer.html#address_limit" target="_blank">лезть в чужую память</a> — это плохо.</p>
+            <p>Добавим в предыдущий пример немного магии:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int magicNumber = 42;
+    int numbers[3] = {1, 2, 3};
+    
+    printf("%d\n", numbers[3]);
+
+    return 0;
+}</code>
+            <samp>42</samp>
+        </section>
+        <section>
+            <h2 id="io">Ввод и вывод значений массива</h2>
+            <p>Мы уже рассмотрели, как инициализировать массив, а как заполнить значения массива из консоли? Скорее всего, с помощью <code>scanf()</code>. Но есть нюанс — ввод значений в массив подразумевает ввод в каждую ячейку массива. Рассмотрим сначала вариант с массивом на одну ячейку (чем не переменная?):</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[1];
+    
+    scanf("%d", &amp;array[0]);
+
+    printf("%d\n", array[0]);
+
+    return 0;
+}</code>
+            <p>Тут все просто: ввели число — напечатали. А что делать, если массив больше чем на один элемент? Можно так:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[3];
+    
+    scanf("%d", &amp;array[0]);
+    scanf("%d", &amp;array[1]);
+    scanf("%d", &amp;array[2]);
+
+    printf("%d\n", array[0]);
+    printf("%d\n", array[1]);
+    printf("%d\n", array[2]);
+
+    return 0;
+}</code>
+            <p>Это работает. А если массив на сто элементов? Только очень <a href="http://lurkmore.to/%D0%91%D1%8B%D0%B4%D0%BB%D0%BE%D0%BA%D0%BE%D0%B4%D0%B5%D1%80" target="_blank">трудолюбивый программист</a> будет писать сто <code>scanf()</code> и <code>printf()</code>. Остальные применят цикл.</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5];
+    
+    for ( int i = 0; i &lt; 5; i++ ) {
+        scanf("%d", &amp;array[i]);
+    }
+    
+    for ( int i = 0; i &lt; 5; i++ ) {
+        printf("%d\n", array[i]);
+    }
+
+    return 0;
+}</code>
+            <samp>1
+2
+3
+4
+5
+1
+2
+3
+4
+5</samp>
+        </section>
+        <section>
+            <h2 id="function">Передача массива в функцию</h2>
+            <p>Предыдущий код нужно немного «причесать»:</p>
+            <ul>
+                <li>вынести размер массива в отдельную переменную;</li>
+                <li>вынести считывание и печать в отдельные функции;</li>
+                <li>вывод массива оформить в одну строку, а то как-то много места занимает.</li>
+            </ul>
+            <p>Приступим, пока что без реализации функций:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int size = 5;
+    int array[size];
+    
+    arrayScan(array, size);
+
+    arrayPrint(array, size);
+
+    return 0;
+}</code>
+            <p>Естественно, работать без реализации функций это не будет. Остановимся более подробно на моменте передачи массива в функцию.</p>
+            <p>Во-первых, функция требует два аргумента: адрес массива, чтобы было понятно, куда писать/читать и его размер, чтобы было понятно, до какого момента писать/читать.</p>
+            <p>Во-вторых, передавать нужно именно адрес массива, чтобы в процессе работы функция взаимодействовала с нужным массивом, который объявлен в <code>main()</code>. Иначе, если внутри функции будет создана копия массива, то функция будет взаимодействовать с копией. А эта копия перестанет существовать, когда функция закончит работу.</p>
+            <p>Ну а теперь — полная версия:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+void arrayScan(int array[], int size) {
+    for ( int i = 0; i &lt; size; i++ ) {
+        scanf("%d", &amp;array[i]);
+    }
+}
+
+void arrayPrint(int array[], int size) {
+    int last = size - 1;
+
+    for ( int i = 0; i &lt; last; i++ ) {
+        printf("%d ", array[i]);
+    }
+    printf("%d\n", array[last]);
+}
+
+int main() {
+    int size = 5;
+    int array[size];
+    
+    arrayScan(array, size);
+
+    arrayPrint(array, size);
+
+    return 0;
+}</code>
+            <samp>1
+2
+3
+4
+5
+1 2 3 4 5</samp>
+            <p>Так же намного лучше! Обратите внимание на то, в каком виде функция принимает массив в качестве аргумента. Квадратные скобки — «фирменный» признак массива. Далее мы рассмотрим более подробно, что они означают.</p>
+        </section>
+
+        <section>
+            <h2 id="magic">Массивы и магия</h2>
+            <h3>Магия указателей</h3>
+            <p>Немного магии с массивами. С ними можно делать такое:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5] = {1, 2, 3, 4, 5};
+    
+    printf("%d\n", 1[array]);
+
+    return 0;
+}</code>
+            <samp>2</samp>
+            <p>Почему это работает? Помните, что имя массива указывает на адрес начала массива? А что будет, если посмотреть, что там лежит?</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5] = {1, 2, 3, 4, 5};
+    
+    printf("%p\n", array);
+    printf("%d\n", *array);
+
+    return 0;
+}</code>
+            <samp>0x7fff5c302c40
+1</samp>
+            <p>Оказывается, адрес начала массива — это адрес его первого элемента. Выглядит это примерно так:</p>
+            <figure>
+                <table>
+                    <tbody>
+                         <tr>
+                            <th>Адрес ячейки</th>
+                            <th>Значение</th>
+                            <th>Элемент</th>
+                            <th>Эквивалент</th>
+                        </tr>
+                        <tr>
+                            <td><code>0x7fff5c302c40</code></td>
+                            <td>1</td>
+                            <td><code>array[0]</code></td>
+                            <td><code>*(array + 0)</code> или <code>*array</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>0x7fff5c302c44</code></td>
+                            <td>2</td>
+                            <td><code>array[1]</code></td>
+                            <td><code>*(array + 1)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>0x7fff5c302c48</code></td>
+                            <td>3</td>
+                            <td><code>array[2]</code></td>
+                            <td><code>*(array + 2)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>0x7fff5c302c4c</code></td>
+                            <td>4</td>
+                            <td><code>array[3]</code></td>
+                            <td><code>*(array + 3)</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>0x7fff5c302c50</code></td>
+                            <td>5</td>
+                            <td><code>array[4]</code></td>
+                            <td><code>*(array + 4)</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Тем, кто хорошо разобрался в адресной арифметике, должно быть всё очевидно. Как и то, каким образом можно получить доступ к другим элементам массива — с помощью <em>смещения</em>:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5] = {1, 2, 3, 4, 5};
+    
+    printf("%d\n", *array);
+    printf("%d\n", *(array+1));
+    printf("%d\n", *(array+2));
+    printf("%d\n", *(array+3));
+    printf("%d\n", *(array+4));
+
+    return 0;
+}</code>
+            <samp>1
+2
+3
+4
+5</samp>
+            <p>Соответственно, если вылезти за пределы массива — получим мусор, в лучшем случае. Что будет в худшем, вы уже знаете.</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int array[5] = {1, 2, 3, 4, 5};
+    
+    printf("%d\n", *(array+4));
+    printf("%d\n", *(array+6));
+
+    return 0;
+}</code>
+            <samp>5
+553151046</samp>
+            <p>Никто не запрещает сохранить адрес массива в указатель:</p>
+            <code data-lang="c">#include &lt;stdio.h&gt;
+
+int main() {
+    int *pointer;
+    int array[5] = {1, 2, 3, 4, 5};
+    
+    pointer = array;
+
+    printf("%d\n", *(pointer+4));
+    printf("%d\n", pointer[4]);
+
+    return 0;
+}</code>
+            <samp>5
+5</samp>
+            <p>Печально это осознавать, но никакой магии в массивах нет, есть только то, что вы уже знаете — числа, адреса (которые, в свою очередь, тоже являются числами) и самая простая работа с памятью: сдвиги, запись, разыменование.</p>
+            <p>Также ничего странного нет в форме записи <code>1[array]</code> — квадратные скобки ввели, чтобы попросту не тянуть за собой звёздочку и круглые скобки, и вы убедились, что записи <code>array[1]</code> и <code>*(array + 1)</code> — это одно и то же. И если сделать так: <code>*(1 + array)</code>, вряд ли что-то изменится. А теперь подставьте квадратные скобки, вместо звёздочки и круглых скобок: <code>1[array]</code>.</p>
+        </section>
+        <section>
+            <h2 id="faq">FAQ</h2>
+            <dl>
+                <dt>Что происходит при объявлении массива и почему надо задавать размер?</dt>
+                <dd>Как уже стало ясно, массив — это структура данных, которая может занимать определенную область памяти. Сколько памяти занимает массив — определяется его размером. Если не указать размер, то у ОС возникнет неопределенность — сколько памяти выделить под эту структуру?</dd>
+
+                <dt>Почему нумерация идёт с нуля, а не с единицы?<br>Почему адрес массива совпадает с адресом его первого элемента?</dt>
+                <dd>Потому, что <code>numbers[0]</code> тоже самое, что <code>*(numbers + 0)</code>, тоже самое, что <code>*(numbers)</code>, тоже самое, что  <code>*numbers</code>.</dd>
+
+                <dt>Массив — это указатель?</dt>
+                <dd>Нет.</dd>
+            </dl>
+        </section>
+        <footer>
+            <address>
+                Автор Gara.
+            </address>
+            <time datetime="2014-03-19">19.03.2014</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/31437201/code.js"></script>
+</body>
+</html>

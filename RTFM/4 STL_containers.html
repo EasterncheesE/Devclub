@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html -->
+<html lang="ru"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>STL. Контейнеры</title>
+    
+    <link rel="stylesheet" href="./4 STL. Контейнеры_files/article.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+<style></style></head>
+<body>
+    <article class="page">
+        <h1>STL. Контейнеры</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#stl">STL</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#custom_vector">Динамический массив своими руками</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#vector">Динамический массив: vector</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#custom_list">Связный список своими руками</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#list">Связные списки: list, stack, queue</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#set">Множества: set</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/BootCamp/containers.html#map">Ассоциативный массив: map</a></li>
+                </ol>
+            </div>
+        </aside>
+        <section>
+            <h2 id="stl">STL</h2>
+            <blockquote>
+                Библиотека стандартных шаблонов (STL) (англ. Standard Template Library) — набор обобщенных алгоритмов, итераторов и контейнеров, средств доступа к содержимому этих контейнеров и сопутствующих вспомогательных функций.
+            </blockquote>
+            <p>
+                Библиотека стандартных шаблонов содержит набор базовых классов для языка C++, таких как контейнеры и ассоциативные массивы (карты), которые могут быть использованы для любых встроеных и пользовательских типов данных. Все классы, входящие в билиотеку, реализованы при помощи шаблонов.
+            </p>
+            <p>
+                Библиотека состоит из четырех основных компонентов:
+            </p>
+            <ol>
+                <li>Контейнеры (англ. containers) и адаптеры (англ. adaptors)</li>
+                <li>Итераторы (англ. iterators)</li>
+                <li>Алгоритмы (англ. algorithms)</li>
+                <li>Функциональные объекты (англ. functors)</li>
+            </ol>
+            <h3>Контейнеры</h3>
+            <p>
+                Контейнеры представляют объекты-хранилища для других объектов. Они реализованы в виде шаблонных классов, что позволяет адаптировать контейнеры для хранения объектов любого типа. Контейнеры содержат весь необходимый функционал для доступа к хранимым объектам. Такой функционал реализован в виде методов контейнеров либо осуществляется при помощи итераторов.
+            </p>
+            <p>
+                Контейнеры разделяют на четыре категории:
+            </p>
+            <ul>
+                <li>Контейнеры для хранения последовательностей. К ним относятся массивы и связные списки.</li>
+                <li>Контейнеры-адаптеры. К ним относятся стек и очередь.</li>
+                <li>Ассоциативные контейнеры. К ним относятся множества и карты.</li>
+                <li>Псевдоконтейнеры</li>
+            </ul>
+            <figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Контейнер</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>vector</td>
+                            <td>Динамический массив с возможностью автоматического изменения размера при добавлении и удалении элементов. Доступ к элементу массива осуществляется за константное время. Время вставки элемента середину в массив и удаление из середины массива — линейное. Добавление элемента в конец списка и удаление элемента из конца списка происходит за амортизированное константное время.</td>
+                        </tr>
+                        <tr>
+                            <td>list</td>
+                            <td>Двусвязный список. Поиск и доступ к элементу осуществляется за линейное время. Вставка и удаление осуществляется за константное время. В отличии от динамического массива, элементы не граничат друг с другом в памяти.</td>
+                        </tr>
+                        <tr>
+                            <td>deque</td>
+                            <td>Динамический массив с возможностью удаления / добавления элементов не только в конец массива, но и в начало.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figcaption>Контейнеры для хранения последовательностей</figcaption>
+            </figure>
+            <figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Контейнер</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>queue</td>
+                            <td>Контейнер, добавление элементов в котором осуществляется с одного конца контейнера, а чтение с другого. Реализует FIFO (first in first out) интерфейс.</td>
+                        </tr>
+                        <tr>
+                            <td>priority queue</td>
+                            <td>По сути queue, но организована с учетом приоритета элементов. На первом месте всегда стоит элемент с самым большим значением.</td>
+                        </tr>
+                        <tr>
+                            <td>stack</td>
+                            <td>Контейнер, добавление и чтение элементов в котором осуществляется с одного конца контейнера. Реализует LIFO (last in first out) интерфейс.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figcaption>Адаптеры</figcaption>
+            </figure>
+            <figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Контейнер</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>set</td>
+                            <td>Математическое (упорядоченное) множество. Обеспечивает уникальность хранимых элементов. Вставка / удаление элементов не влияет на работу итератора, указывающего на элементы такого множества. Реализован на основе самобалансирующегося дерева двоичного поиска.</td>
+                        </tr>
+                        <tr>
+                            <td>multiset</td>
+                            <td>По сути, set, но обеспечивает возможность хранения дубликатов.</td>
+                        </tr>
+                        <tr>
+                            <td>map</td>
+                            <td>Упорядоченный ассоциативный массив. Реализован в виде пар элементов, состоящих из ключей и соответствующих им значений. Ключи представляют собой set.</td>
+                        </tr>
+                        <tr>
+                            <td>multimap</td>
+                            <td>По сути, map, но обеспечивает возможность хранения элементов с дудблирующимися ключами.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figcaption>Ассоциативные контейнеры</figcaption>
+            </figure>
+            <figure>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Контейнер</th>
+                            <th>Описание</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>bitset</td>
+                            <td>Служит для хранения битовых масок. Похож на vector&lt;bool&gt; фиксированного размера. Размер фиксируется тогда, когда объявляется объект bitset. Итераторов в bitset нет. Оптимизирован по размеру памяти.</td>
+                        </tr>
+                        <tr>
+                            <td>valarray</td>
+                            <td>Служит для хранения числовых массивов и оптимизирован для достижения повышенной вычислительной производительности. В некоторой степени похож на vector, но в нём отсутствует большинство стандартных для контейнеров операций.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <figcaption>Псевдоконтейнеры</figcaption>
+            </figure>
+            <p>
+                При добавлении элемента в контейнер, происходит копирование элемента, и в контейнер попадает копия. Если копирование нежелательно, то используют контейнер указателей на элементы.
+            </p>
+            <h3>Итераторы</h3>
+            <p>
+                Итераторы в библиотеке STL используются в качестве посредников для доступа к содержимому контейнеров. Каждый контейнер использует конкретный итератор, который реализован учитываю специфику контейнера и содержит набор необходимых методов для доступа к содержимому контейнера. Условно, итераторы библиотеки STL можно разделить на следующие категории:
+            </p>
+            <ul>
+                <li>Однонаправленные итераторы. Обеспечивают доступ для чтения в одном направлении.</li>
+                <li>Двунаправленные итераторы. Обеспечивают доступ для записи в одном направлении.</li>
+                <li>Входные итераторы. Обеспечивают доступ для чтения и записи в одном направлении.</li>
+                <li>Выходные итераторы. Обеспечивают доступ для чтения и записи в обеих направлениях.</li>
+                <li>Итераторы для произвольного доступа. Эквивалентны обычным указателям: поддерживают арифметику указателей, синтаксис индексации массивов и все формы сравнения.</li>
+            </ul>
+            <p>
+                В итераторах реализован основной функционал, необходимый для работы с контейнерами: поиск, чтение, запись и навигация по хранимым в контейнерах объектам. Но часть операций быстрее выполняется методами контейнеров, ввиду специфической структуры некоторых из них. Например, поиск по ассоциативным контейнерам быстрее выполняется методами ассоциативных контейнеров, так как эти методы более оптимизированы под внутреннее устройство таких контейнеров.
+            </p>
+            <h3>Алгоритмы</h3>
+            <p>
+                В библиотеке STL реализовано множество алгоритмов, которые обеспечивают функции поиска и сортировки. Каждый из этих алгоритмов оптимизирован для работы с различными итераторами, и работает с контейнерами, которые предоставляют соответствующие интерфейсы для работы с итераторами.
+            </p>
+            <h3>Функциональные объекты (функторы)</h3>
+            <p>
+                Библиотека STL включает классы, которые перегружают оператор вызова функции <code>operator()</code>. Экземпляры таких классов называют функциональными объектами. Такой подход к созданию объектов позволяет использовать объект как функцию. Примером таких объектов являются генераторы, которые позволяют заполнить последовательность значениями.
+            </p>
+        </section>
+        <section>
+            <h2 id="custom_vector">Шаблонный список своими руками</h2>
+            <p>
+                Прежде чем приступить к более детальному знакомству с основными контейнерами библиотеки STL, давайте реализуем несложный контейнер. Реализуем динамический массив, аналог контейнера <code>vector</code>, но с минимальным функционалом.
+            </p>
+            <p>
+                Что необходимо реализовать? Напишем класс, объект которого будет хранить последовательность объектов произвольного типа, и которая будет представлена в виде массива, который может изменяться в размере. Также необходимо реализовать методы для добавления элементов в конец массива и удаления последнего элемента.
+            </p>
+            <p>
+                Прототип класса будет выглядеть следующим образом:
+            </p>
+            <div class="code file" data-file="CustomVector.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre><pre>29</pre><pre>30</pre><pre>31</pre><pre>32</pre><pre>33</pre></aside><code data-lang="c" data-file="CustomVector.cpp"><span class="directive">#ifndef CUSTOM_VECTOR_H</span>
+<span class="directive">#define CUSTOM_VECTOR_H</span>
+
+<span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include &lt;cstdlib&gt;</span>
+
+<span class="type">class <span class="function">OutOfMemoryException</span></span> {};
+<span class="type">class <span class="function">EmptyContainerException</span></span> {};
+
+<span class="keyword">template</span> &lt;<span class="type">class <span class="function">Type</span></span>&gt;
+<span class="type">class <span class="function">CustomVector</span></span> {
+    <span class="keyword">private</span>:
+        <span class="type">Type</span> *array;
+        size_t capacity;
+        size_t current;
+        <span class="type">static</span> <span class="type">double</span> multiplier;
+    <span class="keyword">public</span>:
+        <span class="function">CustomVector</span>();
+        <span class="function">~CustomVector</span>();
+
+        size_t <span class="function">max_size</span>() <span class="type">const</span>;
+        size_t <span class="function">size</span>() <span class="type">const</span>;
+
+        <span class="type">void</span> <span class="function">push_back</span>(<span class="type">const</span> Type&amp; elem);
+        <span class="type">Type</span> <span class="function">pop_back</span>();
+
+        <span class="type">const</span> Type&amp; operator[](size_t index) <span class="type">const</span>;
+};
+
+<span class="keyword">template</span> &lt;<span class="type">class <span class="function">Type</span></span>&gt;
+<span class="type">double</span> CustomVector&lt;Type&gt;::multiplier = <span class="number">1.05</span>;
+
+<span class="directive">#endif <span class="comment">//CUSTOM_VECTOR_H</span></span></code></div>
+            <p>
+                Атрибут <code>multiplier</code> необходим для избежания перевыделения памяти на один элемент. Перевыделение памяти — довольно затратная операция, поэтому пользоваться ею при каждом добавлении элемента — непозволительная роскошь. Куда более логично увеличивать объем задействованой под хранение последовательности памяти на некоторое количество процентов от общего количества. В нашем случае, при необходимости увеличить размер массива, количество памяти выделенное под массив будет увеличиваться на пять процентов.
+            </p>
+            <p>
+                Приступим к реализации. Для начала реализуем конструктор и деструктор:
+            </p>
+            <div class="code file" data-file="CustomVector.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre></aside><code data-lang="c" data-file="CustomVector.cpp"><span class="function">CustomVector</span>() : <span class="function">capacity</span>(<span class="number">100</span>), <span class="function">current</span>(<span class="number">0</span>) {
+    array = (Type*)<span class="function">malloc</span>(capacity*<span class="function">sizeof</span>(Type));
+    <span class="keyword">if</span> ( array == NULL ) {
+        throw <span class="keyword">new</span> <span class="function">OutOfMemoryException</span>();
+    }
+}
+<span class="function">~CustomVector</span>() {
+    <span class="function">free</span>(array);
+}</code></div>
+            <p>
+                Реализуем геттеры и перегрузим <code>operator[]</code>:
+            </p>
+            <div class="code file" data-file="CustomVector.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre></aside><code data-lang="c" data-file="CustomVector.cpp">size_t <span class="function">max_size</span>() <span class="type">const</span> {
+    <span class="keyword">return</span> capacity;
+}
+size_t <span class="function">size</span>() <span class="type">const</span> {
+    <span class="keyword">return</span> current;
+}
+<span class="type">const</span> Type&amp; operator[](size_t index) <span class="type">const</span> {
+    <span class="keyword">return</span> array[index];
+}</code></div>
+            <p>
+                Прежде чем реализовать добавление элементов в конец списка, необходимо вспомнить, что мы выделяем память динамически. Это значит, что необходимого количества памяти одним куском нам могут не дать. Это, в свою очередь, означает, что нам необходимо позаботиться о сохранности уже имеющихся атрибутов и обеспечить их корректное изменение. Приступим:
+            </p>
+            <div class="code file" data-file="CustomVector.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre></aside><code data-lang="c" data-file="CustomVector.cpp"><span class="type">void</span> <span class="function">push_back</span>(<span class="type">const</span> Type&amp; elem) {
+    size_t newCurrent = current + <span class="number">1</span>;
+
+    <span class="keyword">if</span> ( newCurrent == capacity ) {
+        size_t newCapacity = capacity * multiplier;
+        Type* newArray = (Type*)<span class="function">realloc</span>(array, newCapacity*<span class="function">sizeof</span>(Type));
+
+        <span class="keyword">if</span> ( array == NULL ) {
+            throw <span class="keyword">new</span> <span class="function">OutOfMemoryException</span>();
+        }
+        capacity = newCapacity;
+        array = newArray;
+    }
+    array[current] = elem;
+    current = newCurrent;
+}</code></div>
+            <p>
+                Дело за малым — реализовать метод для удаления элементов. Осталось определиться: целесообразно ли освобождать память после каждого удаления элемента? Видимо, нет. Все, что необходимо сделать, это уменьшать значение атрибута, который указывает на последний значащий элемент массива. При этом память не освобождается, дабы при добавлении элемента не выделять ее снова. Если уж возникнет необходимость освободить часть памяти — для этого нужно будет написать отдельный метод. Реализуем метод для удаление элемента:
+            </p>
+            <div class="code file" data-file="CustomVector.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre></aside><code data-lang="c" data-file="CustomVector.cpp"><span class="type">Type</span> <span class="function">pop_back</span>() {
+    <span class="keyword">if</span> ( current == <span class="number">0</span> ) {
+        throw <span class="keyword">new</span> <span class="function">EmptyContainerException</span>();
+    }
+    current -= <span class="number">1</span>;
+    <span class="keyword">return</span> array[current];
+}</code></div>
+            <p>
+                Почему метод <code>pop_back()</code> имеет тип <code>Type</code> и возвращает элемент? Для того, чтобы мы могли запомнить значение удаленного элемента и при необходимости использовать его, либо вернуть в массив. В принципе, наш контейнер готов. Проверим насколько корректно он работает:
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include <span class="string">"CustomVector.cpp"</span></span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    CustomVector&lt;std::string&gt;* lst = <span class="keyword">new</span> CustomVector&lt;std::string&gt;();
+
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"alpha"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"bravo"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"charlie"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"delta"</span>);
+
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="number">0</span>; i &lt; lst-&gt;<span class="function">size</span>(); i++ ) {
+        std::cout &lt;&lt; (*lst)[i] &lt;&lt; std::endl;
+    }
+
+    std::cout &lt;&lt; <span class="string">"--------"</span> &lt;&lt; std::endl;
+
+    lst-&gt;<span class="function">pop_back</span>();
+    lst-&gt;<span class="function">pop_back</span>();
+
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="number">0</span>; i &lt; lst-&gt;<span class="function">size</span>(); i++ ) {
+        std::cout &lt;&lt; (*lst)[i] &lt;&lt; std::endl;
+    }
+
+    <span class="keyword">delete</span> lst;
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                В результате работы получим следующий результат:
+            </p>
+            <pre>alpha
+bravo
+charlie
+delta
+--------
+alpha
+bravo</pre>
+            <p>
+                Наш простой шаблонный контейнер работает корректно. Как показала практика такой контейнер несложен в реализации и требует небольших затрат времени, базового понимания динамического выделения памяти и объектно-ориентированного программирования. Теперь, после знакомства с созданием шаблонного контейнера — самое время приступить к освоению стандартной библиотеки шаблонов.
+            </p>
+        </section>
+        <section>
+            <h2 id="vector">Шаблонный список: vector</h2>
+            <p>
+                Контейнер представлен в виде динамического массива, предназначенного для хранения элементов произвольного типа. Массив автоматически изменяется в размере при добавлении и удалении элементов.
+            </p>
+            <p>
+                Как и массив, <code>vector</code> располагает хранимые элементы в памяти последовательно друг за другом. Доступ к элементам осуществляется при помощи использования отступа от указателя на начало массива. <code>Vector</code> использует память, которая выделяется динамически.
+            </p>
+            <p>
+                <a href="http://www.cplusplus.com/reference/vector/vector/">Подробнее о функционале контейнера vector.</a>
+            </p>
+            <p>
+                Использовать этот контейнер достаточно просто. Давайте вспомним написаный нами динамический массив. Воспользуемся примером использования нашего массива, но вместо <code>CustomVector</code> подключим <code>std::vector</code> и создадим экземпляр контейнера при помощи его конструктора.
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include &lt;vector&gt;</span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    std::vector&lt;std::string&gt;* lst = <span class="keyword">new</span> std::vector&lt;std::string&gt;();
+
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"alpha"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"bravo"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"charlie"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"delta"</span>);
+
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="number">0</span>; i &lt; lst-&gt;<span class="function">size</span>(); i++ ) {
+        std::cout &lt;&lt; (*lst)[i] &lt;&lt; std::endl;
+    }
+
+    std::cout &lt;&lt; <span class="string">"--------"</span> &lt;&lt; std::endl;
+
+    lst-&gt;<span class="function">pop_back</span>();
+    lst-&gt;<span class="function">pop_back</span>();
+
+    <span class="keyword">for</span> ( <span class="type">int</span> i = <span class="number">0</span>; i &lt; lst-&gt;<span class="function">size</span>(); i++ ) {
+        std::cout &lt;&lt; (*lst)[i] &lt;&lt; std::endl;
+    }
+
+    <span class="keyword">delete</span> lst;
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                Результат работы <code>vector</code> будет идентичен нашему:
+            </p>
+            <pre>alpha
+bravo
+charlie
+delta
+--------
+alpha
+bravo</pre>
+            <p>
+                Как показывает практика использовать контейнер <code>vector</code> из библиотеки стандартных шаблонов — чрезвычайно сложная задача.
+            </p>
+        </section>
+        <section>
+            <h2 id="custom_list">Связный список своими руками</h2>
+            <p>
+                Перейдем к следующему шагу. Тем более, что мы уже знакомы с контейнером vector, и даже сумели написать собственную версию оного. Следующей чрезвычайно сложной задачей будет связный список.
+            </p>
+            <p>
+                Что такое связный список? По сути, связный список можно назвать контейнером, хотя правильнее будет воспринимать связный скписок как последовательность объектов, связанных друг с другом.
+            </p>
+            <p>
+                Для реализации этой задачи, нам необходимо реализовать несколько классов: класс для хранения элемента последовательности (Item), класс-обработчик для последовательности (List), итератор для навигации по последовательности (Iterator). Напишем самую базовую реализацию с минимально возможным функционалом.
+            </p>
+            <p>
+                Начнем, пожалуй с реализации контейнера. Что должен такой контейнер делать? Видимо, необходимый минимум будет заключаться в возможности таковой контейнер создать, возможности добавлять и связывать элементы и возможности уничтожить контейнер со всеми хранимыми элементами. Плюс, контейнер всегда обязан ориентироваться на местности и уметь находить последний элемент хранимой последовательности, чтобы передать эту информацию итератору. Класс-обработчик (контейнер) будет выглядеть следующим образом:
+            </p>
+            <div class="code file" data-file="List.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre><pre>29</pre><pre>30</pre><pre>31</pre><pre>32</pre><pre>33</pre><pre>34</pre><pre>35</pre><pre>36</pre><pre>37</pre><pre>38</pre><pre>39</pre><pre>40</pre><pre>41</pre><pre>42</pre></aside><code data-lang="c" data-file="List.cpp"><span class="directive">#ifndef LIST_CPP</span>
+<span class="directive">#define LIST_CPP</span>
+
+<span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include <span class="string">"Item.cpp"</span></span>
+<span class="directive">#include <span class="string">"Iterator.cpp"</span></span>
+
+<span class="keyword">template</span> &lt;<span class="type">class <span class="function">Type</span></span>&gt;
+<span class="type">class <span class="function">List</span></span> {
+    <span class="keyword">public</span>:
+        Item&lt;Type&gt;* last;
+        size_t size;
+
+        <span class="function">List</span>() : <span class="function">last</span>(NULL), <span class="function">size</span>(<span class="number">0</span>) {}
+        <span class="function">~List</span>() {
+            <span class="keyword">for</span> ( ; last != NULL; ) {
+                Item&lt;Type&gt;* prevItem = last-&gt;prev;
+
+                <span class="keyword">delete</span> last;
+                last = prevItem;
+                size -= <span class="number">1</span>;
+            }
+        }
+
+        <span class="type">void</span> <span class="function">append</span>(Item&lt;Type&gt;* item) {
+            <span class="keyword">if</span> ( last == NULL ) {
+                last = item;
+            } <span class="keyword">else</span> {
+                last-&gt;next = item;
+                item-&gt;prev = last;
+                last = item;
+            }
+            size += <span class="number">1</span>;
+        }
+        <span class="type">void</span> <span class="function">append</span>(Type value) {
+            Item&lt;Type&gt;* item = <span class="keyword">new</span> Item&lt;Type&gt;(value);
+
+            <span class="keyword">this</span>-&gt;<span class="function">append</span>(item);
+        }
+};
+
+<span class="directive">#endif <span class="comment">// LIST_CPP</span></span></code></div>
+            <p>
+                Сложно, не правда ли? Пришлось действительно мощно попрограммировать. Теперь напишем обертку для хранимых элементов. Что необходимо реализовать? Аж три вещи: хранилище для значения и два указателя на соседние элементы. Этот сложный класс будет выглядеть следующим образом:
+            </p>
+            <div class="code file" data-file="Item.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre></aside><code data-lang="c" data-file="Item.cpp"><span class="directive">#ifndef ITEM_CPP</span>
+<span class="directive">#define ITEM_CPP</span>
+
+<span class="directive">#include &lt;iostream&gt;</span>
+
+<span class="keyword">template</span> &lt;<span class="type">class <span class="function">Type</span></span>&gt;
+<span class="type">class <span class="function">Item</span></span> {
+    <span class="keyword">public</span>:
+        <span class="type">Type</span> value;
+        Item* prev;
+        Item* next;
+
+        <span class="function">Item</span>(Type value) : <span class="function">value</span>(value), <span class="function">prev</span>(NULL), <span class="function">next</span>(NULL) {};
+};
+
+<span class="directive">#endif <span class="comment">// ITEM_CPP</span></span></code></div>
+            <p>
+                Настала очередь итератора. Вы знакомы с принципами и логикой работы итераторов, поэтому я не буду повторять очевидные для вас истины. Просто напишем несложный класс учитывая специфику задачи, которую мы перед собой поставили:
+            </p>
+            <div class="code file" data-file="Iterator.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre><pre>29</pre><pre>30</pre><pre>31</pre><pre>32</pre><pre>33</pre><pre>34</pre><pre>35</pre><pre>36</pre><pre>37</pre><pre>38</pre><pre>39</pre><pre>40</pre><pre>41</pre><pre>42</pre><pre>43</pre><pre>44</pre><pre>45</pre><pre>46</pre><pre>47</pre><pre>48</pre><pre>49</pre><pre>50</pre><pre>51</pre><pre>52</pre><pre>53</pre><pre>54</pre><pre>55</pre></aside><code data-lang="c" data-file="Iterator.cpp"><span class="directive">#ifndef ITERATOR_CPP</span>
+<span class="directive">#define ITERATOR_CPP</span>
+
+<span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include <span class="string">"Item.cpp"</span></span>
+
+<span class="keyword">template</span> &lt;<span class="type">class <span class="function">Type</span></span>&gt;
+<span class="type">class <span class="function">Iterator</span></span> {
+    <span class="keyword">private</span>:
+        Item&lt;Type&gt;* current;
+
+    <span class="keyword">public</span>:
+        <span class="function">Iterator</span>(Item&lt;Type&gt;* item) : <span class="function">current</span>(item) {}
+
+        <span class="type">void</span> <span class="function">next</span>() {
+            <span class="keyword">if</span> ( current-&gt;next != NULL ) {
+                current = current-&gt;next;
+            }
+        }
+        <span class="type">void</span> operator++() {
+            <span class="keyword">this</span>-&gt;<span class="function">next</span>();
+        }
+        <span class="type">void</span> operator++(<span class="type">int</span>) {
+            <span class="keyword">this</span>-&gt;<span class="function">next</span>();
+        }
+
+        <span class="type">void</span> <span class="function">prev</span>() {
+            <span class="keyword">if</span> ( current-&gt;prev != NULL ) {
+                current = current-&gt;prev;
+            }
+        }
+        <span class="type">void</span> operator--() {
+            <span class="keyword">this</span>-&gt;<span class="function">prev</span>();
+        }
+        <span class="type">void</span> operator--(<span class="type">int</span>) {
+            <span class="keyword">this</span>-&gt;<span class="function">prev</span>();
+        }
+
+        <span class="type">void</span> <span class="function">begin</span>() {
+            <span class="keyword">for</span> ( ; current-&gt;prev != NULL; current = current-&gt;prev );
+        }
+        <span class="type">void</span> <span class="function">end</span>() {
+            <span class="keyword">for</span> ( ; current-&gt;next != NULL; current = current-&gt;next );
+        }
+
+        <span class="type">Type</span> operator*() <span class="type">const</span> {
+            <span class="keyword">return</span> current-&gt;value;
+        }
+
+        <span class="type">bool</span> <span class="function">isOver</span>() {
+            <span class="keyword">return</span> current-&gt;next == NULL;
+        }
+};
+
+<span class="directive">#endif <span class="comment">// ITERATOR_CPP&lt;</span></span></code></div>
+            <p>
+                Готово. Самое время провести полевые испытания. Код будет не очень сложным:
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include <span class="string">"List.cpp"</span></span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    List&lt;std::string&gt;* list = <span class="keyword">new</span> List&lt;std::string&gt;();
+
+    list-&gt;<span class="function">append</span>(<span class="string">"alpha"</span>);
+    list-&gt;<span class="function">append</span>(<span class="string">"bravo"</span>);
+    list-&gt;<span class="function">append</span>(<span class="string">"charlie"</span>);
+    list-&gt;<span class="function">append</span>(<span class="string">"delta"</span>);
+
+    Iterator&lt;std::string&gt; <span class="function">it</span>(list-&gt;last);
+
+    it.<span class="function">begin</span>();
+    <span class="keyword">for</span> ( ; !it.<span class="function">isOver</span>(); it++ ) {
+        std::cout &lt;&lt; *it &lt;&lt; std::endl;
+    }
+    std::cout &lt;&lt; *it &lt;&lt; std::endl;
+
+    <span class="keyword">delete</span> list;
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                После компиляции и запуска результат работы этого кода не должен нас удивить:
+            </p>
+            <pre>alpha
+bravo
+charlie
+delta</pre>
+            <p>
+                Я думаю, ни у кого не возникло вопросов по поводу использования шаблонов. И будет удивительно, если вышеизложенный код вызвал трудности в понимании. Поэтому делаю вывод, что написать простой контейнер, будь то динамический массив или связный список, достаточно тривиальная задача.
+            </p>
+        </section>
+        <section>
+            <h2 id="list">Связные списки: list, stack, queue</h2>
+            <h3>list</h3>
+            <p>
+                Контейнер <code>list</code> представляет из себя хранилище для элементов с возможность их добавления и удаления за константное время. <code>List</code> похож на другие контейнеры библиотеки стандартных шаблонов STL, такие как <code>vector</code>, <code>array</code> и <code>deque</code>. Основными отличиями контейнера <code>list</code> являются более высокая производительность при добавлении, удалении и перемещении элементов, а так же то, что хранимые элементы в контейнере <code>list</code> не граничат друг с другом в памяти.
+            </p>
+            <p>
+                Использовать контейнер <list>list</list> невероятно сложно:
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include &lt;list&gt;</span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    std::list&lt;std::string&gt;* lst = <span class="keyword">new</span> std::list&lt;std::string&gt;();
+
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"alpha"</span>);
+    lst-&gt;<span class="function">push_back</span>(<span class="string">"bravo"</span>);
+
+    lst-&gt;<span class="function">push_front</span>(<span class="string">"charlie"</span>);
+    lst-&gt;<span class="function">push_front</span>(<span class="string">"delta"</span>);
+
+    std::list&lt;std::string&gt;::iterator it;
+
+    <span class="keyword">for</span> ( it = lst-&gt;<span class="function">begin</span>(); it != lst-&gt;<span class="function">end</span>(); it++ ) {
+        std::cout &lt;&lt; *it &lt;&lt; std::endl;
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                В результате получим:
+            </p>
+            <pre>delta
+charlie
+alpha
+bravo</pre>
+            <p>
+                <a href="http://www.cplusplus.com/reference/list/list/">Подробнее о функционале контейнера list</a>.
+            </p>
+            <h3>stack</h3>
+            <p>
+                <code>Stack</code> — адаптер, реализованный специально для представления <a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D0%BA">LIFO (last-in first-out) последовательности</a>. <code>Stack</code> имеет довольно ограниченный функционал и поддерживает операции:
+            </p>
+            <ul>
+                <li>back</li>
+                <li>push_back</li>
+                <li>pop_back</li>
+            </ul>
+            <p>
+                <a href="http://www.cplusplus.com/reference/stack/stack/">Подробнее о функционале контейнера stack</a>.
+            </p>
+            <h3>queue</h3>
+            <p>
+                <code>Queue</code> — адаптер, реализованный специально для представления <a href="http://ru.wikipedia.org/wiki/%D0%9E%D1%87%D0%B5%D1%80%D0%B5%D0%B4%D1%8C_(%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)">FIFO (first-in first-out) последовательности</a>. <code>Queue</code> имеет довольно ограниченный функционал и поддерживает операции:
+            </p>
+            <ul>
+                <li>front</li>
+                <li>back</li>
+                <li>push_back</li>
+                <li>pop_front</li>
+            </ul>
+            <p>
+                <a href="http://www.cplusplus.com/reference/queue/queue/">Подробнее о функционале контейнера queue</a>.
+            </p>
+        </section>
+        <section>
+            <h2 id="set">Множества: set</h2>
+            <p>
+                Контейнер <code>set</code> — это последовательность уникальных элементов, хранимых в соответствии с установленым порядком.
+            </p>
+            <p>
+                Реализован <code>set</code> на основе <a href="http://ru.wikipedia.org/wiki/%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE-%D1%87%D1%91%D1%80%D0%BD%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE">бинарного дерева поиска</a>.
+            </p>
+            <p>
+                Применим <code>set</code>:
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre><pre>22</pre><pre>23</pre><pre>24</pre><pre>25</pre><pre>26</pre><pre>27</pre><pre>28</pre><pre>29</pre><pre>30</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include &lt;set&gt;</span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    std::set&lt;std::string&gt;* lst = <span class="keyword">new</span> std::set&lt;std::string&gt;();
+
+    lst-&gt;<span class="function">insert</span>(<span class="string">"delta"</span>);
+    lst-&gt;<span class="function">insert</span>(<span class="string">"charlie"</span>);
+    lst-&gt;<span class="function">insert</span>(<span class="string">"alpha"</span>);
+    lst-&gt;<span class="function">insert</span>(<span class="string">"bravo"</span>);
+    lst-&gt;<span class="function">insert</span>(<span class="string">"ololo"</span>);
+
+
+    <span class="comment">//добавим элемент, который имеется в контейнере</span>
+    lst-&gt;<span class="function">insert</span>(<span class="string">"alpha"</span>);
+
+    <span class="comment">//удалим элемент из контейнера</span>
+    lst-&gt;<span class="function">erase</span>(<span class="string">"ololo"</span>);
+
+    <span class="comment">//удалим элемент, которого нет в контейнере</span>
+    lst-&gt;<span class="function">erase</span>(<span class="string">"trololo"</span>);
+
+    std::set&lt;std::string&gt;::iterator it;
+
+    <span class="keyword">for</span> ( it = lst-&gt;<span class="function">begin</span>(); it != lst-&gt;<span class="function">end</span>(); it++ ) {
+        std::cout &lt;&lt; *it &lt;&lt; std::endl;
+    }
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                Получим следующий результат:
+            </p>
+            <pre>alpha
+bravo
+charlie
+delta</pre>
+            <p>
+                Результат свидетельствует о том, что элементы в контейнере <code>set</code> хранятся упорядоченно и соблюдается уникальность значений хранимых элементов.
+            </p>
+            <p>
+                <a href="http://www.cplusplus.com/reference/set/set/">Подробнее о функционале контейнера set</a>.
+            </p>
+        </section>
+        <section>
+            <h2 id="map">Ассоциативный массив: map</h2>
+            <p>
+                Контейнер <code>map</code> представляет собой <a href="http://ru.wikipedia.org/wiki/%D0%90%D1%81%D1%81%D0%BE%D1%86%D0%B8%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9_%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2">ассоциативный массив</a>. Элементы в <code>map</code> хранятся в виде связки "ключ-значение" в соответствии с установленным порядком.
+            </p>
+            <p>
+                Ключи в контейнере <code>map</code> реализованы на основе <a href="http://ru.wikipedia.org/wiki/%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE-%D1%87%D1%91%D1%80%D0%BD%D0%BE%D0%B5_%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE">бинарного дерева поиска</a> и, по сути, представляют из себя <code>set</code>.
+            </p>
+            <div class="code file" data-file="main.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre><pre>8</pre><pre>9</pre><pre>10</pre><pre>11</pre><pre>12</pre><pre>13</pre><pre>14</pre><pre>15</pre><pre>16</pre><pre>17</pre><pre>18</pre><pre>19</pre><pre>20</pre><pre>21</pre></aside><code data-lang="c" data-file="main.cpp"><span class="directive">#include &lt;iostream&gt;</span>
+<span class="directive">#include &lt;map&gt;</span>
+
+<span class="type">int</span> <span class="function">main</span>() {
+    std::map&lt;<span class="type">int</span>, std::string&gt;* lst = <span class="keyword">new</span> std::map&lt;<span class="type">int</span>, std::string&gt;();
+
+    lst-&gt;<span class="function">insert</span>(std::pair&lt;<span class="type">int</span>, std::string&gt;(<span class="number">4</span>, <span class="string">"delta"</span>));
+    lst-&gt;<span class="function">insert</span>(std::pair&lt;<span class="type">int</span>, std::string&gt;(<span class="number">3</span>, <span class="string">"charlie"</span>));
+    lst-&gt;<span class="function">insert</span>(std::pair&lt;<span class="type">int</span>, std::string&gt;(<span class="number">1</span>, <span class="string">"alpha"</span>));
+    lst-&gt;<span class="function">insert</span>(std::pair&lt;<span class="type">int</span>, std::string&gt;(<span class="number">2</span>, <span class="string">"bravo"</span>));
+
+    std::map&lt;<span class="type">int</span>, std::string&gt;::iterator it;
+
+    <span class="keyword">for</span> ( it = lst-&gt;<span class="function">begin</span>(); it != lst-&gt;<span class="function">end</span>(); it++ ) {
+        std::cout &lt;&lt; <span class="string">"key = "</span> &lt;&lt; it-&gt;first &lt;&lt; <span class="string">", value = "</span> &lt;&lt; it-&gt;second &lt;&lt; std::endl;
+    }
+
+    <span class="keyword">delete</span> lst;
+
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</code></div>
+            <p>
+                Результат работы программы будет следующий:
+            </p>
+            <pre>key = 1, value = alpha
+key = 2, value = bravo
+key = 3, value = charlie
+key = 4, value = delta</pre>
+            <p>
+                Вы могли заметить, что для добавления значения в контейнер использовался <code>std::pair</code>. Что же это такое? <code>std::pair</code>(пара) — это шаблон из библиотеки STL, предназначенный для хранения пар разнородных значений. Реализация пары выглядит следующим образом:
+            </p>
+            <div class="code file" data-file="pair.cpp"><aside><pre>1</pre><pre>2</pre><pre>3</pre><pre>4</pre><pre>5</pre><pre>6</pre><pre>7</pre></aside><code data-lang="c" data-file="pair.cpp"><span class="keyword">template</span> &lt;<span class="type">class <span class="function">T1</span></span>, <span class="type">class <span class="function">T2</span></span>&gt;
+<span class="keyword">struct</span> pair {
+    <span class="type">T1</span> first;
+    <span class="type">T2</span> second;
+    <span class="function">pair</span>() {}
+    <span class="function">pair</span>(<span class="type">const</span> T1&amp; x, <span class="type">const</span> T2&amp; y) : <span class="function">first</span>(x), <span class="function">second</span>(y) {}
+};</code></div>
+            <p>
+                <a href="http://www.cplusplus.com/reference/map/map/">Подробнее о функционале контейнера map</a>.
+            </p>
+        </section>
+        <footer>
+            <address>
+                Автор caiman.
+            </address>
+            <time datetime="2014-02-10">16.04.2014</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="./4 STL. Контейнеры_files/code.js"></script>
+
+</body></html>
