@@ -12,8 +12,8 @@ class BaseState {
         int maxHP;
         bool isVampire;
     public:
-        BaseState();
         BaseState(std::string title, int hp);
+        BaseState(std::string title, int hp, int maxHP);
         virtual ~BaseState();
         
         bool checkIfDead();

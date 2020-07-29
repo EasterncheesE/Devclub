@@ -37,6 +37,20 @@ int Unit::getDMG() {
     return this->_attack->getPhysDMG();
 }
 
+BaseState* Unit::getState() {
+    return this->_state;
+}
+
+BaseAttack* Unit::getAttack() {
+    return this->_attack;
+}
+void Unit::setState(BaseState* newState) {
+    this->_state = newState;
+}
+
+void Unit::setAttack(BaseAttack* newAttack) {
+    this->_attack = newAttack;
+}
 bool Unit::getIsVampire() {
     return this->_state->getIsVampire();
 }

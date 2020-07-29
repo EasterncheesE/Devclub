@@ -20,15 +20,22 @@ class Unit {
         Unit(std::string title, int hp, int physDMG);
         virtual ~Unit();
         
+        bool checkIfDead();
+        
         std::string getTitle();
         int getHP();
         int getMaxHP();
         int getDMG();
         
+        BaseState* getState();
+        BaseAttack* getAttack();
+        void setState(BaseState* newState);
+        void setAttack(BaseAttack* newAttack);
+        
         bool getIsVampire();
         void setIsVampire();
         
-        bool checkIfDead();
+
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

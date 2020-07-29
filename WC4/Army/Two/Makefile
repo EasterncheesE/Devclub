@@ -6,6 +6,8 @@ OBJECTS=$(SOURCES:.cpp=.o)
 EXEC=a.out
 
 all: $(EXEC)
+	clear
+	clear
 	./a.out
 
 $(EXEC): $(OBJECTS)

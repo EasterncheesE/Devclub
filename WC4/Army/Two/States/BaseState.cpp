@@ -6,6 +6,11 @@ BaseState::BaseState(std::string title, int hp) {
     this->maxHP = hp;
     this->isVampire = false;
 }
+BaseState::BaseState(std::string title, int hp, int maxHP) {
+    this->title = title;
+    this->HP = hp;
+    this->maxHP = maxHP;
+}
 BaseState::~BaseState() {}
 
 bool BaseState::checkIfDead() {

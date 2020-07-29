@@ -4,7 +4,8 @@ VampireAttack::VampireAttack(Unit* owner, int dmg) : BaseAttack(owner, dmg) {}
 VampireAttack::~VampireAttack() {}
 
 void VampireAttack::attack(Unit* target) {
-    int randomN = rand() % 1 + 1;
+    int randomN = rand() % 20 + 1;
+    std::cout << "Vampire roll = " << randomN << std::endl;
     // CHECK IF BOTH TARGET AND ATTACKER ARE ALIVE
     if ( owner->checkIfDead() ) {
         std::cout << owner->getTitle() << " is dead and cannot attack." << std::endl;
@@ -19,19 +20,19 @@ void VampireAttack::attack(Unit* target) {
     //VAMPIRE HEALING
     if ( target->getHP() < this->dmg/4 ) {
         this->owner->addHP(target->getHP());
-        std::cout << "Vampire healed for " << target->getHP() << " hitpoints." << std::endl;
+        std::cout << "Vampire " << this->owner->getTitle() << " healed for " << target->getHP() << " hitpoints." << std::endl;
     } else {
-        std::cout << "Vampire healed for " << this->dmg*0.25 << " hitpoints." << std::endl;
+        std::cout << "Vampire " << this->owner->getTitle() << " healed for " <<  this->dmg*0.25 << " hitpoints." << std::endl;
         this->owner->addHP(this->dmg/4);
     
-    // //TURNING INTO VAMPIRE
-    // if ( randomN == 1 && target->getIsVampire() == false ) {
-    //     std::string title = target->getTitle();
-    //     delete(target);
-    //     target = new Vampire(title, 750, 200);
-    //     std::cout << "Unit " << target->getTitle() << " was turned into vampire." << std::endl;
-    //     std::cout << *target << std::endl;
-    // }
+    //TURNING INTO VAMPIRE
+    if ( randomN == 20 && target->getIsVampire() == false ) {
+        target->setState(new VampireState(target->getTitle(), target->getHP(), target->getMaxHP()));
+        target->setAttack(new VampireAttack(target, target->getDMG()));
+        target->setIsVampire();
+        std::cout << "Unit " << target->getTitle() << " was turned into vampire!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!." << std::endl;
+        std::cout << *target << std::endl;
+    }
     
     
     // TARGET DAMAGE AND COUNTERATTACK
@@ -53,9 +54,9 @@ void VampireAttack::counterAttack(Unit* target) {
     //VAMPIRE HEALING
     if ( target->getHP() < this->dmg/8 ) {
         this->owner->addHP(target->getHP());
-        std::cout << "Vampire healed for " << target->getHP() << " hitpoints." << std::endl;
+        std::cout << "Vampire " << this->owner->getTitle() << " healed for " << target->getHP() << " hitpoints." << std::endl;
     } else {
-        std::cout << "Vampire healed for " << this->dmg*0.25 << " hitpoints." << std::endl;
+        std::cout << "Vampire " << this->owner->getTitle() << " healed for " << this->dmg*0.25 << " hitpoints." << std::endl;
         this->owner->addHP(this->dmg/8);
     }
     target->takeDMG(this->dmg/2);
