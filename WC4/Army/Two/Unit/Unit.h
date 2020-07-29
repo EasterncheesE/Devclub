@@ -25,6 +25,9 @@ class Unit {
         int getMaxHP();
         int getDMG();
         
+        bool getIsVampire();
+        void setIsVampire();
+        
         bool checkIfDead();
         
         virtual void attack(Unit* target);

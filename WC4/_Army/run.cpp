@@ -4,8 +4,8 @@
 int main() {
     BaseState* s1 = new BaseState(100, 25, "Bob");
     BaseState* s2 = new BaseState(100, 25, "Kolyan");
-    Unit* u1 = new Unit(s1);
-    Unit* u2 = new Unit(s2);
+    Unit& u1 = new Unit(s1);
+    Unit& u2 = new Unit(s2);
     
     std::cout << *u1 << std::endl;
     std::cout << *u2 << std::endl;

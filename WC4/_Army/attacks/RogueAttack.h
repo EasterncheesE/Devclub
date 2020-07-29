@@ -8,7 +8,7 @@ Class RogueAttack : public BaseAttack {
         RogueAttack();
         virtual ~RogueAttack();
         
-        virtual void attack(Unit* attacker, Unit* enemy);
+        virtual void attack(Unit& attacker, Unit& enemy);
 }
 
 #endif // ROGUEATTACH_H
