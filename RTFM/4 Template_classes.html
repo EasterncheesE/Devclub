@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)https://dl.dropboxusercontent.com/u/39737183/%20articles/index.html -->
+<html lang="ru"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Мои мысли по реализации на C++</title>
+    
+    <link rel="stylesheet" href="./4 Мои мысли по реализации на C++_files/default.css">
+    <link rel="stylesheet" href="./4 Мои мысли по реализации на C++_files/prism.css">
+    <script src="./4 Мои мысли по реализации на C++_files/prism.js"></script>
+<style></style></head>
+<body>
+    <article class="page">
+        <h1>Мои мысли по реализации на C++</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/index.html#obj">Объект как примитив</a></li>
+                    <li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/index.html#tests">Тестирование</a>
+                    </li><li><a href="https://dl.dropboxusercontent.com/u/39737183/%20articles/index.html#exceptions">Исключения</a>
+                </li></ol>
+            </div>
+            <div class="links">
+                <h2>Оглавление</h2>
+                <ol>
+                    <li>Мои мысли по реализации на C++</li>
+                </ol>
+            </div>
+        </aside>
+        <section>
+            <h2 id="obj">Объект как примитив</h2>
+            <p>
+                То, что я вам покажу - не руководство к действию и не "единственно правильное решение". Я просто хочу немного расширить ваш инструментарий одним очень интересным приемом. Допустим, мы имеем некоторое свойство объекта, значение которого всегда должно соответствовать определенному набору условий. Чтобы не придумывать пример специально, давайте рассмотрим свойство класса Unit, которое хранит число - количество очков здоровья юнита. В реализации класса мы должны следить за тем, чтобы количество очков здоровья юнита не превышало определенный лимит и не становилось меньше ноля. Классическая реализация:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Unit</span> <span class="token punctuation">{</span>
+    <span class="token keyword">protected</span><span class="token operator">:</span>
+        <span class="token keyword">int</span> hitPoints<span class="token punctuation">;</span>
+        <span class="token keyword">int</span> hitPointsLimit<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// other properties</span>
+
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token function">getHitPoints</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">int</span> <span class="token function">getHitPointsLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">void</span> <span class="token function">addHitPoints</span><span class="token punctuation">(</span><span class="token keyword">int</span> hp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token function">reduceHitPoints</span><span class="token punctuation">(</span><span class="token keyword">int</span> hp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// other methods</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                Затем мы добиваемся выполнения всех необходимых условий:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token keyword">void</span> Unit<span class="token operator">::</span><span class="token function">addHitPoints</span><span class="token punctuation">(</span><span class="token keyword">int</span> hp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">+</span> hp<span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> result <span class="token operator">&gt;</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPointsLimit <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPointsLimit<span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">=</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">void</span> Unit<span class="token operator">::</span><span class="token function">reduceHitPoints</span><span class="token punctuation">(</span><span class="token keyword">int</span> hp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> hp <span class="token operator">&gt;</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">-</span><span class="token operator">=</span> hp<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                Взаимодействие с объектом выглядит следующим образом:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp">unit<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">addHitPoints</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+unit<span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">reduceHitPoints</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+            <p>
+                И это вполне нормальное решение. Но что, если у юнита может быть несколько таких полей: очки здоровья, запас энергия, расстояние, которое он может пройти за ход, запас маны. Понятно, что все вполне красиво реализуется: общий функционал выносится в отдельные методы, пишутся более разумные классы исключений и т.д. Но я хочу рассмотреть и альтернативное решение. Что если у нас будет некий класс, который будет вести себя как самый обыкновенный примитив, но при этом учитывать все требования к значениям? К примеру выглядеть это будет так:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">Unit</span> <span class="token punctuation">{</span>
+    <span class="token keyword">protected</span><span class="token operator">:</span>
+        Field hitPoints<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// other properties</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                Этому классу не нужны геттеры и сеттеры, поскольку валидация будет реализована во время переопределения операторов. И взаимодействие с объектом будет выглядеть следующим образом:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp">unit<span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+unit<span class="token operator">-</span><span class="token operator">&gt;</span>hitPoints <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+            <p>
+                Реализация не выглядит сложной. На первый взгляд. Но, подумав больше пары минут, мы прийдем к выводу, что этот класс должен быть шаблонным, поскольку нам может пригодиться не только целочисленные значения. Так же, класс должен переопределять основные арифметические операторы, операторы сравнения, оператор вывода и присвоения. Вы, безусловно, все это умеете, и напишите даже в рамках своего понимания и навыков. Но, раз уж я завел этот разговор, видимо давайте сделаем так, как вы, с высокой вероятностью, делать не умеете, а именно - раздельно скомпилируем шаблонный класс. Реализуем как умеем:
+            </p>
+            <p>
+                <strong>LimitedField.h</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">ifndef</span> ARMY_LIMITEDFIELD_H</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ARMY_LIMITEDFIELD_H</span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">class</span> <span class="token class-name">LimitedField</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span><span class="token operator">:</span>
+        Type value<span class="token punctuation">;</span>
+        Type limit<span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token function">LimitedField</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token operator">~</span><span class="token function">LimitedField</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">const</span> Type <span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> Type <span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">//ARMY_LIMITEDFIELD_H</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre> 
+        <p>
+            <strong>LimitedField.cpp</strong>:
+        </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"LimitedField.h"</span></span>
+
+LimitedField<span class="token operator">::</span><span class="token function">LimitedField</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+LimitedField<span class="token operator">::</span><span class="token operator">~</span><span class="token function">LimitedField</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">::</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">::</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                При компиляции, получим много ошибок. Поскольку мы с вами не учитываем несколько моментов:
+            </p>
+            <ul>
+                <li>В реализации шаблонного хедера каждый метод должен быть шаблонным.</li>
+                <li>Для правильной линковки, необходимо указывать шаблон при указании пространства имен.</li>
+                <li>Необходимо принудительно инстанциировать классы из шаблона для каждого типа данных, которые намереваемся пользовать.</li>
+            </ul>
+            <p>
+                Итого, получаем:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"LimitedField.h"</span></span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span> <span class="token comment" spellcheck="true">// template keyworld before each method</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">LimitedField</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// LimitedField&lt;Type&gt;:: - templated namespace</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token operator">~</span><span class="token function">LimitedField</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// explicit instantiation</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">&gt;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                С оператором вывода тоже интересная ситуация. Для того, чтобы шаблонно его переопределить, необходимо так же принудительно инстанциировать опреатор из шаблона для каждого из типов.
+            </p>
+            <p>
+                <strong>LimitedField.h</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">ifndef</span> ARMY_LIMITEDFIELD_H</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ARMY_LIMITEDFIELD_H</span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">class</span> <span class="token class-name">LimitedField</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// definitions</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">//ARMY_LIMITEDFIELD_H</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre> 
+        <p>
+            <strong>LimitedField.cpp</strong>:
+        </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"LimitedField.h"</span></span>
+
+<span class="token comment" spellcheck="true">// methods implementation</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    out <span class="token operator">&lt;&lt;</span> <span class="token string">"("</span> <span class="token operator">&lt;&lt;</span> field<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">"/"</span> <span class="token operator">&lt;&lt;</span> field<span class="token punctuation">.</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">")"</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> out<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                В принципе, это основные нюансы раздельной компиляции шаблонных классов, ну и еще немного веселых моментов чуть позже. Теперь необходимо подумать про набор операторов, которые необходимо переопределеить. Для этого рассмотрим несколько примеров использования класса:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"LimitedField.h"</span></span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> x <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> y <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> z <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> x <span class="token operator">==</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// operator==(LimitedField)</span>
+        <span class="token comment" spellcheck="true">// some code</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span> x <span class="token operator">==</span> <span class="token number">75</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// operator==(int)</span>
+        <span class="token comment" spellcheck="true">// some code</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> z <span class="token operator">&gt;</span> <span class="token number">100</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// operator&gt;(int)</span>
+        <span class="token comment" spellcheck="true">// some code</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span> z <span class="token operator">&lt;=</span> y <span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// operator&lt;=(LimitedField)</span>
+        <span class="token comment" spellcheck="true">// some code</span>
+    <span class="token punctuation">}</span>
+
+    x <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">50</span><span class="token punctuation">;</span> <span class="token keyword">operator</span><span class="token operator">-</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>
+    y <span class="token operator">+</span><span class="token operator">=</span> x<span class="token punctuation">;</span> <span class="token keyword">operator</span><span class="token operator">+</span><span class="token operator">=</span><span class="token punctuation">(</span>LimitedField<span class="token punctuation">)</span>
+    
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> x <span class="token operator">*</span> y <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// operator=(LimitedField)</span>
+    std<span class="token operator">::</span>cout <span class="token operator">&lt;&lt;</span> x <span class="token operator">/</span> <span class="token number">10</span> <span class="token operator">&lt;&lt;</span> std<span class="token operator">::</span>endl<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// operator=(int)</span>
+
+    z <span class="token operator">=</span> x<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// operator=(LimitedField)</span>
+    x <span class="token operator">=</span> <span class="token number">90</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// operator=(int)</span>
+
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                В общем и целом, нам необходимо предусмотреть весь набор операций для взаимодействия с объектами и весь набор операций для взаимодействий с другими примитивами. То есть заголовочный файл начнет выглядеть примерно так:
+            </p>
+            <p>
+                <strong>LimitedField.h</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">ifndef</span> ARMY_LIMITEDFIELD_H</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ARMY_LIMITEDFIELD_H</span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">class</span> <span class="token class-name">LimitedField</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span><span class="token operator">:</span>
+        Type value<span class="token punctuation">;</span>
+        Type limit<span class="token punctuation">;</span>
+
+        Type <span class="token function">validate</span><span class="token punctuation">(</span>Type result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token function">LimitedField</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token operator">~</span><span class="token function">LimitedField</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">const</span> Type <span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> Type <span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">==</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">!=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&gt;=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&lt;=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">+</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">-</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">*</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">/</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Type <span class="token keyword">operator</span><span class="token operator">+</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">==</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">!=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&gt;=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&lt;=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+        <span class="token keyword">const</span> <span class="token keyword">bool</span> <span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">+</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">-</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">*</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">/</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Type <span class="token keyword">operator</span><span class="token operator">+</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">-</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">*</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Type <span class="token keyword">operator</span><span class="token operator">/</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        LimitedField <span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        LimitedField <span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">//ARMY_LIMITEDFIELD_H</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre> 
+        <p>
+            И само собой реализация:
+        </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"LimitedField.h"</span></span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">LimitedField</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token operator">=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token operator">~</span><span class="token function">LimitedField</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">validate</span><span class="token punctuation">(</span>Type result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> result <span class="token operator">&gt;</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> result <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">==</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">==</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">!=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token operator">!</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token keyword">this</span> <span class="token operator">==</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&gt;=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&gt;=</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&lt;=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&lt;=</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&gt;</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&lt;</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">+</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">+</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">-</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">-</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">*</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">*</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">/</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">+</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">+</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">+</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">-</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">-</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">*</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">*</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">/</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">/</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">==</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">==</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">!=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">!=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&gt;=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&gt;=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&lt;=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&lt;=</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&gt;</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&gt;</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">const</span> <span class="token keyword">bool</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">&lt;</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">&lt;</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">+</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">+</span> value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">-</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">-</span> value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">*</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">*</span> value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+<span class="token keyword">void</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">/</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    Type result <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">/</span> value<span class="token punctuation">;</span>
+
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span><span class="token function">validate</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">+</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">+</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">-</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">-</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">*</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">*</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+Type LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">/</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">/</span> value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> LimitedField<span class="token operator">&amp;</span> other<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> other<span class="token punctuation">.</span>value<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token operator">=</span> other<span class="token punctuation">.</span>limit<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token operator">*</span><span class="token keyword">this</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">::</span><span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span>Type value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token operator">-</span><span class="token operator">&gt;</span>limit <span class="token operator">=</span> value<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token operator">*</span><span class="token keyword">this</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token operator">&lt;</span><span class="token keyword">class</span> <span class="token class-name">Type</span><span class="token operator">&gt;</span>
+std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span>Type<span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    out <span class="token operator">&lt;&lt;</span> <span class="token string">"("</span> <span class="token operator">&lt;&lt;</span> field<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">"/"</span> <span class="token operator">&lt;&lt;</span> field<span class="token punctuation">.</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token string">")"</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> out<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> <span class="token keyword">class</span> <span class="token class-name">LimitedField</span><span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">&gt;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">template</span> std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">&lt;&lt;</span><span class="token punctuation">(</span>std<span class="token operator">::</span>ostream<span class="token operator">&amp;</span> out<span class="token punctuation">,</span> <span class="token keyword">const</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">double</span><span class="token operator">&gt;</span><span class="token operator">&amp;</span> field<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        <p>
+            В общем, реализовано много. Теперь все это необходимо протестировать. Как раз о тестировании речь и пойдет ниже.
+        </p>
+        </section>
+        <section>
+            <h2 id="tests">Тестирование</h2>
+            <p>
+                Для начала немного организуем наш код. Сделаем 2 директории: utils и tests. В папке tests будем писать тесты. Реализованый класс <strong>LimitedField</strong> положим в папку utils. 
+            </p>
+            <p>
+                Теперь, собственно, про тесты. Зачем они нужны? Как минимум для того, чтобы проверить, работают ли наши поделки. Еще, тесты нужны для того, чтобы запускать их каждый раз, когда мы вносим изменения в код, для того, чтобы убедиться, что наши изменения в одном месте не стали причиной поломки в другом.
+            </p>
+            <p>
+                Инструментов для тестирования довольно много, но в своих примерах я буду использовать библиотеку <a href="https://github.com/philsquared/Catch/">catch</a>. Скачайте последнюю версию библиотеки, положите ее в папку tests под именем <strong>catch.hpp</strong> и внимательно прочитайте <a href="https://github.com/philsquared/Catch/blob/master/docs/tutorial.md">tutorial</a>, для того, чтобы я сейчас не расписывал как этой библиотекой пользоваться.
+            </p>
+            <p>
+                После того как библиотека скачана и возложена в папку tests, создадим пару файликов. Первый, который положим в директорию tests под именем <strong>main.cpp</strong> будет точкой входа и будет содержать мощнейший код.
+            </p>
+            <p>
+                <strong>main.cpp</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">define</span> CATCH_CONFIG_MAIN</span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"catch.hpp"</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+            <p>
+                Теперь, тут же, в директории tests создадим файл <strong>test_limited_field.cpp</strong>, в котором напишем наш первый тест.
+            </p>
+            <p>
+                <strong>test_limited_field.cpp</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"../utils/LimitedField.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"catch.hpp"</span></span>
+
+<span class="token function">TEST_CASE</span><span class="token punctuation">(</span> <span class="token string">"test LimitedField"</span><span class="token punctuation">,</span> <span class="token string">"[LimitedField]"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> f1 <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span> f1<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">100</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span> f1<span class="token punctuation">.</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">100</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                Собственно, если вы верно следовали указаниям, то у вас должна получиться примерно следующая структура:
+            </p>
+            <pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="2-6"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span></span><span class="token function">ls</span> -la
+total 0
+drwxr-xr-x  4 caiman  staff  136 Oct  9 05:52 <span class="token keyword">.</span>
+drwxr-xr-x  5 caiman  staff  170 Oct  9 01:33 <span class="token punctuation">..</span>
+drwxr-xr-x  2 caiman  staff   68 Oct  9 05:51 tests
+drwxr-xr-x  4 caiman  staff  136 Oct  9 05:52 utils</code></pre>
+            <p>
+                 Содержимое директории utils:
+            </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="2-6"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span></span><span class="token function">ls</span> -la utils/
+total 16
+drwxr-xr-x  4 caiman  staff   136 Oct  9 05:52 <span class="token keyword">.</span>
+drwxr-xr-x  4 caiman  staff   136 Oct  9 05:52 <span class="token punctuation">..</span>
+-rw-r--r--  1 caiman  staff   516 Oct  9 04:41 LimitedField.cpp
+-rw-r--r--  1 caiman  staff  2094 Oct  9 05:18 LimitedField.h</code></pre>
+            <p>
+                 Содержимое директории tests:
+            </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="2-7"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span></span><span class="token function">ls</span> -la tests/
+total 768
+drwxr-xr-x  5 caiman  staff     170 Oct  9 06:46 <span class="token keyword">.</span>
+drwxr-xr-x  9 caiman  staff     306 Oct  9 05:45 <span class="token punctuation">..</span>
+-rw-r--r--  1 caiman  staff  384082 Oct  9 06:04 catch.hpp
+-rw-r--r--  1 caiman  staff      47 Oct  9 06:32 main.cpp
+-rw-r--r--  1 caiman  staff     965 Oct  9 06:32 test_limited_fields.cpp</code></pre>
+            <p>
+                Компилируем все это дело:
+            </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="8-14"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span><span style="display: none;"></span></span><span class="token function">cd</span> tests
+g++ -c <span class="token punctuation">..</span>/utils/LimitedField.cpp
+g++ -c test_limited_fields.cpp
+g++ -c main.cpp
+g++ *.o -o test.out
+<span class="token function">rm</span> *.o
+<span class="token function">ls</span> -la
+total 3072
+drwxr-xr-x  6 caiman  staff      204 Oct  9 06:59 <span class="token keyword">.</span>
+drwxr-xr-x  9 caiman  staff      306 Oct  9 05:45 <span class="token punctuation">..</span>
+-rw-r--r--  1 caiman  staff   384082 Oct  9 06:04 catch.hpp
+-rw-r--r--  1 caiman  staff       47 Oct  9 06:32 main.cpp
+-rwxr-xr-x  1 caiman  staff  1179380 Oct  9 06:59 test.out
+-rw-r--r--  1 caiman  staff      965 Oct  9 06:32 test_limited_fields.cpp</code></pre>
+            <p>
+                Как вы можете заметить, появился файл test.out. Запустим:
+            </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="2-3"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span></span>./test.out 
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">=</span>
+All tests passed <span class="token punctuation">(</span>2 assertions <span class="token keyword">in</span> 1 <span class="token function">test</span> case<span class="token punctuation">)</span></code></pre>
+            <p>
+                Со временем наш проект будет расти, файлов будет становиться много и компилировать руками станет попросту неудобно, поэтому напишем makefile, который будем дописывать по ходу пьесы.
+            </p>
+            <p><strong>makefile</strong>:</p>
+<pre class=" language-bash line-numbers"><code class="language-bash">all: test.out
+
+test.out: main.o test_limited_fields.o LimitedField.o
+    g++ -o test.out main.o test_limited_fields.o LimitedField.o
+
+main.o:
+    g++ -c main.cpp
+
+test_limited_fields.o:
+    g++ -c test_limited_fields.cpp
+
+LimitedField.o:
+    g++ -c <span class="token punctuation">..</span>/utils/LimitedField.cpp
+
+clean:
+    <span class="token function">rm</span> -f *.o
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                Теперрь для того, чтобы пересобрать тесты нужно выполнить:
+            </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output=""><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span></span><span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> clean </code></pre>
+            <p>Напишем необходимые тесты, чтобы убедиться, что все работает корректно:</p>
+            <pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"../utils/LimitedField.h"</span></span>
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"catch.hpp"</span></span>
+
+<span class="token function">TEST_CASE</span><span class="token punctuation">(</span> <span class="token string">"test LimitedField"</span><span class="token punctuation">,</span> <span class="token string">"[LimitedField]"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> f1 <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> f2 <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> f3 <span class="token operator">=</span> LimitedField<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span> f1<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">100</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">REQUIRE</span><span class="token punctuation">(</span> f1<span class="token punctuation">.</span><span class="token function">getLimit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">100</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">SECTION</span><span class="token punctuation">(</span> <span class="token string">"LimitedField: comparison operators test"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> f2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">!=</span> f3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">!=</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token function">REQUIRE_FALSE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> f3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE_FALSE</span><span class="token punctuation">(</span>f1 <span class="token operator">!=</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">&gt;</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">&gt;=</span> f2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">&lt;=</span> f2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">&lt;=</span> <span class="token number">150</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f3 <span class="token operator">&lt;</span> f2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f3 <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">SECTION</span><span class="token punctuation">(</span> <span class="token string">"LimitedField: arithmetic operators test"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">+</span> f2 <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">+</span> f2 <span class="token operator">==</span> f3 <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">/</span> f2 <span class="token operator">==</span> f3 <span class="token operator">/</span> <span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">==</span>  <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">-</span> f2 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">-</span> <span class="token number">100</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f3 <span class="token operator">-</span> f1 <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">SECTION</span><span class="token punctuation">(</span> <span class="token string">"LimitedField: change value test"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">-</span><span class="token operator">=</span> f3<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">+</span><span class="token operator">=</span> f3<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">SECTION</span><span class="token punctuation">(</span> <span class="token string">"LimitedField: change value test"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">-</span><span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">+</span><span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">-</span><span class="token operator">=</span> f3<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            f1 <span class="token operator">+</span><span class="token operator">=</span> f3<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f1 <span class="token operator">==</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">SECTION</span><span class="token punctuation">(</span> <span class="token string">"LimitedField: final tests"</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        f2 <span class="token operator">=</span> f3<span class="token punctuation">;</span>
+
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f2 <span class="token operator">==</span> f3<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        f3 <span class="token operator">=</span> <span class="token number">200</span><span class="token punctuation">;</span>
+
+        <span class="token function">REQUIRE</span><span class="token punctuation">(</span>f3 <span class="token operator">==</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        <p>
+            Запустим:
+        </p>
+<pre class="command-line  language-bash" data-user="caiman" data-host="localhost" data-output="2-3"><code class=" language-bash"><span class="command-line-prompt"><span data-user="caiman" data-host="localhost"></span><span style="display: none;"></span><span style="display: none;"></span></span><span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> clean <span class="token operator">&amp;&amp;</span> ./test.out 
+<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">=</span>
+All tests passed <span class="token punctuation">(</span>39 assertions <span class="token keyword">in</span> 1 <span class="token function">test</span> case<span class="token punctuation">)</span></code></pre>
+        <p>
+            Теперь я спокоен! Каждый раз, когда я буду вносить правки в код я буду перезапускать тесты и смотреть, чтобы мои правки не сломали уже существующий функционал. Надеюсь, пояснил доступно.
+        </p>
+        </section>
+        <section>
+            <h2 id="exceptions">Исключения</h2>
+            <p>
+                Тестирование это хорошо. Это "must have" в любом начинании. Но, так же, следует подумать об обработке исключительных ситуаций. Нам нужны исключения уже на этом этапе, так как мы, например, не обрабатываем ситуацию, когда в конструктор LimitedField в качестве аргумента придет, например, отрицательное число. Безусловно, можно воспользоваться валидацией, которую мы там уже предусмотрели, и в случае прихода отрицательного числа установить в качестве значения и лимита "0", что сделает поле абсолютно бесполезным. Тут уж лучше бросить исключение. И да, для тех кто переживает - проброс исключения из конструктора не приводит к утечке памяти.
+            </p>
+            <p>
+                Для начала рассмотрим исключения из стандартной библиотеки языка. <strong>std::exception</strong> выглядит примерно так:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">exception</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token function">exception</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">exception</span><span class="token punctuation">(</span><span class="token keyword">const</span> std<span class="token operator">::</span>exception<span class="token operator">&amp;</span> other<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        std<span class="token operator">::</span>exception<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span> <span class="token keyword">const</span> exception<span class="token operator">&amp;</span> other <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">virtual</span> <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> <span class="token function">what</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                То есть, как вы можете заметить, реализация исключений в языке программирования C++ невероятно проста. А я не сторонник переписывания стандартных исключений на новый лад, по сему для своих нужд буду наследовать стандартный класс исключений и переопределять аж 1 метод <strong>what()</strong>.
+            </p>
+            <p>
+                Все необходимые исключения, для удобства, буду объявлять в файле Exceptions.h, реализовывать, как вы уже можете предположить, буду в фале Exceptions.cpp. Файлы положу в корень проекта.
+            </p>
+            <p>
+                <strong>Exceptions.h</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">ifndef</span> ARMY_EXCEPTIONS_H_H</span>
+<span class="token macro property">#<span class="token directive keyword">define</span> ARMY_EXCEPTIONS_H_H</span>
+
+<span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">&lt;iostream&gt;</span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">ArmyException</span> <span class="token operator">:</span> <span class="token keyword">public</span> std<span class="token operator">::</span>exception <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">InvalidFieldParameter</span><span class="token operator">:</span> <span class="token keyword">public</span> ArmyException <span class="token punctuation">{</span>
+    <span class="token keyword">public</span><span class="token operator">:</span>
+        <span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> <span class="token function">what</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token macro property">#<span class="token directive keyword">endif</span> </span><span class="token comment" spellcheck="true">//ARMY_EXCEPTIONS_H_H</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <p>
+                <strong>Exceptions.cpp</strong>:
+            </p>
+<pre class=" language-cpp line-numbers"><code class="language-cpp"><span class="token macro property">#<span class="token directive keyword">include</span> <span class="token string">"Exceptions.h"</span></span>
+
+<span class="token keyword">const</span> <span class="token keyword">char</span><span class="token operator">*</span> InvalidFieldParameter<span class="token operator">::</span><span class="token function">what</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">"Invalid parameter for LimitedField(&lt;T&gt; value). Value should be &gt; 0."</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        </section>
+        <footer>
+            <address>
+                Автор caiman.
+            </address>
+        </footer>
+    </article>
+
+
+</body></html>

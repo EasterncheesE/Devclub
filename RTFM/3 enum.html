@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html lang="ru" class="ie7">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="ru" class="ie8">
+<![endif]-->
+<!--[if (lt IE 7)|(gt IE 8)]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <title>Перечисляемый тип</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://my.devclub.com.ua/static/dragonscale.css?43">
+    <link rel="stylesheet" href="style.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <section>
+        <h1>Перечисляемый тип</h1>
+        <div>
+            <p>Перечисляемый тип <em>(англ. enumerated type, enumeration, enum)</em> &mdash; тип данных, состоящий из множества именованых значений, называемых элементами или членами.</p>
+        </div>
+
+        <h2>Использование в языке Си</h2>
+        <div>
+            <code>enum WeekDay {
+    Monday,
+    Tuesday,
+    Wednesday,
+    Thursday,
+    Friday,
+    Saturday,
+    Sunday
+};
+
+int isWeekend(enum WeekDay day) {
+    return day == Saturday || day == Sunday;
+}
+</code>
+        </div>
+
+        <h2>Представление в памяти</h2>
+        <div>
+            <p>В памяти значение перечисляемого типа хранится в виде числа, соответствующего нужному элементу. Данное число, в зависимости от языка программирования, может быть сгенерировано автоматически, либо задано вручную.</p>
+            <code>enum TogglePosition {
+    On = 1,
+    Off = 0
+};
+</code>
+        </div>
+
+        <h2>Преобразование enum в строку</h2>
+        <div>
+            <p>Поскольку в памяти хранится лишь числовые идентификаторы элементов, непосредственное получение строки &laquo;On&raquo; по значению 1 в языке Си невозможно. Однако, при желании, можно написать код, получающий строковые эквиваленты значений перечисляемого типа. Гугл: &laquo;c enum to string&raquo;.</p>
+        </div>
+
+    </section>
+</body>
+</html>

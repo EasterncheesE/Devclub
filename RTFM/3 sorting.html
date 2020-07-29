@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Алгоритмы сортировки</title>
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/31437201/article.css">
+</head>
+<body>
+    <article class="page">
+        <h1>Алгоритмы сортировки</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="#intro">Введение</a></li>
+                    <li><a href="#bubble">Bubble sort</a></li>
+                    <li><a href="#insertion">Insertion sort</a></li>
+                    <li><a href="#selection">Selection sort</a></li>
+                    <li><a href="#comparison">Сравнительная таблица</a></li>
+                </ol>
+            </div>
+            <div class="links">
+            </div>
+        </aside>
+
+        <section>
+            <h2 id="intro">Введение</h2>
+            <p>Прежде чем рассматривать конкретные алгоритмы сортировки данных, стоит разобраться что это вообще за такие алгоритмы и какие у них есть особенности. По традиции обратимся к Википедии, чтобы узнать, что такое <em>алгоритм сортировки</em>:</p>
+            <blockquote cite="http://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B8">
+                Алгоритм сортировки — это алгоритм для упорядочивания элементов в списке. В случае, когда элемент списка имеет несколько полей, поле, служащее критерием порядка, называется ключом сортировки.
+            </blockquote>
+            <p>Вопреки стереотипам, алгоритм сортировки не подразумевает выстраивание элементов списка исключительно от меньшего к большему или наоборот. Сортировка подразумевает упорядочение элементов списка согласно какому-либо закону сортировки. Даже кажущаяся случайной некая последовательность элементов может оказаться отсортированной, просто по неизвестному нам закону. Конечно, наиболее востребованная задача на практике — упорядочить элементы по возрастанию или по убыванию. В рамках этих задач и придумано подавляющее большинство алгоритмов сортировки.</p>
+            <p>Алгоритмы сортировки, как и любые другие, имеют две основные качественные характеристики, по которым оценивается их эффективность:</p>
+            <ul>
+                <li><strong>Время</strong> — основной параметр, характеризующий быстродействие алгоритма. Называется также <dfn>вычислительной сложностью</dfn>. Для оценки эффективности алгоритма по временному параметру важно знать его <em>худший</em>, <em>средний</em> и <em>лучший</em> случаи. Для типичного алгоритма хорошее поведение — это <code>O(N&sdot;logN)</code> и плохое поведение — это <code>O(N²)</code>. Идеальное поведение для упорядочения — <code>O(N)</code>.</li>
+                <li><strong>Память</strong> — ряд алгоритмов требует выделения дополнительной памяти под временное хранение данных. Как правило, эти алгоритмы требуют <code>O(log N)</code> памяти. При оценке не учитывается место, которое занимает исходный массив и независящие от входной последовательности затраты, например, на хранение кода программы (так как всё это потребляет <code>O(1)</code>). Алгоритмы сортировки, не потребляющие дополнительной памяти, относят к <em>сортировкам на месте</em> (англ. <em>in-place</em>).</li>
+            </ul>
+            <p>Важным свойством алгоритма сортировки является <em>устойчивость</em> (англ. <em>stability</em>). Устойчивый алгоритм сортировки не меняет относительный порядок сортируемых элементов, имеющих одинаковые ключи. Это означает, что сортировка не меняет взаимного расположения равных элементов.</p>
+
+            <div class="notabene">
+                <p>«По убыванию» — сортировка элементов строго по убыванию, не подразумевающая дубликатов элементов:</p>
+                <pre>5 4 3 2 1 0</pre>
+                <p>«По невозрастанию» — сортировка элементов по убыванию, подразумевающая дубликаты элементов:</p>
+                <pre>5 5 4 3 3 1 0</pre>
+                <p>Та же логика и для пары терминов «по возрастанию» и «по неубыванию». Более корректными являются термины «по невозрастанию» и «по неубыванию».</p>
+            </div>
+
+            <p>Рассмотрим несколько классических алгоритмов, относящихся к категории сортировок, основанных на операции сравнения.</p>
+        </section>
+
+        <section>
+            <h2 id="bubble">Bubble sort</h2>
+            <p>Первое место в нашем хит-параде алгоритмов сортировки по праву занимает бессмертная классика жанра — алгоритм <em>сортировки пузырьком</em>, он же <em>сортировки простыми обменами</em>, он же <em>bubble sort</em>. Для понимания и реализации этот алгоритм — простейший, но эффективен он лишь для небольших наборов данных.</p>
+
+            <h3>Суть алгоритма</h3>
+            <p>Принцип действий прост: обходим массив от начала до конца, попутно меняя местами неотсортированные соседние элементы. В результате первого прохода на последнее место «всплывёт» максимальный элемент. Теперь снова обходим неотсортированную часть массива (от первого элемента до предпоследнего) и меняем по пути неотсортированных соседей. Второй по величине элемент окажется на предпоследнем месте. Продолжая в том же духе, будем обходить всё уменьшающуюся неотсортированную часть массива, перемещая найденные максимумы в конец.</p>
+
+            <h3>Пример работы</h3>
+            <p>Возьмём массив чисел <code>{7, 2, 6, 1, 2}</code> и отсортируем значения по неубыванию, используя сортировку пузырьком. Выделены те элементы, которые сравниваются на данном этапе. Серым цветом обозначена неотсортированная часть, черным — отсортированная.</p>
+            <p>Первый проход:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">7</td>
+                            <td class="swap">2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="swap">7</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td class="swap">7</td>
+                            <td class="swap">6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td class="swap">6</td>
+                            <td class="swap">7</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>6</td>
+                            <td class="swap">7</td>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>6</td>
+                            <td class="swap">1</td>
+                            <td class="swap">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td class="swap">7</td>
+                            <td class="swap">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td class="swap">2</td>
+                            <td class="swap">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Результатом первого прохода стало перемещение наибольшего значения в конец массива, то есть этот элемент стал на своё место и трогать его уже не нужно. Второй проход:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="swap">6</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="swap">6</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td class="swap">6</td>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td class="swap">1</td>
+                            <td class="swap">6</td>
+                            <td>2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>1</td>
+                            <td class="swap">6</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>2</td>
+                            <td>1</td>
+                            <td class="swap">2</td>
+                            <td class="swap">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>За второй проход «всплыл» максимум в оставшейся части — шестёрка. Теперь можно сказать, что два последние элемента отсортированы. Третий проход:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="swap">2</td>
+                            <td>2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="swap">2</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="swap">2</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>«Всплыла» двойка. По сути, массив уже отсортирован, но алгоритм предусматривает ещё один проход. Четвёртый проход:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+
+            <p>Естественно, что ничего не поменялось — массив отсортирован.</p>
+            <div class="co">Стоит отметить одну интересную особенность: за один проход максимум всегда «всплывает» в конец массива, в то время как минимум перемещается только на одну позицию в сторону начала.</div>
+
+            <h3>Реализация</h3>
+            <h4>Оригинал</h4>
+            <p>Реализация сортировки по неубыванию в классической версии алгоритма выглядит так:</p>
+            <code data-lang="c" data-file="bubbleSort().c">void bubbleSort(int array[], int size) {
+    int last = size - 1;
+
+    for ( int i = 0; i &lt; last; i++ ) {
+        int limit = last - i;
+
+        for ( int j = 0; j &lt; limit; j++ ) {
+            int next = j + 1;
+
+            if ( array[j] &gt; array[next] ) {
+                int temp = array[j];
+
+                array[j] = array[next];
+                array[next] = temp;
+            }
+        }
+    }
+}</code>
+            <h4>Модификация</h4>
+            <p>Реализация модифицированного алгоритма «пузырька» с проверкой на предмет отсортированности.</p>
+            <code data-lang="c" data-file="bubbleSortM().c">void bubble(int array[], int size) {
+    int last = size - 1;
+    int isSorted = 0;
+
+    for ( int i = 0; i &lt; last &amp;&amp; !isSorted; i++ ) {
+        int limit = last - i;
+
+        isSorted = 1;
+
+        for ( int j = 0; j &lt; limit; j++ ) {
+            int next = j + 1;
+
+            if ( array[j] &gt; array[next] ) {
+                int temp = array[j];
+
+                array[j] = array[next];
+                array[next] = temp;
+                isSorted = 0;
+            }
+        }
+    }
+}</code>
+            <h3>Анализ работы алгоритма</h3>
+            <p>Дополнительной памяти алгоритм не использует, что означает константную пространственную сложность — <code>O(1)</code>.</p>
+            <p>Алгоритм не меняет взаимного расположения равных элементов, значит он устойчивый.</p>
+            
+            <h4>Оригинал</h4>
+            <p>Вне зависимости от входящих данных этот алгоритм работает за время <code>O(N²)</code>. Но тем не менее, различают худший и лучший случай. Худший — данные в массиве расположены таким образом, что на каждой итерации нужно производить операцию обмена, это добавляет некую нагрузку на работу алгоритма. Лучший случай — массив уже отсортирован и операций обмена просто не будет, но количество проходов останется прежним. Средний случай, внезапно, тоже <code>O(N²)</code>.</p>
+            
+            <h4>Модификация</h4>
+            <p>Если оптимизировать «пузырёк» таким образом, чтобы он проверял, отсортирован ли уже массив, то можно добиться линейной сложности в лучшем случае — <code>O(N)</code>.</p>
+
+            <h3>Производные алгоритмы</h3>
+            <p>Из рубрики «программисты шутят»: в 1980 году Влодзимеж Добосиевич пояснил почему пузырьковая и производные от неё сортировки работают так медленно. <i>Это всё из-за черепашек.</i> «Черепахи» — это те самые неспешные минимальные значения, которые перемещаются к началу массива, соответственно «кролики» — более резвые их коллеги — максимумы.</p>
+            <p>На базе этой особенности придуманы несколько оптимизаций для «пузырька», которые породили новые алгоритмы сортировки. Их основная суть — либо подгонять «черепах», либо вообще от них избавиться.
+            <p>К таким алгоритмам относятся:</p>
+            <ul>
+                <li><a href="http://en.wikipedia.org/wiki/Cocktail_sort" target="_blank">шейкерная сортировка</a>;</li>
+                <li><a href="http://en.wikipedia.org/wiki/Odd%E2%80%93even_sort" target="_blank">чётно-нечётная сортировка</a>;</li>
+                <li><a href="http://en.wikipedia.org/wiki/Comb_sort" target="_blank">сортировка расчёской</a>.</li>
+            </ul>
+            <p>Неплохая <a href="http://habrahabr.ru/post/204600/" target="_blank">статья</a> об этих оптимизациях есть на Хабре.</p>
+        </section>
+
+        <section>
+            <h2 id="insertion">Insertion sort</h2>
+            <p>Следующий в нашем списке — былинный алгоритм <em>сортировки вставками</em>, он же <em>insertion sort</em>.</p>
+
+            <h3>Суть алгоритма</h3>
+            <p>Его принцип заключается в том, что на каждом шаге алгоритма мы берём один из элементов массива, находим позицию для вставки и вставляем. Обычно, с целью получения устойчивого алгоритма сортировки, элементы вставляются в том порядке, в котором они идут во входном массиве.</p>
+            <p>Звучит сложно, но каждый из вас применял его на практике, сортируя купюры в кошельке. Берём 10 гривен и смотрим в кошелёк, а там идут 2, 5 и 50 гривневые купюры. Вот как раз между 5 и 50 и вставляем наш червончик.</p>
+
+            <h3>Пример работы</h3>
+            <p>Возьмём предыдущий массив: <code>{7, 2, 6, 1, 2}</code> и отсортируем значения по неубыванию алгоритмом вставки. Серым цветом обозначена неотсортированная часть, черным — отсортированная. Красным выделен элемент, который будем вставлять.</p>
+            <h4>Вариант №1. Оригинал</h4>
+            <p>Это пример работы алгоритма «в лоб» — как думаем, так и пишем, без каких-либо модификаций.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Первый элемент массива отсортирован относительно себя, поэтому ничего никуда вставлять не нужно, нужно переходить к следующему элементу.</p>
+
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">7</td>
+                            <td class="swap">2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="sorted">7</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Берём второй элемент — двойку, сравниваем её с отсортированной частью — семёркой. Двойка явно меньше, меняем их местами, тем самым вставляя двойку на более подходящее место.</p>
+
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">7</td>
+                            <td class="swap">6</td>
+                            <td>1</td>
+                            <td>2</td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="swap">6</td>
+                            <td class="sorted">7</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Следующий элемент — шестёрка. Сравниваем с отсортированной частью: шестёрка меньше семёрки, меняем их местами. Теперь сравниваем с двойкой, шестёрка больше, оставляем шестёрку на своём месте.</p>
+
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="swap">1</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="swap">1</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Следующий кандидат для вставки — единица, сравниваем по такому же принципу с отсортированной частью и ставим на своё место.</p>
+
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td class="swap">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Неотсортированной остаётся только вторая двойка — вставляем её на своё место.</p>
+
+            <h4>Вариант №2. Модификация</h4>
+            <p>Особенностью предыдущего примера была запись вставляемого элемента в массив на каждой итерации. Зачем? Если подумать, то окажется, что нам нужно записывать вставляемый элемент всего один раз — в нужную позицию. Для этого нужно эту ячейку освободить, сдвинув соседние элементы. Это более пригодный для реализации вариант.</p>
+            <p>Первый шаг остаётся прежним:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>А вот теперь кое-что новое: записываем двойку во временную переменную, семёрку сдвигаем вправо, а двойку пишем в свободную ячейку:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">7</td>
+                            <td></td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td class="sorted">7</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                            <td class="sorted">7</td>
+                            <td>6</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Пока что мощного прироста производительности не видно. Следующая итерация — берём шестёрку и записываем во временную переменную, семёрку сдвигаем вправо и потом записываем шестёрку в свободную ячейку:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">6</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">7</td>
+                            <td></td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td></td>
+                            <td class="sorted">7</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="swap">6</td>
+                            <td class="sorted">7</td>
+                            <td>1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Следующая итерация — очередь единицы. Вот тут полезность модификации налицо.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td></td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td></td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">2</td>
+                            <td></td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Теперь ставим вторую двойку на своё место.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td></td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td></td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="swap">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Готово.</p>
+
+            <h3>Реализация</h3>
+            <h4>Оригинал</h4>
+            <p>Так выглядит <code>insertSort()</code> от программиста, не использующего при работе мозг:</p>
+            <code data-lang="c" data-file="insertSort().c">void insertSort(int array[], int size) {
+    for ( int i = 1; i &lt; size; i++ ) { 
+        for ( int j = i, prev = j - 1; j &gt; 0 &amp;&amp; array[j] &lt; array[prev]; j--, prev-- ) {
+            int temp = array[j];
+
+            array[j] = array[prev];
+            array[prev] = temp;
+        }
+    }
+}</code>
+            <h4>Модификация</h4>
+            <p>Более приемлемый вариант реализации, без записи вставляемого элемента на каждой итерации.</p>
+            <code data-lang="c" data-file="insertSortM().c">void insertSort(int array[], int size) {
+    for ( int i = 1; i &lt; size; i++ ) {
+        int j = i;
+        int temp = array[i];
+
+        for ( int prev = j - 1; j &gt; 0 &amp;&amp; temp &lt; array[prev]; j--, prev-- ) {
+            array[j] = array[prev];
+        }
+        array[j] = temp;
+    }
+}</code>
+            <h3>Анализ работы алгоритма</h3>
+            <p>Судя по всему, худший случай для него наступает, когда сортируемые данные расположены таким образом, что на каждой итерации нужно делать смещение всей отсортированной части. Обратите внимание, сколько было сдвигов для единицы в примере работы алгоритма. Такое случается, когда массив отсортирован в обратном порядке от нужного. В этом случае вычислительная сложность алгоритма — <code>O(N²)</code>.</p>
+            <p>Соответственно, лучшим случаем будет отсортированный массив, ведь никаких сдвигов делать не нужно. Внутренний цикл попросту не срабатывает, потому вычислительная сложность будет <code>O(N)</code>. Средний случай — <code>O(N²)</code>.</p>
+            <p>Сортировка вставками не нуждается в дополнительной памяти, поэтому пространственная сложность — <code>O(1)</code>.</p>
+            <p>Алгоритм не меняет взаимного расположения равных элементов, значит он устойчивый.</p>
+
+            <h3>Производные алгоритмы</h3>
+            <p>Наиболее знаменитая оптимизация этого алгоритма — это <a href="http://en.wikipedia.org/wiki/Shellsort" target="_blank">сортировка Шелла</a>.</p>
+        </section>
+        
+        <section>
+            <h2 id="selection">Selection sort</h2>
+            <p>Алгоритм <em>сортировки выбором</em>, также известен как <em>selection sort</em> — наиболее привычный для человека алгоритм сортировки.</p>
+
+            <h3>Суть алгоритма</h3>
+            <p>Допустим, что нужно выстроить элементы массива по неубыванию. Проходимся по массиву в поисках минимального значения, когда нашли — ставим его на первое место, а то что было на первом месте — ставим туда, где был минимум, то есть меняем их местами. На второе место станет минимум, найденный в оставшемся массиве, первый элемент мы уже не трогаем. И так далее, пока все элементы не станут на свои места.</p>
+
+            <p>Чтобы не путать сортировку вставками и сортировку выбором, стоит запомнить простое правило: сортировка вставками отвечает на вопрос «куда вставить?» (вспоминайте кошелёк), а сортировка выбором — «что вставить?» (ставим минимум вперёд).</p>
+
+            <h3>Пример работы</h3>
+            <p>Рассмотрим все тот же массив — <code>{7, 2, 6, 1, 2}</code>. Серым цветом обозначена неотсортированная часть, черным — отсортированная. Красным выделены элементы, значения которых меняются местами.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td>7</td>
+                            <td>2</td>
+                            <td>6</td>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td>2</td>
+                            <td>6</td>
+                            <td class="swap">7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Мы нашли минимум — единичка и ставим её на первое место. А семёрку на место, где была единичка. Больше единица не претендент на пост минимума. Ищем минимум в оставшейся части:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="swap">2</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Новый минимум — двойка, находится на своём месте, ничего не меняем. Ищем минимумы дальше:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td class="swap">2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="swap">2</td>
+                            <td>7</td>
+                            <td class="swap">6</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Снова двойка! Какое совпадение! Она меняется местами с шестёркой. Ищем дальше.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">2</td>
+                            <td>7</td>
+                            <td class="swap">6</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">2</td>
+                            <td class="swap">6</td>
+                            <td class="swap">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Шестёрка поменялась местами с семёркой.</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="swap">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="sorted">1</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">2</td>
+                            <td class="sorted">6</td>
+                            <td class="sorted">7</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>И последняя итерация — оставшийся подмассив из одного элемента считается отсортированным. Массив отсортирован.</p>
+
+            <h3>Реализация</h3>
+            <h4>Оригинал</h4>
+            <p>Что-то похожее по запаху на оригинал <code>insertSort()</code> — перестановки на каждой итерации:</p>
+            <code data-lang="c" data-file="selectSort().c">void selectSort(int array[], int size) {
+    for ( int i = 0; i &lt; size; i++ ) {
+        for ( int j = i + 1; j &lt; size; j++ ) {
+            if ( array[j] &lt; array[i] ) {
+                int temp = array[i];
+                
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    }
+}</code>
+            <h4>Оптимизация</h4>
+            <p>Не трудно догадаться, что нужно избавиться от лишних перестановок. По сути перестановка нужна лишь одна, как и в <code>insertSort()</code> — когда мы находим достойный элемент, то есть минимум:</p>
+            <code data-lang="c" data-file="selectSortM().c">void selectSort(int array[], int size) {
+    for ( int i = 0; i &lt; size; i++ ) {
+        int min = i;
+        
+        for ( int j = i + 1; j &lt; size; j++ ) {
+            if ( array[j] &lt; array[min] ) {
+                min = j;
+            }
+        }
+
+        if ( min != i ) {
+            int temp = array[i];
+
+            array[i] = array[min];
+            array[min] = temp;
+        }
+    }
+}</code>
+            <h3>Анализ работы алгоритма</h3>
+            <p>Граничные случаи для этого алгоритма сильно зависят от реализации. Обобщённо его можно охарактеризовать так: поиск максимума со стороны минимума или поиск минимума со стороны максимума. Лучший случай, соответственно, такой же с точностью до наоборот.</p>
+            <p>Худший и лучший случаи этого алгоритма отличаются только тем, что в лучшем нет операций перезаписи, итого — <code>O(N²)</code>.</p>
+            <p>Сортировка выбором не нуждается в дополнительной памяти, поэтому пространственная сложность — <code>O(1)</code>.</p>
+            <p>Алгоритм <i>меняет</i> взаимное расположение элементов с одинаковыми значениями, значит он неустойчивый. Рассмотрим такую ситуацию на небольшом примере:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="red">5</td>
+                            <td class="orange">5</td>
+                            <td class="yellow">5</td>
+                            <td class="swap">1</td>
+                            <td class="green">5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>Алгоритм сортировки выбором подразумевает, что единицу нужно обменять с первой пятёркой:</p>
+            <figure>
+                <table class="array">
+                    <tbody>
+                        <tr>
+                            <td class="swap">1</td>
+                            <td class="orange">5</td>
+                            <td class="yellow">5</td>
+                            <td class="red">5</td>
+                            <td class="green">5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+            <p>«Радуга» поломалась. Стоит прикинуть в уме, как отработает в такой ситуации «пузырёк» или сортировка вставками, чтобы понять разницу между алгоритмами в разрезе устойчивости.</p>
+            <h3>Производные алгоритмы</h3>
+            <p>Как и в случае с «пузырьком», у сортировки вставкой есть оптимизация, которая ищет и минимум и максимум за один проход, и она тоже называется <em>шейкерной сортировкой</em> (англ. <em>cocktail sort</em>). Но чаще всего под этим названием имеют в виду именно оптимизацию «пузырька».</p>
+        </section>
+
+        <section>
+            <h2 id="comparison">Сравнительная таблица</h2>
+            <p>Итак, пришло время подвести итоги и сравнить характеристики рассмотренных алгоритмов сортировки.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Алгоритм</th>
+                        <th colspan="2">Вычислительная сложность</th>
+                        <th>Пространственная сложность</th>
+                        <th>Устойчивость</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="3">bubbleSort</td>
+                        <td>Худший случай</td>
+                        <td><code>O(N²)</code></td>
+                        <td rowspan="3"><code>O(1)</code></td>
+                        <td rowspan="3">Устойчивый</td>
+                    </tr>
+                    <tr>
+                        <td>Средний случай</td>
+                        <td><code>O(N²)</code></td>
+                    </tr>
+                    <tr>
+                        <td>Лучший случай</td>
+                        <td><code>O(N²)</code> — оригинал<br>
+                        <code>O(N)</code> — оптимизация</td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="3">insertSort</td>
+                        <td>Худший случай</td>
+                        <td><code>O(N²)</code></td>
+                        <td rowspan="3"><code>O(1)</code></td>
+                        <td rowspan="3">Устойчивый</td>
+                    </tr>
+                    <tr>
+                        <td>Средний случай</td>
+                        <td><code>O(N²)</code></td>
+                    </tr>
+                    <tr>
+                        <td>Лучший случай</td>
+                        <td><code>O(N)</code></td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="3">selectSort</td>
+                        <td>Худший случай</td>
+                        <td><code>O(N²)</code></td>
+                        <td rowspan="3"><code>O(1)</code></td>
+                        <td rowspan="3">Неустойчивый</td>
+                    </tr>
+                    <tr>
+                        <td>Средний случай</td>
+                        <td><code>O(N²)</code></td>
+                    </tr>
+                    <tr>
+                        <td>Лучший случай</td>
+                        <td><code>O(N²)</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+        <footer>
+            <address>
+                Автор Gara.
+            </address>
+            <time datetime="2014-02-18">18.02.2014</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/31437201/code.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html lang="ru" class="ie7">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="ru" class="ie8">
+<![endif]-->
+<!--[if (lt IE 7)|(gt IE 8)]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+	<title>Матрица</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://my.devclub.com.ua/static/dragonscale.css?43">
+	<link rel="stylesheet" href="style.css">
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<section>
+		<h1>Матрица</h1>
+		<div>
+			<p>Ма&#769;трица &mdash; математический объект, записываемый в виде прямоугольной таблицы элементов, которая представляет собой совокупность строк и столбцов, на пересечении которых находятся её элементы. Количество строк и столбцов матрицы задают размер матрицы. Справа находится пример матрицы размера 3&times;4, заполненной последовательными числами от 1 до 12.</p>
+		</div>
+		<aside>
+			<table class="matrix">
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>10</td>
+					<td>11</td>
+					<td>12</td>
+				</tr>
+			</table>
+		</aside>
+
+		<h2>Использование в коде</h2>
+		<div>
+		<p>Объявляется и заполняется аналогичная матрица размера rows&times;cols вот так:</p>
+		<code>int matrix[rows][cols];
+int serial = 1;
+
+for ( int row = 0; row &lt; rows; row++ ) {
+    for ( int col = 0; col &lt; cols; col++ ) {
+        matrix[row][col] = serial;
+        serial += 1;
+    }
+}</code>
+		</div>
+
+		<h2>Представление в памяти</h2>
+		<div>
+		<p>Известно, что адресация памяти &mdash; линейная. Память выделяется не прямоугольными блоками, а линейными диапазонами адресов. Поэтому и матрица в памяти хранится в линейной форме.</p>
+		<p>В этом можно убедиться:</p>
+		<code>int matrix[rows][cols];
+int serial = 1;
+int *start = &amp;matrix[0][0];
+int *end = start + rows * cols;
+
+for ( int *p = start; p &lt; end; p++ ) {
+    *p = serial;
+    serial += 1;
+}</code>
+		</div>
+		<aside>
+			<table class="linear matrix">
+				<tr>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+					<td>9</td>
+					<td>10</td>
+					<td>11</td>
+					<td>12</td>
+				</tr>
+			</table>
+		</aside>
+
+		<h2>Быстродействие</h2>
+		<div>
+			<p>Последовательный доступ к памяти наиболее производителен. Исходя из формата хранения матриц в памяти, последовательный доступ происходит при обработке матриц построчно. Внешний цикл проходит по строкам (первому индексу), а внутренний &mdash; по столбцам (второму индексу).</p>
+		</div>
+
+		<h2>Хорошие примеры</h2>
+		<div>
+		<p>Хранение прямоугольной таблицы данных, представление прямоугольного игрового поля, матрицы для математических вычислений (например, решение систем линейных уравнений).</p>
+		</div>
+
+		<h2>Плохой пример</h2>
+		<div>
+		<p>Объединение двух или более линейных массивов одинакового размера и типа в один прямоугольный. Обычно сопровождается неосмысленным названием нового массива.</p>
+		<p>До:
+		<code>float temperatures[size];
+float humidities[size];
+
+temperatures[0] = 42.5;
+humidities[0] = 53.7;</code></p>
+		<p>После:
+		<code>float data[size][2];
+
+data[0][0] = 42.5;
+data[0][1] = 53.7;</code></p>
+		<h3>Дополнительная информация</h3>
+		<p class="advanced">Действительно, в определенных случаях можно повысить быстродействие, располагая связанные данные рядом, однако это делается более адекватными средствами, например, применяя структуры.
+<!-- 		
+			<code>typedef struct {
+    float temperature;
+    float humidity;
+} AirProperties;
+
+AirProperties measurements[size];
+
+measurements[0].temperature = 42.5;
+measurements[0].humidity = 53.7;
+</code> --></p>
+		<p>Использование структур будет рассмотрено на дальнейших этапах обучения.</p>
+		</div>
+	</section>
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html lang="ru" class="ie7">
+<![endif]-->
+<!--[if IE 8]>
+<html lang="ru" class="ie8">
+<![endif]-->
+<!--[if (lt IE 7)|(gt IE 8)]><!-->
+<html lang="ru">
+<!--<![endif]-->
+<head>
+    <title>Объектно ориентированное программирование. Продолжение.</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://dl.dropboxusercontent.com/u/31437201/article.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <article class="page">
+        <h1>Объектно ориентированное программирование. Продолжение.</h1>
+        <aside class="plan">
+            <div class="contents">
+                <h2>План</h2>
+                <ol>
+                    <li><a href="#incapsulation">Инкапсуляция. private и public свойства и методы</a></li>
+                    <li><a href="#constructor">Конструктор</a></li>
+                    <li><a href="#destructor">Деструктор</a></li>
+                    <li><a href="#default-args">Аргументы по умолчанию</a></li>
+                    <li><a href="#getters_setters">Геттеры, сеттеры (акцессоры / мутаторы)</a>
+                        <ol>
+                            <li><a href="#getters">Геттеры или акцессоры</a></li>
+                            <li><a href="#setters">Сеттеры или мутаторы</a></li>
+                        </ol>
+                    </li>
+                    <li><a href="#heap">Создание объектов в куче</a></li>
+                    <li><a href="#interaction">Взаимодействие классов</a></li>
+                    <li><a href="#separate_compilation">Раздельная компиляция классов</a></li>
+                    <li><a href="#ifndef_pragma">ifndef, pragma once</a>
+                        <ol>
+                            <li><a href="#ifndef">ifndef</a></li>
+                            <li><a href="#pragma_once">pragma once</a></li>
+                        </ol>
+                    </li>
+                    <li><a href="#template_classes">Шаблонные классы</a></li>
+                </ol>
+            </div>
+        </aside>
+        <section>
+            <h2 id="incapsulation">Инкапсуляция. private и public свойства и методы</h2>
+            <p>
+                В <a href="oop.html">предыдущей статье</a> встречалось слово <code>public</code> в коде, но о нём не сказано ни слова. Давайте скажем.
+            </p>
+            <blockquote>
+                Инкапсуляция — механизм языка программирования, ограничивающий доступ к составляющим объект компонентам (методам и свойствам), делает их приватными, то есть доступными только внутри объекта.
+            </blockquote>
+            <p>
+                Тайный смысл этого определения в том, что инкапсуляция позволяет ограничивать доступ к свойствам и методам класса, и тем самым «скрывать» внутреннюю реализацию объекта от внешнего мира, оставляя только некоторое количество публично доступных методов для взаимодействия с объектом. Используя этот набор публичных методов, называемый <i>интерфейсом</i>, мы можем взаимодействовать с объектом.
+            </p>
+            <p>
+                Приватные атрибуты и методы позволяют объекту функционировать по принципу «черного ящика», в котором что-то есть и что-то происходит, но неизвестно что. Мы не можем заглянуть в этот ящик и повлиять на происходящее внутри. Если же к этому ящику добавить несколько кнопок и рычагов, доступных снаружи — с этим ящиком можно будет взаимодействовать, каким-то образом влиять на происходящее внутри него.
+            </p>
+            <p>
+                Тот-же автомобиль. Вот он стоит, весь красивый и пахучий. Что у него внутри? Что там происходит? Непонятно. Благо разработчик позаботился о нашем комфорте и предоставил для нас несложный интерфейс: педали, руль, замок зажигания и несколько других переключалок. Мы знаем, что если мы повернем руль вправо — автомобиль повернет колеса вправо, а если мы нажмем педаль тормоза — автомобиль замедлит свое движение. Нам не нужно знать, какие железки, провода и подшипники задействованы в повороте колес вправо — это внутренняя реализация.
+            </p>
+            <p>
+                Сокрытие внутренней реализации дает нам возможность контролировать внутреннее состояние объекта и обеспечить невозможность случайного изменения этого состояния откуда-то извне. Это позволяет обеспечить целостность этого состояния.
+            </p>
+            <p>
+                Также, сокрытие внутренней реализации развязывает руки разработчику, ибо он может сколько угодно изменять внутреннее функционирование объекта, сохраняя при этом правильность работы внешнего интерфейса. Тот, кто этим внешним интерфейсом пользуется разницы не заметит. Ну согласитесь, какая вам разница где именно находится топливный бак в автомобиле: справа, слева, спереди или сзади? Какая разница бензиновый у него двигатель или газовый, или электрический? Если вы нажмете педаль газа — автомобиль все так же поедет, если повернете руль — повернутся колеса. Поведение остается прежним, несмотря на изменения во внутреннем устройстве.
+            </p>
+            <p>
+                Для указания приватности или публичности атрибутов и методов в коде используются <i>модификаторы доступа</i> <code>private</code> и <code>public</code>:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Car {
+    private:
+        // приватные свойства
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+
+        // приватный метод
+        bool hasFuel(double fuelNeeded) {
+            return fuelNeeded &lt;= this-&gt;currentFuel;
+        }
+
+
+    public:
+        // публичные методы
+        void travel(double distance) {
+            double fuelNeeded = distance * this-&gt;consumption;
+
+            this-&gt;currentFuel -= fuelNeeded;
+            std::cout &lt;&lt; "Travelled " &lt;&lt; distance &lt;&lt; " miles. ";
+            std::cout &lt;&lt; this-&gt;currentFuel &lt;&lt; " fuel left." &lt;&lt; std::endl;
+        }
+
+        void refill() {
+            this-&gt;currentFuel = this-&gt;maxFuel;
+            std::cout &lt;&lt; "Car refilled. " &lt;&lt; this-&gt;currentFuel &lt;&lt; " fuel left." &lt;&lt; std::endl;
+        }
+};
+
+int main() {
+    Car car = Car();
+
+    // из-за этой строки получим ошибку компиляции, т.к. hasFuel() — приватный метод.
+    car.hasFuel(20);
+
+    // и из-за этой строки тоже получим ошибку компиляции, т.к. maxFuel — приватный атрибут.
+    std::cout &lt;&lt; "max fuel: " &lt;&lt; car.maxFuel &lt;&lt; std::endl;
+
+    return 0;
+}</code>
+            <p>
+                Попытка скомпилировать приведенный код приведет к ошибке, потому-что метод <code>hasFuel</code> и поля объекта объявлены приватными. Это означает, что работать с этими полями и вызывать этот метод можно только внутри класса, а именно внутри методов.
+            </p>
+            <p>
+                В этом коде есть еще одна проблема — поля объекта не инициализированы. Это не хорошо. Нужно это исправить. В каком месте кода мы бы могли это сделать? Может быть в методе <code>travel</code>? Или в методе <code>refill</code>? Как-то нелогично, ведь тогда инициализация будет происходить при каждом вызове метода.
+            </p>
+            <p>
+                Наиболее подходящим местом для инициализации будет метод, который вызывается всего один раз, и при этом всегда самым первым. Да и вызываться он должен в обязательном порядке, иначе в какой-то момент мы можем попросту забыть его вызвать и получим неправильный, неинициализированный объект.
+            </p>
+            <p>
+                Такой метод, благо, существует и называется конструктором.
+            </p>
+        </section>
+
+        <section>
+            <h2 id="constructor">Конструктор</h2>
+            <p>
+                Мы уже выяснили, что для собственной безопасности поля объекта следует всегда делать приватными. Потребность в публичных полях возникает в крайне редких и эксцентричных случаях. Также, понимаем, что для корректной работы объекта его атрибуты должны быть в «правильном» состоянии, то есть инициализированы правильными начальными значениями. Наиболее удачным местом для инициализации является <i>конструктор</i>.
+            </p>
+            <blockquote>
+                В объектно-ориентированном программировании конструктор класса (от англ. constructor, иногда сокращают ctor) — специальный блок инструкций, вызываемый при создании объекта.
+                Конструкторы часто выделяются наличием одинакового имени с именем класса, в котором объявляется. Их задача — инициализировать члены объекта. Корректно написанный конструктор оставит объект в «правильном» состоянии.
+            </blockquote>
+            <p>
+                То есть конструктор — обычный метод, который вызывается при создании объекта и в котором нужно проинициализировать атрибуты. В языке С++ конструктор имеет то же имя, что и класс. Пример:
+            </p>
+            <code data-lang="c">class Car {
+    public:
+        // конструктор класса Car
+        Car() {
+
+        }
+};
+
+
+class RequestHandler {
+    public:
+        // конструктор класса RequestHandler
+        RequestHandler() {
+
+        }
+};
+
+
+class ImageLoader {
+    public:
+        // конструктор класса ImageLoader
+        ImageLoader() {
+
+        }
+};</code>
+            <p>
+                Добавим несколько приватных атрибутов в класс <code>Car</code>. Т.к. атрибуты приватные — инициализировать их извне класса мы не сможем, ибо получим ошибку компиляции. Инициализировать атрибуты следует в конструкторе:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // инициализация полей объекта в конструкторе
+        Car() {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+            this-&gt;maxFuel     = 100;
+            this-&gt;currentFuel = 100;
+            this-&gt;consumption = 0.18;
+            this-&gt;model       = new char[50];
+        }
+};</code>
+            <p>
+                В C++ существует еще один способ инициализации атрибутов в конструкторе:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // инициализация полей объекта в конструкторе
+        Car() : maxFuel(100)
+              , currentFuel(100)
+              , consumption(0.18)
+              , model(new char[50])
+        {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+        }
+};</code>
+            <p>
+                Как и обычный метод, конструктор может принимать аргументы:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // инициализация полей объекта в конструкторе
+        Car(double maxFuel, double currentFuel, double consumption) {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+            this-&gt;maxFuel     = maxFuel;
+            this-&gt;currentFuel = currentFuel;
+            this-&gt;consumption = consumption;
+            this-&gt;model       = new char[50];
+        }
+};</code>
+            <p>
+                Альтернативный вариант записи того же кода:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // инициализация полей объекта в конструкторе
+        Car(double maxFuel, double currentFuel, double consumption) : maxFuel(maxFuel)
+                                                                    , currentFuel(currentFuel)
+                                                                    , consumption(consumption)
+                                                                    , model(new char[20])
+        {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+        }
+};</code>
+        </section>
+
+        <section>
+            <h2 id="destructor">Деструктор</h2>
+            <p>
+                Жизнь начинается с конструктора, но ничто не вечно... Поэтому объекты умирают. При этом вызывается другой специальный метод — <i>деструктор</i>.
+            </p>
+            <p>
+                Деструктор служит для деинициализации полей объекта. В деструкторе следует освобождать используемые объектом ресурсы, в особенности указатели, во избежание утечек памяти.
+            </p>
+            <p>
+                В С++ деструктор записывается так же как и конструктор, только со знаком «тильда» (~) перед именем. Добавим деструктор в класс <code>Car</code>:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // инициализация полей объекта в конструкторе
+        Car() {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+            this-&gt;maxFuel     = 100;
+            this-&gt;currentFuel = 100;
+            this-&gt;consumption = 0.18;
+            this-&gt;model       = new char[50];
+        }
+
+        // деструктор класса Car. Удачное место для удаления указателя.
+        ~Car() {
+            std::cout &lt;&lt; "destructing car" &lt;&lt; std::endl;
+            delete this-&gt;model;
+        }
+};</code>
+            <p>
+                Деструктор вызывается автоматически в случае, когда выполнение кода выходит из области видимости. Именно поэтому вызывать деструктор «руками» не нужно. На это указывает идиотский синтаксис полученного выражения:
+            </p>
+            <code data-lang="c">Car car = Car();
+
+// ...
+
+car.~Car(); // выглядит несколько странно...</code>
+            <p>
+                Если вы попытаетесь это сделать — деструктор отработает как обычный метод, но объект при этом удален не будет. И если вы в деструкторе очистите какой-нибудь указатель, то при повторном вызове деструктора получите ошибку. Всё потому, что при первом вызове вы уже удалили какие-то ресурсы и удалить их повторно не получится.
+            </p>
+            <p>
+                Еще одной особенностью деструкторов является то, что они не принимают аргументы. Код с деструктором, принимающим аргументы, попросту не компилируется. При этом ошибка компилятора очень тонко намекает на то, что деструктор не может принимать аргументы.
+            </p>
+            <pre>car.cpp:26:5: error: destructor cannot have any parameters
+    ~Car(int arg) {
+    ^
+1 error generated.</pre>
+        </section>
+
+        <section>
+            <h2 id="default-args">Атрибуты по умолчанию</h2>
+            <p>
+                Зачастую атрибуты объектов могут обладать некими начальными значениями. Их можно задать одним из указанных выше способов. Но существует еще одна возможность — задание атрибутов по умолчанию:
+            </p>
+            <code data-lang="c">// инициализация полей объекта в конструкторе с атрибутами по умолчанию
+Car(double maxFuel=100, double currentFuel=100, double consumption=0.18) {
+    std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+    this-&gt;maxFuel     = maxFuel;
+    this-&gt;currentFuel = currentFuel;
+    this-&gt;consumption = consumption;
+    this-&gt;model       = new char[50];
+}</code>
+            <p>
+                Атрибуты с указанными значениями по умолчанию являются опциональными, то есть при создании объекта их можно не указывать. Подобный подход достаточно удобен, так как покрывает сразу несколько способов создания объекта:
+            </p>
+            <code data-lang="c">Car car1 = Car();
+Car car2 = Car(120);
+Car car3 = Car(120, 120);
+Car car4 = Car(120, 120, 0.21);</code>
+            <p>
+                Правда при таком подходе существует ряд ограничений. Нельзя пропускать аргументы при передаче, то есть нельзя указать первый и третий аргументы, а в качестве второго использовать аргумент по умолчанию.
+            </p>
+            <p>
+                Допустим мы желаем вызвать указанный выше конструктор с аргументами по умолчанию. Мы хотим указать <code>maxFuel = 130, consumption = 0.21</code>, а в качестве currentFuel использовать значение по умолчанию:
+            </p>
+            <code data-lang="c">Car car = Car(130, 0.21); // maxFuel = 130, currentFuel = по умолчанию, consumption = 0.21</code>
+            <p>
+                Этот код отработает неправильно. Он будет интерпретирован как <code>maxFuel = 130</code>, <code>currentFuel = 0.21</code>, а в качестве <code>consumption</code> будет использован аргумент по умолчанию.
+            </p>
+            <p>
+                Нельзя при объявлении конструктора вначале указать опциональные аргументы, а затем обязательные:
+            </p>
+            <code data-lang="c">// неправильно
+Car(double maxFuel=100, double currentFuel, double consumption=0.18) {
+    // ...
+}
+
+// неправильно
+Car(double maxFuel=100, double currentFuel=100, double consumption) {
+    // ...
+}
+
+// правильно
+Car(double maxFuel, double currentFuel=100, double consumption=0.18) {
+    // ...
+}
+
+// правильно
+Car(double maxFuel, double currentFuel, double consumption=0.18) {
+    // ...
+}</code>
+            <p>
+                Неправильный код из этого примера приведет к ошибке на этапе компиляции, которая тонко намекает на неправильное указание аргументов по умолчанию:
+            </p>
+            <pre>car.cpp:18:36: error: missing default argument on parameter 'currentFuel'
+Car(double maxFuel=100, double currentFuel, double consumption=0.18...</pre>
+        </section>
+
+        <section>
+            <h2 id="getters_setters">Геттеры, сеттеры (акцессоры / мутаторы)</h2>
+            <p>
+                Для того, чтобы обеспечить правильность внутреннего состояния объектов, рекомендуется все атрибуты делать приватными. Но ведь к приватным атрибутам нет доступа извне класса. Как же быть? Что делать в случае, когда необходимо менять атрибуты извне? Для этого используют особые публичные методы — геттеры и сеттеры (англ. getters and setters), или, как еще они называются, акцессоры и мутаторы (англ. accessors and mutators).
+            </p>
+            <h3 id="getters">Геттеры или акцесоры</h3>
+            <p>
+                Геттеры позволяют получить значение приватного атрибута. Как именно? Зачастую просто возвращая значение этого атрибута. Давайте посмотрим на примеры. Для этого дополним наш класс <code>Car</code> несколькими геттерами:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // конструктор
+        Car() {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+            this-&gt;maxFuel     = 100;
+            this-&gt;currentFuel = 100;
+            this-&gt;consumption = 0.18;
+            this-&gt;model       = new char[50];
+        }
+
+        // деструктор
+        ~Car() {
+            std::cout &lt;&lt; "destructing car" &lt;&lt; std::endl;
+            delete this-&gt;model;
+        }
+
+        // геттеры для приватных атрибутов
+        double getMaxFuel() const {
+            return this-&gt;maxFuel;
+        }
+
+        double getCurrentFuel() const {
+            return this-&gt;currentFuel;
+        }
+
+        double getConsumption() const {
+            return this-&gt;consumption;
+        }
+};</code>
+        <p>
+            Как видите, геттер — обычный метод. Характерно то, что эти методы называются так же, как и соответствующие атрибуты. Имя геттера представляет собой название атрибута с префиксом get.
+        </p>
+        <p>
+            Обратите внимание на ключевое слово <code>const</code> в имени геттера. Этот <code>const</code> означает, что данный метод не изменяет состояние объекта, то есть внутри этого метода нельзя изменять значения атрибутов. Делать геттеры константными необязательно, но этот приём рекомендуется к применению. Геттер — это метод, который не должен ничего изменять, и объявление его константным помогает гарантировать это.
+        </p>
+        <h3 id="setters">Сеттеры или мутаторы</h3>
+        <p>
+            Сеттеры — методы, которые устанавливают новые значения приватным атрибутам. Дополним класс <code>Car</code> несколькими сеттерами:
+        </p>
+        <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        // конструктор
+        Car() {
+            std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+            this-&gt;maxFuel     = 100;
+            this-&gt;currentFuel = 100;
+            this-&gt;consumption = 0.18;
+            this-&gt;model       = new char[50];
+        }
+
+        // деструктор
+        ~Car() {
+            std::cout &lt;&lt; "destructing car" &lt;&lt; std::endl;
+            delete this-&gt;model;
+        }
+
+        // геттеры для приватных атрибутов
+        double getMaxFuel() const {
+            return this-&gt;maxFuel;
+        }
+
+        double getCurrentFuel() const {
+            return this-&gt;currentFuel;
+        }
+
+        double getConsumption() const {
+            return this-&gt;consumption;
+        }
+
+        // сеттеры для приватных атрибутов
+        void setMaxFuel(double maxFuel) {
+            this-&gt;maxFuel = maxFuel;
+        }
+
+        void setCurrentFuel(double currentFuel) {
+            if ( currentFuel &gt; this-&gt;maxFuel ) {
+                currentFuel = this-&gt;maxFuel;
+            } else if ( currentFuel &lt; 0 ) {
+                currentFuel = 0;
+            }
+
+            this-&gt;currentFuel = currentFuel;
+        }
+
+        void setConsumption(double consumption) {
+            this-&gt;consumption = consumption;
+        }
+};</code>
+        <p>
+            Как видите, сеттеры это всего-навсего методы, которые принимают новые значения атрибутов и устанавливают их. При этом, можно произвести некоторые проверки правильности новых данных, как в методе <code>setCurrentFuel</code>, обеспечив тем самым правильность внутреннего состояния объекта (текущий запас топлива в баке автомобиля не может превышать объем бака и не может быть меньше нуля).
+        </p>
+        <p>
+            Именуются сеттеры как и геттеры, только с префиксом set. Как правило, сеттер не возвращает никаких значений, поэтому возвращаемый тип — <code>void</code>.
+        </p>
+        </section>
+
+        <section>
+            <h2 id="heap">Куча. Создание объектов в куче. </h2>
+            <p>
+                Википедия говорит, что:
+            </p>
+            <blockquote>
+                Ку́ча (англ. heap) в информатике и программировании — название структуры данных, с помощью которой реализована динамически распределяемая память приложения, а также объём памяти, зарезервированный под эту структуру.
+
+                Куча использует память, выделяемую динамически или запрошенную статически у операционной системы. Эта память используется для размещения объектов, динамически созданных программой.
+            </blockquote>
+            <p>
+                Как видим, куча — это динамическая память, которую можно запрашивать у операционной системы. А это означает, что объём этой памяти ограничен общим объёмом памяти системы. Поэтому, куча является предпочтительным местом для создания объектов.
+            </p>
+            <p>
+                Создавать объекты в куче вы можете с помощью <code>new</code>:
+            </p>
+            <code data-lang="c">class Car {
+    // ...
+};
+
+int main() {
+    Car *car = new Car(); // создаём объект Car в куче
+
+    return 0;
+}</code>
+        <p>
+            В языке С++, как и во многих других С-подобных языках, <code>new</code> является языковой конструкцией, которая динамически выделяет память в куче и инициализирует память используя конструктор. <code>new</code> пытается аллоцировать достаточное количество памяти, и, в случае успеха, возвращает указатель на выделенную область памяти.
+        </p>
+        <p>
+            Ключевой особенностью является то, что объекты, созданные с помощью <code>new</code> автоматически не удаляются при выходе за пределы видимости. Поэтому, чтобы избежать т.н. «утечек памяти» следует подчищать за собой, удаляя созданные объекты вручную, с помощью <code>delete</code>. Вызов <code>delete</code> приводит к вызову деструктора удаляемого объекта и затем освобождает выделенную память.
+        </p>
+        <p>
+            Зачем это нужно? Объекты могут разрастаться до больших размеров и при этом попросту не помещаться в стэке. Использование стэка в этом случае приведет к пресловутому Segmentation Fault. Создание того-же объекта в куче позволит этого избежать.
+        </p>
+        <code data-lang="c">class Car {
+    // ...
+};
+
+int main() {
+    Car *car = new Car(); // создаём объект Car в куче
+
+    // делаем что-то важное
+
+    delete car; // подчищаем за собой память
+
+    return 0;
+}</code>
+        </section>
+
+        <section>
+            <h2 id="interaction">Взаимодействие классов</h2>
+            <p>
+                Объекты разных классов могут взаимодействовать между собой. Объекты можно вполне успешно передавать в качестве аргументов и вызывать их методы.
+            </p>
+            <code data-lang="c">class Car {
+    public:
+        void move(double distance) {
+            double fuelNeeded = distance * this-&gt;consumption;
+
+            if ( fuelNeeded &gt; this-&gt;currentFuel ) {
+                std::cerr &lt;&lt; "Can't move. Not enough fuel." &lt;&lt; std::endl;
+                return;
+            }
+
+            this-&gt;currentFuel -= fuelNeeded;
+        }
+};
+
+class Driver {
+    public:
+        // получаем указатель на объект Car и вызываем его метод move
+        void driveCar(Car* car, double distance) {
+            car->move(distance);
+        }
+};
+
+int main() {
+    // создаём объекты в куче
+    Car *car = new Car();
+    Driver *driver = new Driver();
+
+    // передаем водителю автомобиль
+    driver-&gt;driveCar(car, 150);
+
+    // подчищаем за собой память
+    delete car;
+    delete driver;
+
+    return 0;
+}</code>
+        <p>
+            Также, объекты одного класса могут содержать в себе объекты другого класса в качестве своих аргументов <i>(агрегация или композиция)</i>, например часть функционала автомобиля, а именно логика работы двигателя, может быть вынесена в класс <code>Engine</code>:
+        </p>
+        <code data-lang="c">class Engine {
+    private:
+        bool isRunning;
+
+    public:
+        Engine() {
+            this-&gt;isRunning = false;
+        }
+
+        bool running() {
+            return this-&gt;isRunning;
+        }
+
+        void start() {
+            this-&gt;isRunning = true;
+        }
+
+        void stop() {
+            this-&gt;isRunning = false;
+        }
+};
+
+class Car {
+    private:
+        // объект класса engine в качестве атрибута класса Car
+        Engine *engine;
+
+    public:
+        Car() {
+            this-&gt;engine = new Engine();
+        }
+
+        ~Car() {
+            delete this-&gt;engine;
+        }
+
+        void move(double distance) {
+            // взаимодействуем с двигателем, который является атрибутом
+            if ( !this-&gt;engine-&gt;running() ) {
+                this-&gt;engine-&gt;start(); // вызываем метод вложенного объекта
+            }
+
+            // делаем что-то полезное...
+
+            // снова взаимодействуем с двигателем
+            this-&gt;engine-&gt;stop();
+        }
+};</code>
+        <p>
+            Теперь всё как в реальной жизни: есть отдельный двигатель, и есть автомобиль. Двигатель является составной частью автомобиля.
+            Это показано в приведенном примере: объект класса <code>Car</code> содержит объект класса <code>Engine</code> в качестве аргумента.
+            Поэтому объект класса <code>Car</code> является композитным.
+        </p>
+        </section>
+
+        <section>
+            <h2 id="separate_compilation">Раздельная компиляция классов</h2>
+            <p>
+                На практике классы в C++ следует разносить на заголовочные файлы и реализацию. В заголовочный файл выносится объявление класса, его атрибутов и перечень методов без реализации. Реализация этих методов выносится в другой файл, в котором следует к названию метода добавлять название класса, в котором этот метод объявлен. Заголовочный файл имеет расширение <code>*.h</code>, файл реализации — <code>*.cpp</code>. Как это выглядит? Давайте посмотрим на примере нашего класса <code>Car</code>:
+            </p>
+            <p>
+                <code>car.h</code> — заголовочный файл класса Car:
+            </p>
+            <code data-lang="c">class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        Car();
+        ~Car();
+
+        double getMaxFuel() const;
+        double getCurrentFuel() const;
+        double getConsumption() const;
+
+        void setMaxFuel(double maxFuel);
+        void setCurrentFuel(double currentFuel);
+        void setConsumption(double consumption);
+};</code>
+            <p>
+                <code>car.cpp</code> — реализация класса Car:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+#include "car.h" // подключаем наш заголовочный файл
+
+Car::Car() {
+    std::cout &lt;&lt; "constructing car" &lt;&lt; std::endl;
+
+    this-&gt;maxFuel     = 100;
+    this-&gt;currentFuel = 100;
+    this-&gt;consumption = 0.18;
+    this-&gt;model       = new char[50];
+}
+
+Car::~Car() {
+    std::cout &lt;&lt; "destructing car" &lt;&lt; std::endl;
+    delete this-&gt;model;
+}
+
+double Car::getMaxFuel() const {
+    return this-&gt;maxFuel;
+}
+
+double Car::getCurrentFuel() const {
+    return this-&gt;currentFuel;
+}
+
+double Car::getConsumption() const {
+    return this-&gt;consumption;
+}
+
+void Car::setMaxFuel(double maxFuel) {
+    this-&gt;maxFuel = maxFuel;
+}
+
+void Car::setCurrentFuel(double currentFuel) {
+    if ( currentFuel &gt; this-&gt;maxFuel ) {
+        currentFuel = this-&gt;maxFuel;
+    } else if ( currentFuel &lt; 0 ) {
+        currentFuel = 0;
+    }
+
+    this-&gt;currentFuel = currentFuel;
+}
+
+void Car::setConsumption(double consumption) {
+    this-&gt;consumption = consumption;
+}</code>
+        <p>
+            Ну и <code>main.cpp</code>
+        </p>
+        <code data-lang="c">#include &lt;iostream&gt;
+#include "car.h" // подключаем наш заголовочный файл
+
+int main() {
+    Car *car = new Car();
+
+    std::cout &lt;&lt; car-&gt;getMaxFuel() &lt;&lt; std::endl;
+    std::cout &lt;&lt; car-&gt;getCurrentFuel() &lt;&lt; std::endl;
+    std::cout &lt;&lt; car-&gt;getConsumption() &lt;&lt; std::endl;
+
+    car-&gt;setMaxFuel(200);
+    car-&gt;setCurrentFuel(165.6);
+    car-&gt;setConsumption(1.3);
+
+    std::cout &lt;&lt; car-&gt;getMaxFuel() &lt;&lt; std::endl;
+    std::cout &lt;&lt; car-&gt;getCurrentFuel() &lt;&lt; std::endl;
+    std::cout &lt;&lt; car-&gt;getConsumption() &lt;&lt; std::endl;
+
+    delete car;
+
+    return 0;
+}</code>
+        <p>
+            Как видите, сложного ничего нет. Немного непривычно. Но зачем так делать? Какая от этого выгода?
+        </p>
+        <p>
+            Представьте себе, что этот класс является частью большого проекта над которым работает целая команда. Вы написали класс <code>Car</code>, и скомпилировали его один раз. Коллегам же вы предоставляете заголовочный файл, который даёт им достаточно подробное описание того, что в вашем скомпилированном классе есть, чем можно пользоваться и как именно. При этом, заголовочный файл не загромождён реализацией методов, поэтому он, как правило, достаточно небольшой и читать его очень просто. Заголовочный файл служит как-бы «инструкцией по эксплуатации» вашего класса.
+        </p>
+        <p>
+            Теперь ваши коллеги могут пользоваться вашим классом, подключив его заголовочный файл. Они также могут отдельно скомпилировать свои классы, предоставив свои заголовочные файлы.
+        </p>
+        <p>
+            Имея набор скомпилированых файлов можно собрать проект. При внесении изменений в один из классов не нужно компилировать весь проект заново, а достаточно перекомпилировать только измененные классы, а затем пересобрать проект. В итоге — экономим время.
+        </p>
+        <p>
+            Для того, чтобы скомпилировать класс отдельно, нужно компилятору сообщить о подобном намерении. Необходимо указать, какие классы компилировать, указав дополнительно флаг <code>-c</code>. Скомпилированные классы будут иметь расширение <code>*.o</code>, и будут, по сути, библиотекой. Наш класс <code>Car</code> можно скомпилировать так:
+        </p>
+        <kbd>g++ car.cpp -c</kbd>
+        <p>
+            Теперь можем собрать проект воедино:
+        </p>
+        <kbd>g++ main.cpp car.o</kbd>
+        <p>
+            В результате получим всё тот же пресловутый <code>a.out</code>, который можно запустить:
+        </p>
+        <kbd>./a.out</kbd>
+        <p>
+            Как это будет выглядеть, если классов больше чем один? Компилируем все классы в библиотеки <code>*.o</code>:
+        </p>
+        <kbd>g++ *.cpp -c</kbd>
+        <p>
+            <code>main</code> в качестве библиотеки нам не нужен. Удаляем:
+        </p>
+        <kbd>rm main.o</kbd>
+        <p>
+            Собираем проект и компилируем <code>main.cpp</code>:
+        </p>
+        <kbd>g++ main.cpp *.o</kbd>
+        <p>
+            Проверяем, что получилось:
+        </p>
+        <kbd>./a.out</kbd>
+        <p>
+            Или делаем всё то же самое одной командой:
+        </p>
+        <kbd>g++ *.cpp -c &amp;&amp; rm main.o &amp;&amp; g++ main.cpp *.o &amp;&amp; ./a.out</kbd>
+
+        </section>
+
+        <section>
+            <h2 id="ifndef_pragma">ifndef, pragma once</h2>
+            <h3 id="ifndef">ifndef</h3>
+            <p>
+                Допустим, вы успешно написали мощный класс <code>Car</code>, и отдали его коллегам по работе. Теперь они могут пользоваться этим классом в своей работе. Для этого им всего-лишь нужно подключить <code>car.h</code> в свой код, и ваш класс станет им доступен.
+            </p>
+            <p>
+                Предположим, что пятеро из них подключают ваш заголовочный файл в свои классы. Получается, что при сборке проекта, класс <code>Car</code> будет подключен пять раз. Как минимум нелогично, правда? Как быть?
+            </p>
+            <p>
+                Было бы гораздо логичнее и правильнее подключить класс <code>Car</code> всего один раз, но позволить всем, кому он нужен, пользоваться уже подключеным. Это можно сделать при помощи инструкции <code>#ifndef ...</code> в заголовочном файле, ведь подключается именно заголовочный файл. Давайте внесём соответствующие изменения в <code>car.h</code>:
+            </p>
+            <code data-lang="c">#ifndef CAR_H
+#define CAR_H
+
+class Car {
+    private:
+        double maxFuel;
+        double currentFuel;
+        double consumption;
+        char*  model;
+
+    public:
+        Car();
+        ~Car();
+
+        double getMaxFuel() const;
+        double getCurrentFuel() const;
+        double getConsumption() const;
+
+        void setMaxFuel(double maxFuel);
+        void setCurrentFuel(double currentFuel);
+        void setConsumption(double consumption);
+};
+
+#endif // CAR_H</code>
+        <p>
+             Как видите, изменения произошли лишь в начале и в конце файла. Добавилось аж 3 строки. Но как это работает?
+        </p>
+        <p>
+            Каждый раз, когда компилятор, а точнее препроцессор, натыкается на <code>#include "car.h"</code>, он пытается добавить в проект этот файл. И при каждой такой попытке препроцессор проверяет, объявлен ли макрос <code>CAR_H</code>. В случае, если такой макрос ещё не объявлен, препроцессор переходит к последующим инструкциям в этом файле. А следующей строкой этот макрос объявляется. При попытке подключить этот файл повторно, макрос <code>CAR_H</code> уже будет объявлен и условие не выполнится. В итоге, файл будет подключен только один раз.
+        </p>
+        <p>
+            Конструкция
+        </p>
+        <code data-lang="c">#ifndef SOME_CLASS_H
+#define SOME_CLASS_H
+
+// ...
+
+#endif // SOME_CLASS_H</code>
+        <p>
+            по своей сути является аналогом обычного <code>if ( ... ) {...}</code>, но на языке препроцессора.
+        </p>
+        <p>
+            Обычно в качестве имени этого макроса используют название класса. Например <code>CAR_H</code>, <code>ENGINE_H</code>, <code>REQUEST_HANDLER_H</code> и т.д. После <code>#endif</code> дописывают имя макроса в виде коментария исключительно для удобства.
+        </p>
+        <h3 id="pragma_once">pragma once</h3>
+        <blockquote>
+            В языках программирования Си и C++ #pragma once — нестандартная, но широко распространенная препроцессорная директива, разработанная для контроля за тем, чтобы конкретный исходный файл при компиляции подключался строго один раз.
+        </blockquote>
+        <p>
+            Т.е. <code>#pragma once</code> делает ровно то же самое, что и <code>#ifndef — #define — #endif</code>, только не является стандартным механизмом. Фокус в том, что на некоторых компиляторах <code>#pragma once</code> может не работать.
+        </p>
+        <p>
+            При использовании <code>#ifndef</code> может возникать коллизия имён макросов, ибо эти макросы приходится писать руками, а <code>#pragma once</code> возлагает обязанности по определению того, какой файл уже подключен, а какой нет, на компилятор. Это позволяет избежать возможных коллизий.
+        </p>
+        <p>
+            Забавно, но некоторые считают, что использование <code>#pragma once</code> якобы уменьшает количество строк, которые нужно написать. Аж на две. Это если работает. А если не работает — то директива будет проигнорирована, и как следствие файл будет подключаться многократно.
+        </p>
+        <p>
+            Поэтому, чтобы работало наверняка, опытные «гуру» делают так:
+        </p>
+        <code data-lang="c">#pragma once
+#ifndef SOME_CLASS_H
+#define SOME_CLASS_H
+
+// ...
+
+#endif // SOME_CLASS_H</code>
+        <p>
+            Сэкономили так сэкономили...
+        </p>
+        </section>
+
+        <section>
+            <h2 id="template_classes">Шаблонные классы</h2>
+            <p>
+                Давайте рассмотрим ещё одну проблему. Допустим, мы хотим написать класс, для представления точки на плоскости с Декартовыми координатами. Обычная точка с координатами <code>x</code> и <code>y</code>.
+                Для простоты допустим, что эта точка умеет только печатать свои координаты и больше ничего. И допустим, что координатная система — целочисленная. Итак, класс <code>Point</code>:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Point {
+    private:
+        int x, y;
+
+    public:
+        Point() {
+            this-&gt;x = 0;
+            this-&gt;y = 0;
+        }
+
+        Point(int x, int y) {
+            this-&gt;x = x;
+            this-&gt;y = y;
+        }
+
+        int getX() const {
+            return this-&gt;x;
+        }
+
+        int getY() const {
+            return this-&gt;y;
+        }
+
+        void print() {
+            std::cout &lt;&lt; "(" &lt;&lt; this-&gt;x &lt;&lt; ", " &lt;&lt; this->y &lt;&lt; ")" &lt;&lt; std::endl;
+        }
+
+};
+
+int main() {
+    Point *p1 = new Point();
+    Point *p2 = new Point(2, 3);
+
+    p1-&gt;print();
+    p2-&gt;print();
+
+    delete p1;
+    delete p2;
+
+    return 0;
+}</code>
+            <p>
+                Простой и понятный класс, в котором координаты хранятся в атрибутах типа <code>int</code>. Вроде хорошо, задание выполнено.
+            </p>
+            <p>
+                Теперь допустим, что нам потребовались точки, с координатами типа <code>float</code>. Т.е. нужны точки и типа <code>int</code>, и типа <code>float</code>, причем идентичного функционала:
+            </p>
+            <code data-lang="c">#include &lt;iostream&gt;
+
+class Point {
+    private:
+        float x, y;
+
+    public:
+        Point() {
+            this-&gt;x = 0;
+            this-&gt;y = 0;
+        }
+
+        Point(float x, float y) {
+            this-&gt;x = x;
+            this-&gt;y = y;
+        }
+
+        float getX() const {
+            return this-&gt;x;
+        }
+
+        float getY() const {
+            return this-&gt;y;
+        }
+
+        void print() {
+            std::cout &lt;&lt; "(" &lt;&lt; this-&gt;x &lt;&lt; ", " &lt;&lt; this->y &lt;&lt; ")" &lt;&lt; std::endl;
+        }
+
+};
+
+int main() {
+    Point *p1 = new Point();
+    Point *p2 = new Point(2.4, 3.7);
+
+    p1-&gt;print();
+    p2-&gt;print();
+
+    delete p1;
+    delete p2;
+
+    return 0;
+}</code>
+        <p>
+            Нам удалось решить проблему, применив копипаст, и теперь у нас есть 2 идентичных класса, которые отличаются только типом аргументов.
+        </p>
+        <p>
+            А что мы будем делать, если точки понадобятся еще и для типа <code>double</code>? Ещё раз применим копипасту? А затем применим еще раз для типа <code>long</code>? И для <code>long long</code>? Многовато копипасты.
+        </p>
+        <p>
+            Самое весёлое начнется когда нам понадобится внести правки. При подходе с копипастой прийдется в каждом из продублированных классов делать ровно одни и те же правки.
+        </p>
+        <p>
+            Должен быть иной способ решить нашу задачу, не прибегая к копипасте. И такой способ есть — шаблоны, а точнее, шаблонные классы.
+        </p>
+        <p>
+            Давайте изменим наш класс <code>Point</code>, чтобы он был шаблонным и одинаково подходил для типов <code>int</code>, <code>long</code>, <code>long long</code>, <code>float</code> и <code>double</code>:
+        </p>
+        <code data-lang="c">#include &lt;iostream&gt;
+
+template &lt;typename T&gt;
+class Point {
+    private:
+        T x, y;
+
+    public:
+        Point() {
+            this-&gt;x = 0;
+            this-&gt;y = 0;
+        }
+
+        Point(T x, T y) {
+            this-&gt;x = x;
+            this-&gt;y = y;
+        }
+
+        T getX() const {
+            return this-&gt;x;
+        }
+
+        T getY() const {
+            return this-&gt;y;
+        }
+
+        void print() {
+            std::cout &lt;&lt; "(" &lt;&lt; this-&gt;x &lt;&lt; ", " &lt;&lt; this-&gt;y &lt;&lt; ")" &lt;&lt; std::endl;
+        }
+
+};
+
+#endif // POINT_H
+
+int main() {
+    Point&lt;float&gt;  *p1 = new Point&lt;float&gt;(2.2, 3.5);
+    Point&lt;double&gt; *p2 = new Point&lt;double&gt;(4.9, 9.1);
+    Point&lt;int&gt;    *p3 = new Point&lt;int&gt;(5, -8);
+
+    p1-&gt;print();
+    p2-&gt;print();
+    p3-&gt;print();
+
+    delete p1;
+    delete p2;
+    delete p3;
+
+    return 0;
+}</code>
+        <p>
+            Код несколько усложнился. Добавился какой-то <code>template</code> и <code>typename</code>, а вместо типов данных в классе теперь используется некий <code>T</code>. В <code>main</code> при объявлении типа переменной и при вызове конструктора появились дополнительные записи. Сложно. Непонятно. Давайте разберемся.
+        </p>
+        <p>
+            Ключевое слово <code>template</code> говорит, что в коде будет использоваться шаблон. В угловых скобках указываем, что этот шаблон заменяет тип данных (ключевое слово <code>typename</code>), и указываем имя этого шаблона (в этом примере <code>T</code>). Кстати говоря, вместо <code>typename</code> можно использовать <code>class</code>, тогда эта строка будет выглядеть так: <code>template &lt;class T&gt;</code>. Теперь при реализации классов, во всех местах где ранее приходилось явно указывать тип (<code>int</code>, <code>float</code> и т.д.) — можно вместо явного типа использовать шаблон <code>T</code>.
+        </p>
+        <p>
+            При использовании шаблонных классов нам прийдется указывать явно, с каким типом будет работать создаваемый объект. Делается это в угловых скобках сразу после имени типа при объявлении переменной и при вызове конструктора: <code>Point&lt;int&gt; *p = new Point&lt;int&gt;();</code>.
+        </p>
+        </section>
+
+        <footer>
+            <address>
+                Автор X-Treem.
+            </address>
+            <time datetime="2013-12-12">12.12.2013</time>
+        </footer>
+    </article>
+    <script type="text/javascript" src="https://dl.dropboxusercontent.com/u/31437201/code.js"></script>
+</body>
+</html>
