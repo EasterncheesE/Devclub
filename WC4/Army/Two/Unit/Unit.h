@@ -32,10 +32,14 @@ class Unit {
         void setState(BaseState* newState);
         void setAttack(BaseAttack* newAttack);
         
+        bool getStateChangeImmune();
+        void setStateChangeImmune();
+        
         bool getIsVampire();
         void setIsVampire();
         
-
+        bool getIsWerewolf();
+        void setIsWerewolf();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

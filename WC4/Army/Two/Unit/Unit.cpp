@@ -51,12 +51,29 @@ void Unit::setState(BaseState* newState) {
 void Unit::setAttack(BaseAttack* newAttack) {
     this->_attack = newAttack;
 }
+
+bool Unit::getStateChangeImmune() {
+    return this->_state->getStateChangeImmune();
+}
+void Unit::setStateChangeImmune() {
+    this->_state->setStateChangeImmune();
+}
+
+
 bool Unit::getIsVampire() {
     return this->_state->getIsVampire();
 }
 void Unit::setIsVampire() {
     this->_state->setIsVampire();
 }
+
+bool Unit::getIsWerewolf() {
+    return this->_state->getIsWerewolf();
+}
+void Unit::setIsWerewolf() {
+    this->_state->setIsWerewolf();
+}
+
     
 void Unit::attack(Unit* target) {
     this->_attack->attack(target);
@@ -77,5 +94,6 @@ std::ostream& operator<<(std::ostream& out, Unit& unit) {
     out << "Unit HP: " << unit.getHP() << "/" << unit.getMaxHP() << std::endl;
     out << "Unit DMG:" << unit.getDMG() << std::endl;
     out << "Is vampire: " << unit.getIsVampire() << std::endl;
+    out << "Is werewolf: " << unit.getIsWerewolf() << std::endl;
     return out;
 }

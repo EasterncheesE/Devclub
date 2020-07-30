@@ -1,7 +1,6 @@
 #ifndef ROGUE_ATTACK_H
 #define ROGUE_ATTACK_H
 
-#include "../Unit/Unit.h"
 #include "BaseAttack.h"
 
 class RogueAttack : public BaseAttack {

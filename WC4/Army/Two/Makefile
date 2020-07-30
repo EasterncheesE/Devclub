@@ -8,7 +8,9 @@ EXEC=a.out
 all: $(EXEC)
 	clear
 	clear
+	rm  -r *.o
 	./a.out
+	rm -r a.out
 
 $(EXEC): $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(EXEC)

@@ -29,12 +29,32 @@ int BaseState::getHP() {
 int BaseState::getMaxHP() {
     return this->maxHP;
 }
+
+bool BaseState::getStateChangeImmune() {
+    return this->changeStateImmune;
+}
+void BaseState::setStateChangeImmune() {
+    this->changeStateImmune = true;
+}
+
+
+
+
 bool BaseState::getIsVampire() {
     return this->isVampire;
 }
 void BaseState::setIsVampire() {
     this->isVampire = true;
+    this->changeStateImmune = true;
 }
+bool BaseState::getIsWerewolf() {
+    return this->isWerewolf;
+}
+void BaseState::setIsWerewolf() {
+    this->isWerewolf = true;
+    this->changeStateImmune = true;
+}
+
 
 void BaseState::addHP(int hp) {
     if ( this->checkIfDead()) {

@@ -4,6 +4,8 @@ Vampire::Vampire(std::string title, int hp, int dmg) : Unit(title, hp, dmg) {
     std::cout << "Vampire constructor" << std::endl;
     this->_attack = new VampireAttack(this, dmg);
     this->_state = new VampireState(title, hp);
+    this->_state->setIsVampire();
+    this->_state->setStateChangeImmune();
 }
 Vampire::~Vampire() {
     std::cout << "Vampire destructor" << std::endl;

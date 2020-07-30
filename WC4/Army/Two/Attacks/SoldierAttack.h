@@ -1,7 +1,6 @@
 #ifndef SOLDIER_ATTACK_H
 #define SOLDIER_ATTACK_H
 
-#include "../Unit/Unit.h"
 #include "BaseAttack.h"
 
 class Unit;

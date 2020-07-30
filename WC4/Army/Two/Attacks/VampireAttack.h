@@ -2,7 +2,6 @@
 #define VAMPIRE_ATTACK_H
 
 #include <cstdlib>
-#include "../Unit/Unit.h"
 #include "../Unit/Vampire.h"
 #include "BaseAttack.h"
 

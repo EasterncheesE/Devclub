@@ -11,6 +11,8 @@ class BaseState {
         int HP;
         int maxHP;
         bool isVampire;
+        bool isWerewolf;
+        bool changeStateImmune;
     public:
         BaseState(std::string title, int hp);
         BaseState(std::string title, int hp, int maxHP);
@@ -21,8 +23,14 @@ class BaseState {
         int getHP();
         int getMaxHP();
         
+        bool getStateChangeImmune();
+        void setStateChangeImmune();
+        
         bool getIsVampire();
         void setIsVampire();
+        
+        bool getIsWerewolf();
+        void setIsWerewolf();
         
         virtual void addHP(int hp);
         virtual void takeDMG(int dmg);
