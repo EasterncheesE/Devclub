@@ -5,6 +5,8 @@ BaseState::BaseState(std::string title, int hp) {
     this->HP = hp;
     this->maxHP = hp;
     this->isVampire = false;
+    this->isWerewolf = false;
+    this->isSpellcaster = false;
 }
 BaseState::BaseState(std::string title, int hp, int maxHP) {
     this->title = title;
@@ -37,8 +39,12 @@ void BaseState::setStateChangeImmune() {
     this->changeStateImmune = true;
 }
 
-
-
+bool BaseState::getMagicImmunity() {
+    return this->isMagicImmune;
+}
+void BaseState::setMagicImmunity() {
+    this->isMagicImmune = true;
+}
 
 bool BaseState::getIsVampire() {
     return this->isVampire;
@@ -54,6 +60,14 @@ void BaseState::setIsWerewolf() {
     this->isWerewolf = true;
     this->changeStateImmune = true;
 }
+bool BaseState::getIsSpellcaster() {
+    return this->isSpellcaster;
+}
+void BaseState::setIsSpellcaster() {
+    this->isSpellcaster = true;
+    this->changeStateImmune = true;
+}
+
 
 
 void BaseState::addHP(int hp) {

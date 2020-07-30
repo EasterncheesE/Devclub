@@ -13,6 +13,8 @@ class BaseState {
         bool isVampire;
         bool isWerewolf;
         bool changeStateImmune;
+        bool isMagicImmune;
+        bool isSpellcaster;
     public:
         BaseState(std::string title, int hp);
         BaseState(std::string title, int hp, int maxHP);
@@ -26,11 +28,17 @@ class BaseState {
         bool getStateChangeImmune();
         void setStateChangeImmune();
         
+        bool getMagicImmunity();
+        void setMagicImmunity();
+        
         bool getIsVampire();
         void setIsVampire();
         
         bool getIsWerewolf();
         void setIsWerewolf();
+        
+        bool getIsSpellcaster();
+        void setIsSpellcaster();
         
         virtual void addHP(int hp);
         virtual void takeDMG(int dmg);
