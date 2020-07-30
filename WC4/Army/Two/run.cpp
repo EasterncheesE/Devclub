@@ -4,6 +4,7 @@
 #include "./Unit/Rogue.h"
 #include "./Unit/Vampire.h"
 #include "./Unit/Werewolf.h"
+#include "./Unit/Wizard.h"
 
 int main() {
     
@@ -12,6 +13,7 @@ int main() {
     Rogue* jenny = new Rogue(std::string("Jenny"), 400, 150);
     Vampire* frank = new Vampire(std::string("Frank"), 5000, 200);
     Werewolf* vasya = new Werewolf(std::string("Vasya"), 5000, 100);
+    Wizard* petya = new Wizard(std::string("Petya"), 5000, 50);
     
     
     std::cout << *andy << std::endl << std::endl;

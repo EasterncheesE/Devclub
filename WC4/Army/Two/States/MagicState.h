@@ -9,10 +9,13 @@ class MagicState : public BaseState {
         int maxMP;
         int manaRegen;
     public:
-        MagicState(std::string title, int hp, int mp, int maxMP, int manaRegen);
+        MagicState(std::string title, int hp, int mp);
         ~MagicState();
         
-    
+        int getMP();
+        int getManaRegen();
+        void addMP(int MP);
+        void spendMP(int MP);
 };
 
 
