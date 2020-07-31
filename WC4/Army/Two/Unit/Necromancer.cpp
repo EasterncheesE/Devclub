@@ -20,7 +20,6 @@ void regularAttack(Unit* target) {
         std::cout << target->getTitle() << " is dead and cannot be attacked->" << std::endl;
         target->update(this->owner);
         std::cout << "Target is dead and necromancer is healing" << std::endl;
-        this->owner->addHP(200);
         return;
     }
     
