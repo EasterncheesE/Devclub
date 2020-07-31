@@ -2,21 +2,24 @@
 #define MAGIC_ATTACK_H
 
 #include <iostream>
-#include "BaseAttack.h"
 #include "../States/MagicState.h"
 #include "../Unit/Spellcaster.h"
-#include "../Unit/Wizard.h"
 
+class Spellcaster;
 
-class MagicAttack : public BaseAttack {
+class MagicAttack {
+    protected:
+        Spellcaster* owner;
+        int dmg;
     public:
         MagicAttack(Spellcaster* owner, int dmg);
         ~MagicAttack();
         
         
         void attack(Unit* target);
+        void regularAttack(Unit* target);
+        void counterAttack(Unit* target);
         void castSpell(Unit* target);
-        void counterattack(Unit* target);
         void chooseAction(Unit* target);
         
         

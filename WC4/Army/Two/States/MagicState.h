@@ -1,22 +1,24 @@
 #ifndef MAGIC_STATE_H
 #define MAGIC_STATE_H
 
-#include "BaseState.h"
+#include <iostream>
 
-class MagicState : public BaseState {
+class MagicState {
     protected:
         int MP;
         int maxMP;
         int manaRegen;
     public:
-        MagicState(std::string title, int hp, int mp);
+        MagicState(int mp);
         ~MagicState();
         
         int getMP();
+        int getMaxMP();
         int getManaRegen();
-        void addMP(int MP);
-        void spendMP(int MP);
+        void addMP(int mp);
+        void spendMP(int mp);
 };
+
 
 
 #endif // MAGIC_STATE_H

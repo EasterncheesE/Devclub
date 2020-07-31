@@ -4,7 +4,7 @@
 #include "./Unit/Rogue.h"
 #include "./Unit/Vampire.h"
 #include "./Unit/Werewolf.h"
-#include "./Unit/Wizard.h"
+#include "./Unit/Spellcaster.h"
 
 int main() {
     
@@ -13,23 +13,24 @@ int main() {
     Rogue* jenny = new Rogue(std::string("Jenny"), 400, 150);
     Vampire* frank = new Vampire(std::string("Frank"), 5000, 200);
     Werewolf* vasya = new Werewolf(std::string("Vasya"), 5000, 100);
-    Wizard* petya = new Wizard(std::string("Petya"), 5000, 50);
+    Spellcaster* vova = new Spellcaster(std::string("Vova"), 5000, 50, 1000);
     
     
-    std::cout << *andy << std::endl << std::endl;
+    std::cout << std::endl << *vova << std::endl << std::endl;
     std::cout << *vasya << std::endl;
     
-    // frank->attack(andy);
+    vova->attack(vasya);
     
-    for ( int i = 1; andy->getHP() > 0 && vasya->getHP() > 0 ; i++) {
+    std::cout << std::endl << *vova << std::endl << std::endl;
+    std::cout << *vasya << std::endl << std::endl;
+    for ( int i = 1; vova->getHP() > 0 && vasya->getHP() > 0 ; i++) {
         std::cout << "ITERATION NO " << i << std::endl;
-        andy->attack(vasya);
-        // std::cout << *andy << std::endl << std::endl;
-        vasya->attack(andy);
+        vova->attack(vasya);
+        std::cout << *vova << std::endl << std::endl;
+        vasya->attack(vova);
         std::cout << std::endl;
-
     }
-    std::cout << std::endl << *andy << std::endl;
+    std::cout << std::endl << *vova << std::endl;
     std::cout << *vasya << std::endl << std::endl;
     return 0;
 }
