@@ -1,9 +1,11 @@
 #include "Rogue.h"
 
 Rogue::Rogue(std::string title, int hp, int dmg) : Unit(title, hp, dmg) {
+    std::cout << "Rogue constructor" << std::endl;
     this->_attack = new RogueAttack(this, dmg);
 }
 Rogue::~Rogue() {
+    std::cout << "Rogue destructor" << std::endl;
     delete(this->_state);
     delete(this->_attack);
 }

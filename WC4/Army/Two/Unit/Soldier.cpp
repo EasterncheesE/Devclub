@@ -8,7 +8,6 @@ Soldier::~Soldier () {
     delete(this->_attack);
 }
 
-
 void Soldier::attack(Unit* target) {
     std::cout << "Soldier is attacking" << std::endl;
     this->_attack->attack(target);

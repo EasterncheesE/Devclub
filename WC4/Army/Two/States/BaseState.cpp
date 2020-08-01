@@ -1,6 +1,6 @@
 #include "BaseState.h"
 
-BaseState::BaseState(std::string title, int hp) {
+BaseState::BaseState(std::string title, int hp, Unit* owner) {
     this->title = title;
     this->HP = hp;
     this->maxHP = hp;
@@ -8,7 +8,7 @@ BaseState::BaseState(std::string title, int hp) {
     this->isWerewolf = false;
     this->isSpellcaster = false;
 }
-BaseState::BaseState(std::string title, int hp, int maxHP) {
+BaseState::BaseState(std::string title, int hp, int maxHP, Unit* owner) {
     this->title = title;
     this->HP = hp;
     this->maxHP = maxHP;
@@ -68,9 +68,8 @@ void BaseState::setIsSpellcaster() {
     this->changeStateImmune = true;
 }
 
-
-
 void BaseState::addHP(int hp) {
+    std::cout << "HEALING" << std::endl;
     if ( this->checkIfDead()) {
         std::cout << "Cannot heal killed unit.";
         return;
@@ -80,7 +79,6 @@ void BaseState::addHP(int hp) {
     } else {
         this->HP += hp;
     }
-    
 }
 
 void BaseState::takeDMG(int dmg) {
@@ -89,7 +87,7 @@ void BaseState::takeDMG(int dmg) {
     }
     
     if ( dmg >= this->HP ) {
-         std::cout << this->title << " took " << this->HP << " points of damage. He is dead now" << std::endl;
+         std::cout << this->title << " took " << this->HP << " points of damage. He is dead now, so we notify observers and observables" << std::endl;
         this->HP = 0;
     } else {
         this->HP -= dmg;

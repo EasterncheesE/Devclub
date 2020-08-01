@@ -2,12 +2,18 @@
 
 
 Spellcaster::Spellcaster(std::string title, int hp, int dmg, int mp) : Unit(title, hp, dmg) {
+    std::cout << "Spellcaster constructor" << std::endl;
     this->_magicState = new MagicState(mp);
     this->_magicAttack = new MagicAttack(this, dmg);
     this->_state->setIsSpellcaster();
     this->_state->setStateChangeImmune();
 }
-Spellcaster::~Spellcaster() {}
+Spellcaster::~Spellcaster() {
+    delete(this->_state);
+    delete(this->_attack);
+    delete(this->_magicState);
+    delete(this->_magicAttack);
+}
 
 int Spellcaster::getMP() {
     return this->_magicState->getMP();
@@ -27,6 +33,10 @@ void Spellcaster::spendMP(int MP) {
 
 void Spellcaster::attack(Unit* target) {
     this->_magicAttack->attack(target);
+}
+
+void Spellcaster::regularAttack(Unit* target) {
+    this->_magicAttack->regularAttack(target);
 }
 void Spellcaster::counterAttack(Unit* target) {
     this->_magicAttack->counterAttack(target);

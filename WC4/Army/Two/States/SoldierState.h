@@ -5,7 +5,7 @@
 
 class SoldierState : public BaseState {
     public:
-        SoldierState(std::string title, int hp);
+        SoldierState(std::string title, int hp, Unit* owner);
         ~SoldierState();
 };
 

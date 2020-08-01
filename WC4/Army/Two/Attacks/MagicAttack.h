@@ -16,11 +16,11 @@ class MagicAttack {
         ~MagicAttack();
         
         
-        void attack(Unit* target);
-        void regularAttack(Unit* target);
-        void counterAttack(Unit* target);
-        void castSpell(Unit* target);
-        void chooseAction(Unit* target);
+        virtual void attack(Unit* target);
+        virtual void regularAttack(Unit* target);
+        virtual void counterAttack(Unit* target);
+        virtual void castSpell(Unit* target);
+        virtual void chooseAction(Unit* target);
         
         
         

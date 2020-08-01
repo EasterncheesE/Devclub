@@ -11,13 +11,12 @@
 class BaseState;
 class BaseAttack;
 
-class Unit {
+class Unit : public Observer, public Observable{
     protected:
         BaseState* _state;
         BaseAttack* _attack;
     public:
-        Unit(std::string title, int hp);
-        Unit(std::string title, int hp, int physDMG);
+        Unit(std::string title, int hp, int dmg, Unit* owner);
         virtual ~Unit();
         
         bool checkIfDead();
@@ -43,8 +42,8 @@ class Unit {
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);
-        virtual void addHP(int hp);
-        virtual void takeDMG(int dmg);
+        void addHP(int hp);
+        void takeDMG(int dmg);
 };
 
 std::ostream& operator<<(std::ostream& out, Unit& unit);

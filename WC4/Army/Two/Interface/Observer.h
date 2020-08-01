@@ -2,6 +2,7 @@
 #ifndef OBSERVER_H
 #define OBSERVER_H
 
+#include <iostream>
 #include <set>
 #include "Observable.h"
 
@@ -16,8 +17,9 @@ class Observer {
         virtual ~Observer();
 
         void addObservable(Observable* target);
+        virtual void removeObservable(Observable* target);
         void notifyObservables();
-        virtual void update(Observable* target);
+
 };
 
 #endif //OBSERVER_H

@@ -8,6 +8,7 @@ MagicAttack::~MagicAttack() {}
 
 
 void MagicAttack::attack(Unit* target) {
+    std::cout << "Magic attack" << std::endl;
     this->chooseAction(target);
 }
 
@@ -31,7 +32,7 @@ void MagicAttack::counterAttack(Unit* target) {
 }
 
 void MagicAttack::castSpell(Unit* target) {
-    std::cout << "Casting fireball" << std::endl;
+    std::cout << "Casting fireball" << ". MP = " << this->owner->getMP() << std::endl;
     if ( this->owner->getMP() < 100 ) {
         std::cout << "Not enough mana" << std::endl;
         this->chooseAction(target);

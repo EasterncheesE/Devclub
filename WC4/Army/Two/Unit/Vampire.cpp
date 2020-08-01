@@ -12,11 +12,6 @@ Vampire::~Vampire() {
     delete(this->_state);
     delete(this->_attack);
 }
-void Vampire::checkIfDead() {
-    if ( this->getHP() <= 0 ) {
-        this->Vampire::~Vampire();
-    } 
-}
 
 void Vampire::attack(Unit* target) {
     this->_attack->attack(target);

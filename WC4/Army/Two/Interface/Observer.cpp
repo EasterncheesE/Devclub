@@ -7,8 +7,18 @@ Observer::~Observer() {
 }
 
 void Observer::addObservable(Observable *target) {
+    std::cout << "Adding observable" << std::endl;
     this->observableList->insert(target);
-    target->attach(this);
+    target->addObserver(this);
+}
+
+void Observer::removeObservable(Observable *target) {
+    std::set<Observable*>::iterator it = this->observableList->find(target);
+    std::cout << "removing observable" << std::endl;
+
+    if ( it != this->observableList->end() ) {
+        this->observableList->erase(it);
+    }
 }
 
 void Observer::notifyObservables() {
@@ -17,14 +27,7 @@ void Observer::notifyObservables() {
     for ( it = observableList->begin(); it != this->observableList->end(); it++ ) {
         Observable* target = *it;
 
-        target->detach(this);
+        target->removeObserver(this);
     }
 }
 
-void Observer::update(Observable *target) {
-    std::set<Observable*>::iterator it = this->observableList->find(target);
-
-    if ( it != this->observableList->end() ) {
-        this->observableList->erase(it);
-    }
-}

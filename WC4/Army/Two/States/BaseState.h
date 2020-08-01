@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include "../Setup.h"
+#include "../Unit/Unit.h"
+
+class Unit;
 
 class BaseState {
     protected:
@@ -15,9 +18,10 @@ class BaseState {
         bool changeStateImmune;
         bool isMagicImmune;
         bool isSpellcaster;
+        Unit* owner;
     public:
-        BaseState(std::string title, int hp);
-        BaseState(std::string title, int hp, int maxHP);
+        BaseState(std::string title, int hp, Unit* owner);
+        BaseState(std::string title, int hp, int maxHP, Unit* owner);
         virtual ~BaseState();
         
         bool checkIfDead();

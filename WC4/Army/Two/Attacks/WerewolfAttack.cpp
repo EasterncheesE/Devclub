@@ -45,7 +45,7 @@ void WerewolfAttack::counterAttack(Unit* target) {
         std::cout << target->getTitle() << " is dead and cannot be counterattacked." << std::endl;
         return;
     }
-    std::cout << owner->getTitle()  << " is counterattacking " << target->getTitle() << std::endl;
+    std::cout << this->owner->getTitle()  << " is counterattacking " << target->getTitle() << std::endl;
     //WEREWOLF HEALING
     this->owner->addHP(25);
     std::cout << "Werewolf " << this->owner->getTitle() << " regenerated 25 hitpoints." << std::endl;

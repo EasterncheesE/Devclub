@@ -10,8 +10,6 @@ class Vampire : public Unit {
         Vampire(std::string title, int hp, int dmg);
         ~Vampire();
         
-        void checkIfDead();
-        
         void attack(Unit* target);
         void counterAttack(Unit* target);
 };

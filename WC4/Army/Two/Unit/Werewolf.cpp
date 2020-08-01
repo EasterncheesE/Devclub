@@ -12,12 +12,6 @@
         delete(this->_state);
         delete(this->_attack);
     }
-    
-void Werewolf::checkIfDead() {
-    if ( this->getHP() <= 0 ) {
-        this->Werewolf::~Werewolf();
-    } 
-}
 
 void Werewolf::attack(Unit* target) {
     this->_attack->attack(target);

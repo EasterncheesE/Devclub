@@ -31,5 +31,6 @@ void MagicState::spendMP(int mp) {
         return;
     } else {
         this->MP -= mp;
+        // std::cout << "Used " << mp << " of mana. MP left: " << this->MP << std::endl;
     }
 }

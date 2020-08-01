@@ -8,7 +8,7 @@ BaseAttack::BaseAttack(Unit* owner, int dmg) {
 }
 BaseAttack::~BaseAttack() {}
 
-int BaseAttack::getPhysDMG() {
+int BaseAttack::getDMG() {
     return this->dmg;
     } 
     

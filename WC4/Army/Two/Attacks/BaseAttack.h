@@ -14,7 +14,7 @@ class BaseAttack {
         BaseAttack(Unit* owner, int dmg);
         virtual ~BaseAttack();
         
-        int getPhysDMG();
+        int getDMG();
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);
 };
