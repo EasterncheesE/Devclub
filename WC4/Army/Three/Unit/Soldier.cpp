@@ -1,13 +1,10 @@
 #include "Soldier.h"
 
-Soldier::Soldier(std::string title, int hp, int dmg) : Unit (title, hp, dmg) {
-    this->_attack = new SoldierAttack(this, dmg);
-}
+Soldier::Soldier(std::string title, int hp, int dmg) : Unit (title, hp, dmg) {}
 Soldier::~Soldier () {
     delete(this->_state);
     delete(this->_attack);
 }
-
 
 void Soldier::attack(Unit* target) {
     std::cout << "Soldier is attacking" << std::endl;

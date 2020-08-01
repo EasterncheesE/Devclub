@@ -1,23 +1,20 @@
-#pragma once
 #ifndef UNIT_H
 #define UNIT_H
 
-#include <iostream>
+#include "../State/DefaultState.h"
+#include "../Attack/DefaultAttack.h"
 #include "../Interface/Observer.h"
 #include "../Interface/Observable.h"
-#include "../States/BaseState.h"
-#include "../Attacks/BaseAttack.h"
 
-class BaseState;
-class BaseAttack;
+class DefaultState;
+class DefaultAttack;
 
-class Unit {
+class Unit : public Observer, public Observable {
     protected:
-        BaseState* _state;
-        BaseAttack* _attack;
+        DefaultState* _state;
+        DefaultAttack* _attack;
     public:
-        Unit(std::string title, int hp);
-        Unit(std::string title, int hp, int physDMG);
+        Unit(std::string title, int hp, int dmg);
         virtual ~Unit();
         
         bool checkIfDead();
@@ -25,28 +22,24 @@ class Unit {
         std::string getTitle();
         int getHP();
         int getMaxHP();
-        int getDMG();
-        
-        BaseState* getState();
-        BaseAttack* getAttack();
-        void setState(BaseState* newState);
-        void setAttack(BaseAttack* newAttack);
-        
-        bool getStateChangeImmune();
-        void setStateChangeImmune();
-        
         bool getIsVampire();
-        void setIsVampire();
-        
         bool getIsWerewolf();
+        bool getIsTurnImmune();
+        bool getIsMagicImmune();
+        int getDMG();
+
+        void setTitle(std::string newTitle);
+        void addHP(int value);
+        void reduceHP(int value);
+        void setMaxHP(int vaue);
+        void setIsVampire();
         void setIsWerewolf();
+        void setIsTurnImmune();
+        void setIsMagicImmune();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);
-        virtual void addHP(int hp);
-        virtual void takeDMG(int dmg);
 };
 
-std::ostream& operator<<(std::ostream& out, Unit& unit);
-
+std::ostream& operator<<(std::ostream& out, Unit* unit);
 #endif // UNIT_H

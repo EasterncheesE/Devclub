@@ -1,0 +1,94 @@
+#include "DefaultState.h"
+
+DefaultState::DefaultState(Unit* owner, std::string title, int hp) {
+    this->owner = owner;
+    this->title = title;
+    this->HP = hp;
+    this->maxHP = hp;
+    this->isVampire = false;
+    this->isWerewolf = false;
+    this->isTurnImmune = false;
+    
+}
+DefaultState::~DefaultState() {}
+
+bool DefaultState::checkIfDead() {
+    if ( this->owner->getHP() <= 0 ) {
+        return true;
+    } 
+    return false;
+}
+
+Unit* DefaultState::getOwner() {
+    return this->owner;
+}
+std::string DefaultState::getTitle() {
+    return this->title;
+}
+int DefaultState::getHP() {
+    return this->HP;
+}
+int DefaultState::getMaxHP() {
+    return this->maxHP;
+}
+bool DefaultState::getIsVampire() {
+    return this->isVampire;
+}
+bool DefaultState::getIsWerewolf() {
+    return this->isWerewolf;
+}
+bool DefaultState::getIsTurnImmune() {
+    return this->isTurnImmune;
+}
+bool DefaultState::getIsMagicImmune() {
+    return this->isMagicImmune;
+}
+
+void DefaultState::setTitle(std::string newTitle) {
+    this->title = newTitle;
+}
+void DefaultState::addHP(int value) {
+    if ( this->checkIfDead() ) {
+        std::cout << "You cannot heal dead unit" << std::endl;
+        return;
+    } else {
+        if ( this->HP + value >= this->maxHP ) {
+            std::cout << "Unit " << this->title << " was healed for " << this->maxHP - this->HP << " HP." << std::endl;
+            this->HP = this->maxHP;
+        } else {
+            std::cout << "Unit " << this->title << " was healed for " << value << " HP." << std::endl;
+            this->HP += value;
+        }
+    }
+}
+void DefaultState::reduceHP(int value) {
+    if ( this->checkIfDead() ) {
+        std::cout << "You cannot damage dead unit" << std::endl;
+        return;
+    } else {
+        if ( this->HP < value ) {
+            std::cout << "Unit " << this->title << " was damaged for " << this->HP << " HP. He is dead now, notifying." << std::endl;
+            this->HP = 0;
+            this->owner->notifyObservables();
+            this->owner->notifyObservers();
+        } else {
+            this->HP -= value;
+            std::cout << "Unit " << this->title << " was damaged for " << value << " HP. HP left: " << this->HP << "/" << this->maxHP << std::endl;
+        }
+    }
+}
+void DefaultState::setMaxHP(int value) {
+    this->maxHP = value;
+}
+void DefaultState::setIsVampire() {
+    this->isVampire = true;
+}
+void DefaultState::setIsWerewolf() {
+    this->isWerewolf = true;
+}
+void DefaultState::setIsTurnImmune() {
+    this->isTurnImmune = true;
+}
+void DefaultState::setIsMagicImmune() {
+    this->isMagicImmune = true;
+}

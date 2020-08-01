@@ -2,7 +2,7 @@
 #define SOLDIER_H
 
 #include "Unit.h"
-#include "../Attacks/SoldierAttack.h"
+#include "../Attack/DefaultAttack.h"
 
 class Soldier : public Unit {
     public:
