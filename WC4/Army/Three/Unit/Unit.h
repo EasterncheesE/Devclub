@@ -28,6 +28,8 @@ class Unit : public Observer, public Observable {
         bool getIsMagicImmune();
         int getDMG();
 
+        void setState(DefaultState* state);
+        void setAttack(DefaultAttack* attack);
         void setTitle(std::string newTitle);
         void addHP(int value);
         void reduceHP(int value);

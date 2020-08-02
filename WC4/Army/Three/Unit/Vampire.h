@@ -2,7 +2,9 @@
 #define VAMPIRE_H
 
 #include "Unit.h"
+#include "../State/VampireState.h"
 #include "../Attack/VampireAttack.h"
+
 
 class Vampire : public Unit {
     public:
@@ -11,7 +13,6 @@ class Vampire : public Unit {
         
         void attack(Unit* target);
         void counterAttack(Unit* target);
-        void removeObservable(Observable* target);
 };
 
 

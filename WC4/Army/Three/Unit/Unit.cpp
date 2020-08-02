@@ -12,10 +12,6 @@ Unit::~Unit() {
 }
 
 bool Unit::checkIfDead() {
-    if ( this->getHP() <= 0) {
-        this->notifyObservers();
-        this->notifyObservables();
-    }
     return this->_state->checkIfDead();
 }
 
@@ -43,6 +39,14 @@ bool Unit::getIsMagicImmune() {
 int Unit::getDMG() {
     return this->_attack->getDMG();
 }
+
+void Unit::setState(DefaultState* _state) {
+    this->_state = _state;
+}
+void Unit::setAttack(DefaultAttack* _attack) {
+    this->_attack = _attack;
+}
+
 void Unit::setTitle(std::string newTitle) {
     this->_state->setTitle(newTitle);
 }
@@ -81,9 +85,8 @@ std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << ". Unit DMG:" << unit->getDMG() << std::endl;
     out << "Is vampire: " << unit->getIsVampire();
     out << ". Is werewolf: " << unit->getIsWerewolf();
-    out << ". Is werewolf: " << unit->getIsWerewolf();
-    out << ". Turn immune: " << unit->getIsWerewolf();
-    out << ". Magic Immune: " << unit->getIsWerewolf();
+    out << ". Turn immune: " << unit->getIsTurnImmune();
+    out << ". Magic Immune: " << unit->getIsMagicImmune();
     out << ". Is dead: " << unit->checkIfDead() << std::endl;
     return out;
 }

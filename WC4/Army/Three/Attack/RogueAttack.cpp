@@ -26,6 +26,7 @@ void RogueAttack::attack(Unit* target) {
 void RogueAttack::counterAttack(Unit* target) {
     if ( this->owner->checkIfDead() ) {
         std::cout << "RogueAttack::counterAttack. " << this->owner->getTitle() << " is dead and cannot attack." ;
+        return;
     } else {
         std::cout << "RogueAttack::counterAttack, attacker is alive. ";
     }

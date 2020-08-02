@@ -11,15 +11,14 @@ int DefaultAttack::getDMG() {
 }
 
 void DefaultAttack::attack(Unit* target) {
-    std::cout << this->owner->getTitle() << " is attacking " << target->getTitle() << " with Unit::attack for " << this->dmg << " damage. ";
     if ( this->owner->checkIfDead() ) {
-        std::cout << this->owner->getTitle() << " is dead and cannot attack. " ;
+        std::cout << "DefaultAttack::attack. " << this->owner->getTitle() << " is dead and cannot attack. " ;
         return;
     } else {
         std::cout << "DefaultAttack::attack, attacker is alive. ";
     }
     if ( target->checkIfDead() ) {
-        std::cout << target->getTitle() << " is dead and cannot be attacked." << std::endl;
+        std::cout << "DefaultAttack::attack. " << target->getTitle() << " is dead and cannot be attacked." << std::endl;
         return;
     } else {
         std::cout << "DefaultAttack::attack, target is alive." << std::endl;

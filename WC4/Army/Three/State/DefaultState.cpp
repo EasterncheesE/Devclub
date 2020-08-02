@@ -66,7 +66,7 @@ void DefaultState::reduceHP(int value) {
         std::cout << "You cannot damage dead unit" << std::endl;
         return;
     } else {
-        if ( this->HP < value ) {
+        if ( this->HP <= value ) {
             std::cout << "Unit " << this->title << " was damaged for " << this->HP << " HP. He is dead now, notifying." << std::endl;
             this->HP = 0;
             this->owner->notifyObservables();
