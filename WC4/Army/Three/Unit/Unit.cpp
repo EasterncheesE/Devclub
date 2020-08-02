@@ -69,11 +69,9 @@ void Unit::setIsMagicImmune() {
 }
 
 void Unit::attack(Unit* target) {
-    this->addObservable(target);
     this->_attack->attack(target);
 }
 void Unit::counterAttack(Unit* target) {
-    this->addObservable(target);
     this->_attack->counterAttack(target);
 }
 

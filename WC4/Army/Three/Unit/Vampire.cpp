@@ -11,10 +11,12 @@ Vampire::~Vampire() {
 }
 
 void Vampire::attack(Unit* target) {
+    std::cout << "Vampire::attack" << std::endl;
     this->addObservable(target);
     this->_attack->attack(target);
 }
 void Vampire::counterAttack(Unit* target) {
+    std::cout << "Vampire::counterAttack" << std::endl;
     this->_attack->counterAttack(target);
 }
 

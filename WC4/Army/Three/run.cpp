@@ -1,12 +1,13 @@
 #include <iostream>
-#include "./Unit/Unit.h"
+#include "./Unit/Rogue.h"
 #include "./Unit/Vampire.h"
 
 
 int main() {
-    Unit* bob = new Unit(std::string("Bob"), 500, 200);
-    Unit* patrick = new Unit(std::string("Patrick"), 500, 200);
+    Unit* bob = new Unit(std::string("Bob"), 500, 100);
+    Rogue* patrick = new Rogue(std::string("Patrick"), 500, 250);
     Vampire* frank = new Vampire(std::string("Frank"), 600, 250);
+    
     
     std::cout << patrick << std::endl;
     std::cout << bob << std::endl;
