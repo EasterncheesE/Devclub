@@ -1,6 +1,6 @@
 #include "VampireState.h"
 
-VampireState::VampireState(Vampire* owner, std::string title, int hp) : DefaultState(owner, title, hp) {
+VampireState::VampireState(Unit* owner, std::string title, int hp) : DefaultState(owner, title, hp) {
     this->isVampire = true;
     this->isTurnImmune = true;
 }

@@ -53,8 +53,11 @@ void Unit::setTitle(std::string newTitle) {
 void Unit::addHP(int value) {
     this->_state->addHP(value);
 }
-void Unit::reduceHP(int value) {
-    this->_state->reduceHP(value);
+void Unit::takePhysDMG(int value) {
+    this->_state->takePhysDMG(value);
+}
+void Unit::takeMagicDMG(int value) {
+    this->_state->takeMagicDMG(value);
 }
 void Unit::setMaxHP(int value) {
     this->_state->setMaxHP(value);

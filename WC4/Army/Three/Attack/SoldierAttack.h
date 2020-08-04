@@ -3,10 +3,8 @@
 
 #include "DefaultAttack.h"
 
-class Unit;
-
 class SoldierAttack : public DefaultAttack {
-    public:
+public:
         SoldierAttack(Unit* owner, int dmg);
         ~SoldierAttack();
 };

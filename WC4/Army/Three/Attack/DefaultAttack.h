@@ -6,10 +6,10 @@
 class Unit;
 
 class DefaultAttack {
-    protected:
+protected:
         Unit* owner;
         int dmg;
-    public:
+public:
         DefaultAttack(Unit* owner, int dmg);
         virtual ~DefaultAttack();
         

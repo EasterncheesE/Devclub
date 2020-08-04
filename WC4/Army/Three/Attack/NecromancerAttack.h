@@ -2,13 +2,12 @@
 #define NECROMANCER_ATTACK_H
 
 #include "DefaultMagicAttack.h"
-#include "../Unit/Necromancer.h"
 
-class Necromancer;
+class Spellcaster;
 
 class NecromancerAttack : public DefaultMagicAttack {
-    public:
-        NecromancerAttack(Necromancer* owner, int dmg);
+public:
+        NecromancerAttack(Spellcaster* owner, int dmg);
         ~NecromancerAttack();
 };
 

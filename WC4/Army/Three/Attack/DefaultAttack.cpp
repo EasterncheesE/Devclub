@@ -24,7 +24,7 @@ void DefaultAttack::attack(Unit* target) {
         std::cout << "DefaultAttack::attack, target is alive." << std::endl;
     }
 
-    target->reduceHP(this->dmg);
+    target->takePhysDMG(this->dmg);
     target->counterAttack(this->owner);
 }
 void DefaultAttack::counterAttack(Unit* target) {
@@ -38,5 +38,5 @@ void DefaultAttack::counterAttack(Unit* target) {
         return;
     }
     
-    target->reduceHP(this->dmg / 2);
+    target->takePhysDMG(this->dmg / 2);
 }

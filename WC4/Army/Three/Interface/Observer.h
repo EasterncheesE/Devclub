@@ -9,10 +9,10 @@
 class Observable;
 
 class Observer {
-    protected:
+protected:
         std::set<Observable*>* observableList;
 
-    public:
+public:
         Observer();
         virtual ~Observer();
 

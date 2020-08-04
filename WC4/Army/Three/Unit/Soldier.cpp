@@ -10,11 +10,9 @@ Soldier::~Soldier () {
 }
 
 void Soldier::attack(Unit* target) {
-    std::cout << "Soldier::attack" << std::endl;
     this->_attack->attack(target);
 }
 
 void Soldier::counterAttack(Unit* target) {
-    std::cout << "Soldier::counterAttack" << std::endl;
     this->_attack->counterAttack(target);
 }

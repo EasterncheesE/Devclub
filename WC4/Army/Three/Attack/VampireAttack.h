@@ -1,13 +1,15 @@
 #ifndef VAMPIRE_ATTACK_H
 #define VAMPIRE_ATTACK_H
 
-#include <ctime>
 #include <cstdlib>
-#include "../Unit/Vampire.h"
 #include "DefaultAttack.h"
+#include "../Unit/Vampire.h"
+
+
+class Unit;
 
 class VampireAttack : public DefaultAttack {
-    public:
+public:
         VampireAttack(Unit* owner, int dmg);
         ~VampireAttack();
         

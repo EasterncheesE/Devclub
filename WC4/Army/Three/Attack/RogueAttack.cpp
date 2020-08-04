@@ -20,7 +20,7 @@ void RogueAttack::attack(Unit* target) {
     } else {
         std::cout << "RogueAttack::attack, target is alive." << std::endl;
     }
-    target->reduceHP(this->dmg);
+    target->takePhysDMG(this->dmg);
 }
     
 void RogueAttack::counterAttack(Unit* target) {
@@ -37,7 +37,7 @@ void RogueAttack::counterAttack(Unit* target) {
         std::cout << "RogueAttack::counterAttack, target is alive." << std::endl;
     }
     
-    target->reduceHP(this->dmg / 2);
+    target->takePhysDMG(this->dmg / 2);
     
     
     

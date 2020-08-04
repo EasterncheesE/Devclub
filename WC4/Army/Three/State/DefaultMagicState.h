@@ -6,12 +6,12 @@
 class Spellcaster;
 
 class DefaultMagicState {
-    protected:
+protected:
         Spellcaster* owner;
         int mp;
         int maxMP;
         int mpRegen;
-    public:
+public:
         DefaultMagicState(Spellcaster* owner, int mp);
         ~DefaultMagicState();
         

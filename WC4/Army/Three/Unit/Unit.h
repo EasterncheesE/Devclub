@@ -10,10 +10,10 @@ class DefaultState;
 class DefaultAttack;
 
 class Unit : public Observer, public Observable {
-    protected:
+protected:
         DefaultState* _state;
         DefaultAttack* _attack;
-    public:
+public:
         Unit(std::string title, int hp, int dmg);
         virtual ~Unit();
         
@@ -32,7 +32,8 @@ class Unit : public Observer, public Observable {
         void setAttack(DefaultAttack* attack);
         void setTitle(std::string newTitle);
         void addHP(int value);
-        void reduceHP(int value);
+        void takePhysDMG(int value);
+        void takeMagicDMG(int value);
         void setMaxHP(int vaue);
         void setIsVampire();
         void setIsWerewolf();

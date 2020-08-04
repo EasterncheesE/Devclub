@@ -40,7 +40,7 @@ void DefaultMagicAttack::castSpell(Unit* target) {
     if ( choice == 1 ) {
         std::cout << "Fireball chosen" << std::endl;
         this->owner->reduceMP(100);
-        target->reduceHP(100);
+        target->takeMagicDMG(100);
     } else {
         std::cout << "Healing spell chosen" << std::endl;
         this->owner->reduceMP(50);

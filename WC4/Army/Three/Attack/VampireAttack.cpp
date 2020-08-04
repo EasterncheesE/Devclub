@@ -29,10 +29,12 @@ void VampireAttack::attack(Unit* target) {
     //Vampire TURNING
     if ( target->getIsTurnImmune() != true ) {
         this->turnVampire(target);
+    } else {
+        std::cout << "Target is immune to turning" << std::endl;
     }
     
     // TARGET DAMAGE AND COUNTERATTACK
-    target->reduceHP(this->dmg);
+    target->takePhysDMG(this->dmg);
     target->counterAttack(this->owner);
 }
 
@@ -52,16 +54,18 @@ void VampireAttack::counterAttack(Unit* target) {
     if ( target->getHP() <= this->dmg ) {
         this->owner->addHP(target->getHP() / 8);
     } else {
-        this->owner->addHP(dmg/8);
+        this->owner->addHP(this->dmg/8);
     }
     
     //Vampire TURNING
     if ( target->getIsTurnImmune() != true ) {
         this->turnVampire(target);
+    } else {
+        std::cout << "Target is immune to turning" << std::endl;
     }
     
     //TARGET DAMAGE
-    target->reduceHP(this->dmg/2);
+    target->takePhysDMG(this->dmg/2);
 }
 
 void VampireAttack::turnVampire(Unit* target) {

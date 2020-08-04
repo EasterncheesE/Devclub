@@ -2,12 +2,9 @@
 #define ROGUE_ATTACK_H
 
 #include "DefaultAttack.h"
-#include "../Unit/Unit.h"
-
-class Unit;
 
 class RogueAttack : public DefaultAttack {
-    public:
+public:
         RogueAttack(Unit* owner, int dmg);
         ~RogueAttack();
         

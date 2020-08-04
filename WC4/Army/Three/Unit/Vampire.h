@@ -5,9 +5,12 @@
 #include "../State/VampireState.h"
 #include "../Attack/VampireAttack.h"
 
+class VampireState;
+class VampireAttack;
+
 
 class Vampire : public Unit {
-    public:
+public:
         Vampire(std::string title, int hp, int dmg);
         ~Vampire();
         

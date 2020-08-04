@@ -5,8 +5,11 @@
 #include "../State/NecromancerState.h"
 #include "../Attack/NecromancerAttack.h"
 
+class NecromancerState;
+class NecromancerAttack;
+
 class Necromancer : public Spellcaster {
-    public:
+public:
         Necromancer(std::string title, int hp, int dmg, int mp);
         ~Necromancer();
         

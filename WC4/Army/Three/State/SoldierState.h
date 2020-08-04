@@ -1,11 +1,10 @@
 #ifndef SOLDIER_STATE_H
 #define SOLDIER_STATE_H
 
-#include "../Unit/Unit.h"
 #include "DefaultState.h"
 
 class SoldierState : public DefaultState {
-    public:
+public:
         SoldierState(Unit* owner, std::string title, int hp);
         ~SoldierState();
 };

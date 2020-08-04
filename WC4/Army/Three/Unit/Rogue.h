@@ -6,7 +6,7 @@
 #include "../State/RogueState.h"
 
 class Rogue : public Unit {
-    public:
+public:
         Rogue(std::string title, int hp, int dmg);
         ~Rogue();
         

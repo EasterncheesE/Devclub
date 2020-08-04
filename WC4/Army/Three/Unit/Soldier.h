@@ -6,7 +6,7 @@
 #include "../State/SoldierState.h"
 
 class Soldier : public Unit {
-    public:
+public:
         Soldier(std::string title, int hp, int dmg);
         ~Soldier();
         

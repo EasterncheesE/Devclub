@@ -5,6 +5,7 @@ Spellcaster::Spellcaster(std::string title, int hp, int dmg, int mp) : Unit (tit
     this->_magicState = new DefaultMagicState(this, mp);
     this->_magicAttack = new DefaultMagicAttack(this, dmg*2);
     this->setIsTurnImmune();
+    this->_spellBook = new Spellbook(this);
 }
 Spellcaster::~Spellcaster() {
     std::cout << "Spellcaster destructor" << std::endl;
@@ -24,6 +25,18 @@ int Spellcaster::getMPRegen() {
     return this->_magicState->getMPRegen();
 }
 
+int Spellcaster::getMagicDMG() {
+    return this->_magicAttack->getMagicDMG();
+}
+
+void Spellcaster::getSpellList() {
+    this->_spellBook->getSpellList();
+}
+void Spellcaster::addSpell(Spell* spell) {
+    this->_spellBook->addSpell(spell);
+}
+
+
 void Spellcaster::addMP(int value) {
     this->_magicState->addMP(value);
 }
@@ -34,9 +47,6 @@ void Spellcaster::regenMP() {
     this->_magicState->regenMP();
 }
 
-int Spellcaster::getMagicDMG() {
-    return this->_magicAttack->getMagicDMG();
-}
 void Spellcaster::attack(Unit* target) {
     this->_magicAttack->attack(target);
 }

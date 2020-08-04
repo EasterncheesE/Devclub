@@ -7,7 +7,7 @@
 class Unit;
 
 class DefaultState {
-    protected:
+protected:
         Unit* owner;
         std::string title;
         int HP;
@@ -17,7 +17,7 @@ class DefaultState {
         bool isTurnImmune;
         bool isMagicImmune;
         
-    public:
+public:
         DefaultState(Unit* owner, std::string title, int hp);
         ~DefaultState();
         
@@ -34,7 +34,8 @@ class DefaultState {
 
         void setTitle(std::string newTitle);
         void addHP(int value);
-        void reduceHP(int value);
+        void takePhysDMG(int value);
+        void takeMagicDMG(int value);
         void setMaxHP(int vaue);
         void setIsVampire();
         void setIsWerewolf();

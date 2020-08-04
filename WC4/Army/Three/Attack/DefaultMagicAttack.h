@@ -7,10 +7,10 @@ class Spellcaster;
 class Unit;
 
 class DefaultMagicAttack {
-    protected:
+protected:
         Spellcaster* owner;
         int magicDMG;
-    public:
+public:
         DefaultMagicAttack(Spellcaster* owner, int dmg);
         ~DefaultMagicAttack();
         

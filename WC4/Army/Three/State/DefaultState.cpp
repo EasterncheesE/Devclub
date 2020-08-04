@@ -61,7 +61,7 @@ void DefaultState::addHP(int value) {
         }
     }
 }
-void DefaultState::reduceHP(int value) {
+void DefaultState::takePhysDMG(int value) {
     if ( this->checkIfDead() ) {
         std::cout << "You cannot damage dead unit" << std::endl;
         return;
@@ -77,6 +77,27 @@ void DefaultState::reduceHP(int value) {
         }
     }
 }
+void DefaultState::takeMagicDMG(int value) {
+    if ( this->checkIfDead() ) {
+        std::cout << "You cannot damage dead unit" << std::endl;
+        return;
+    } else {
+        if ( this->isMagicImmune ) {
+            std::cout << "Unit is immune to magic and cannot be damaged by magic" << std::endl;
+            return;
+        }
+        if ( this->HP <= value ) {
+            std::cout << "Unit " << this->title << " was damaged for " << this->HP << " HP. He is dead now, notifying." << std::endl;
+            this->HP = 0;
+            this->owner->notifyObservables();
+            this->owner->notifyObservers();
+        } else {
+            this->HP -= value;
+            std::cout << "Unit " << this->title << " was damaged for " << value << " HP. HP left: " << this->HP << "/" << this->maxHP << std::endl;
+        }
+    }
+}
+
 void DefaultState::setMaxHP(int value) {
     this->maxHP = value;
 }
