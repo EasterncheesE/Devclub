@@ -5,7 +5,7 @@
 #include "../Unit/Spellcaster.h"
 #include "DefaultSpell.h"
 // #include "Fireball.h" 
-// #include "Heal.h"
+
 
 class DefaultSpell;
 class Spellcaster;
@@ -22,7 +22,6 @@ public:
     void addSpell(DefaultSpell* spell);
     
     void chooseSpell(Unit* target);
-    void castSpell(Unit* target, int choice);
 };
 
 #endif // SPELLBOOK_H

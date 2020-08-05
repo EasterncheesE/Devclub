@@ -29,8 +29,7 @@ void Spellbook::chooseSpell(Unit* target) {
     DefaultSpell* tempSpell;
     std::vector<DefaultSpell*>::iterator it;
     
-    std::cout << "Vector size is " << this->_spellBook->size() << std::endl;
-    
+    std::cout << std::endl << "Mana remaining: " << this->owner->getMP() << "/" << this->owner->getMaxMP() << std::endl;
     this->getSpellList();
     
     for ( ; choice < 1 || choice > this->_spellBook->size() ; )  {
