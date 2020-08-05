@@ -15,11 +15,7 @@ public:
         ~DefaultMagicAttack();
         
         int getMagicDMG();
-        void attack(Unit* target);
-        void regularAttack(Unit* target);
-        void castSpell(Unit* target);
-        void counterAttack(Unit* target);
-        void chooseAction(Unit* target);
+        void magicAttack(Unit* target);
 };
 
 #endif // DEFAULT_MAGIC_ATTACK_H

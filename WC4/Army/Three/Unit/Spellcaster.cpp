@@ -32,10 +32,9 @@ int Spellcaster::getMagicDMG() {
 void Spellcaster::getSpellList() {
     this->_spellBook->getSpellList();
 }
-void Spellcaster::addSpell(Spell* spell) {
+void Spellcaster::addSpell(DefaultSpell* spell) {
     this->_spellBook->addSpell(spell);
 }
-
 
 void Spellcaster::addMP(int value) {
     this->_magicState->addMP(value);
@@ -48,19 +47,38 @@ void Spellcaster::regenMP() {
 }
 
 void Spellcaster::attack(Unit* target) {
-    this->_magicAttack->attack(target);
+    this->chooseAction(target);
 }
 void Spellcaster::regularAttack(Unit* target) {
     this->_attack->attack(target);
 }
-void Spellcaster::castSpell(Unit* target) {
-    this->_magicAttack->castSpell(target);
+void Spellcaster::magicAttack(Unit* target) {
+    this->_magicAttack->magicAttack(target);
 }
+
 void Spellcaster::counterAttack(Unit* target) {
     this->_attack->counterAttack(target);
 }
 void Spellcaster::chooseAction(Unit* target) {
-    this->_magicAttack->chooseAction(target);
+    int choice = 0;
+       
+    std::cout << "1 for regular attack, 2 for magic attack, 3 for cast spell" << std::endl;
+    for ( std::cin >> choice; choice < 1 && choice > 3; std::cin >> choice) {
+        std::cout << "You must choose 1-3" << std::endl;
+    }
+    
+    if ( choice == 1 ) {
+        this->regularAttack(target);
+    } else if ( choice == 2) {
+        this->magicAttack(target);
+    } else {
+        this->_spellBook->chooseSpell(target);
+    }
+}
+
+void Spellcaster::castSpell(Unit* target) {
+    this->_spellBook->chooseSpell(target);
+    
 }
 
 std::ostream& operator<<(std::ostream& out, Spellcaster* spellcaster) {

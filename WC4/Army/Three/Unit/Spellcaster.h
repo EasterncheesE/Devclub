@@ -5,12 +5,11 @@
 #include "../Attack/DefaultMagicAttack.h"
 #include "Unit.h"
 #include "../Spell/Spellbook.h"
-#include "../Spell/Spell.h"
 
-class Spell;
-class Spellbook;
 class DefaultMagicState;
 class DefaultMagicAttack;
+class Spellbook;
+class DefaultSpell;
 
 class Spellcaster : public Unit {
 protected:
@@ -32,13 +31,15 @@ public:
         void regenMP();
         
         void getSpellList();
-        void addSpell(Spell* spell);
-        
+        void addSpell(DefaultSpell* spell);
+        virtual void chooseAction(Unit* target);
+        virtual void castSpell(Unit* target);
+
         virtual void attack(Unit* target);
         virtual void regularAttack(Unit* target);
-        virtual void castSpell(Unit* target);
+        virtual void magicAttack(Unit* target);
         virtual void counterAttack(Unit* target);
-        virtual void chooseAction(Unit* target);
+
         
 };
 

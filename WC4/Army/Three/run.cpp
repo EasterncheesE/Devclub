@@ -25,10 +25,10 @@ int main() {
     // std::cout << may << std::endl;
     
     std::cout << fedor << std::endl;
-    fedor->addSpell(new Fireball(fedor,100,150));
-    fedor->addSpell(new Heal(fedor,100,150));
-    fedor->addSpell(new Fireball(fedor,100,150));
     fedor->getSpellList();
+    fedor->attack(vasya);
+    // fedor->castSpell(fedor);
+    
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }

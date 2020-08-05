@@ -1,22 +1,28 @@
 #ifndef SPELLBOOK_H
 #define SPELLBOOK_H
 
-#include "Spell.h"
 #include <vector>
+#include "../Unit/Spellcaster.h"
+#include "DefaultSpell.h"
+// #include "Fireball.h" 
+// #include "Heal.h"
 
-class Spell;
+class DefaultSpell;
+class Spellcaster;
 
 class Spellbook {
 protected:
-    std::vector<Spell*>* spellBook;
+    Spellcaster* owner;
+    std::vector<DefaultSpell*>* _spellBook;
 public: 
     Spellbook(Spellcaster* owner);
     ~Spellbook();
     
     void getSpellList();
-    void addSpell(Spell* spell);
+    void addSpell(DefaultSpell* spell);
     
-    void castSpell(Spell* spell, int value);
+    void chooseSpell(Unit* target);
+    void castSpell(Unit* target, int choice);
 };
 
 #endif // SPELLBOOK_H

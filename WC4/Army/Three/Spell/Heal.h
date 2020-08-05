@@ -1,13 +1,13 @@
 #ifndef HEAL_H
 #define HEAL_H
 
-#include "Spell.h"
+#include "DefaultSpell.h"
 
-class Heal : public Spell {
+class Heal : public DefaultSpell{
 public:
-    Heal(Spellcaster* owner, int manaCost = 50, int spellValue = 100);
+    Heal(int manaCost = 50, int spellValue = 100);
     ~Heal();
     
-    void useSpell(Unit* target);
+    void useSpell(Spellcaster* owner, Unit* target);
 };
 #endif // HEAL_H

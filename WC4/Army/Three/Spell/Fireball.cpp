@@ -1,9 +1,9 @@
 #include "Fireball.h"
 
-Fireball::Fireball(Spellcaster* owner, int manaCost, int spellValue) : Spell(owner, "Fireball", manaCost, spellValue) {}
+Fireball::Fireball(int manaCost, int spellValue) : DefaultSpell("Fireball", manaCost, spellValue) {}
 Fireball::~Fireball() {}
 
-void Fireball::useSpell(Unit* target) {
-    this->owner->reduceMP(this->manaCost);
+void Fireball::useSpell(Spellcaster* owner, Unit* target) {
+    owner->reduceMP(this->manaCost);
     target->takeMagicDMG(this->spellValue);
 }

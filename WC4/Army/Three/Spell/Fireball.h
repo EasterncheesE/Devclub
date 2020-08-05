@@ -1,14 +1,14 @@
 #ifndef FIREBALL_H
 #define FIREBALL_H
 
-#include "Spell.h"
+#include "DefaultSpell.h"
 
-class Fireball : public Spell {
+class Fireball : public DefaultSpell {
 public:
-    Fireball(Spellcaster* owner, int manaCost = 100, int spellValue = 150);
+    Fireball(int manaCost = 100, int spellValue = 150);
     ~Fireball();
     
-    void useSpell(Unit* target);
+    void useSpell(Spellcaster* owner, Unit* target);
 };
 
 #endif // FIREBALL_H
