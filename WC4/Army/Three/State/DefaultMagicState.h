@@ -2,17 +2,18 @@
 #define DEFAULT_MAGIC_STATE_H
 
 #include "../Unit/Spellcaster.h"
+#include "../State/DefaultState.h"
 
 class Spellcaster;
 
-class DefaultMagicState {
+class DefaultMagicState : public DefaultState {
 protected:
         Spellcaster* owner;
         int mp;
         int maxMP;
         int mpRegen;
 public:
-        DefaultMagicState(Spellcaster* owner, int mp);
+        DefaultMagicState(Spellcaster* owner, std::string title, int hp, int mp);
         ~DefaultMagicState();
         
         int getMP();

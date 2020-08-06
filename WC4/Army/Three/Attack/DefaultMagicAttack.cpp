@@ -1,15 +1,19 @@
 #include "DefaultMagicAttack.h"
 
 
-DefaultMagicAttack::DefaultMagicAttack(Spellcaster* owner, int dmg) {
+DefaultMagicAttack::DefaultMagicAttack(Spellcaster* owner, int dmg) : DefaultAttack(owner, dmg) {
     this->owner = owner;
-    this->magicDMG = dmg;
+    this->magicDMG = dmg*2;
 }
 DefaultMagicAttack::~DefaultMagicAttack() {}
 
 int DefaultMagicAttack::getMagicDMG() {
     return this->magicDMG;
 }
+void DefaultMagicAttack::regularAttack(Unit* target) {
+    this->DefaultAttack::attack(target);
+}
+
 void DefaultMagicAttack::magicAttack(Unit* target) {
     if ( this->owner->checkIfDead() ) {
         std::cout << "DefaultMagicAttack::attack " << this->owner->getTitle() << " is dead and cannot attack. " ;
@@ -24,6 +28,11 @@ void DefaultMagicAttack::magicAttack(Unit* target) {
         std::cout << "DefaultMagicAttack::attack, target is alive." << std::endl;
     }
     
-    target->takeMagicDMG(this->magicDMG);
-    this->owner->reduceMP(25);
+    if ( this->owner->getMP() > 25 ) {
+        target->takeMagicDMG(this->magicDMG);
+        this->owner->reduceMP(25);
+    } else {
+        this->owner->chooseAction(target);
+    }
+
 }

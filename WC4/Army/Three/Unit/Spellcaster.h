@@ -13,8 +13,8 @@ class DefaultSpell;
 
 class Spellcaster : public Unit {
 protected:
-    DefaultMagicState* _magicState;
-    DefaultMagicAttack* _magicAttack;
+    DefaultMagicState* _state;
+    DefaultMagicAttack* _attack;
     Spellbook* _spellBook;
     
 public:

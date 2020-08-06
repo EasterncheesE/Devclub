@@ -1,6 +1,7 @@
 #include "DefaultState.h"
 
 DefaultState::DefaultState(Unit* owner, std::string title, int hp) {
+    std::cout << "DefaultState constructor" << std::endl;
     this->owner = owner;
     this->title = title;
     this->HP = hp;

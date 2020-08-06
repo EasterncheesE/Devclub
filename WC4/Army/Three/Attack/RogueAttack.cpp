@@ -3,8 +3,8 @@
 RogueAttack::RogueAttack(Unit* owner, int dmg) : DefaultAttack(owner, dmg) {}
 RogueAttack::~RogueAttack() {}
 
-int RogueAttack::getDMG() {
-    return this->dmg;
+int RogueAttack::getPhysDMG() {
+    return this->physDMG;
 }
 
 void RogueAttack::attack(Unit* target) {
@@ -20,7 +20,7 @@ void RogueAttack::attack(Unit* target) {
     } else {
         std::cout << "RogueAttack::attack, target is alive." << std::endl;
     }
-    target->takePhysDMG(this->dmg);
+    target->takePhysDMG(this->physDMG);
 }
     
 void RogueAttack::counterAttack(Unit* target) {
@@ -37,7 +37,7 @@ void RogueAttack::counterAttack(Unit* target) {
         std::cout << "RogueAttack::counterAttack, target is alive." << std::endl;
     }
     
-    target->takePhysDMG(this->dmg / 2);
+    target->takePhysDMG(this->physDMG / 2);
     
     
     

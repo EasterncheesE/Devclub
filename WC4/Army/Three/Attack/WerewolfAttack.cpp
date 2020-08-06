@@ -30,7 +30,7 @@ void WerewolfAttack::attack(Unit* target) {
     }
     
     // TARGET DAMAGE AND COUNTERATTACK
-    target->takePhysDMG(this->dmg);
+    target->takePhysDMG(this->physDMG);
     target->counterAttack(this->owner);
 }
 
@@ -57,7 +57,7 @@ void WerewolfAttack::counterAttack(Unit* target) {
     }
     
     //TARGET DAMAGE
-    target->takePhysDMG(this->dmg/2);
+    target->takePhysDMG(this->physDMG/2);
 }
 
 void WerewolfAttack::turnWerewolf(Unit* target) {
@@ -68,6 +68,6 @@ void WerewolfAttack::turnWerewolf(Unit* target) {
     if ( roll <= 5 ) {
         std::cout << target->getTitle() << " was turned into werewolf!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
         target->setState(new WerewolfState(target, target->getTitle(), target->getHP(), target->getMaxHP()));
-        target->setAttack(new WerewolfAttack(target, target->getDMG()));
+        target->setAttack(new WerewolfAttack(target, target->getPhysDMG()));
     }
 }

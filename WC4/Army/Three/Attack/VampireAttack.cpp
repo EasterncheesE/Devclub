@@ -20,10 +20,10 @@ void VampireAttack::attack(Unit* target) {
     
     std::cout << owner->getTitle() << " is attacking " << target->getTitle() << std::endl;
    //VAMPIRE HEALING
-    if ( target->getHP() <= this->dmg ) {
+    if ( target->getHP() <= this->physDMG ) {
         this->owner->addHP(target->getHP() / 4);
     } else {
-        this->owner->addHP(dmg/4);
+        this->owner->addHP(physDMG/4);
     }
    
     //Vampire TURNING
@@ -34,7 +34,7 @@ void VampireAttack::attack(Unit* target) {
     }
     
     // TARGET DAMAGE AND COUNTERATTACK
-    target->takePhysDMG(this->dmg);
+    target->takePhysDMG(this->physDMG);
     target->counterAttack(this->owner);
 }
 
@@ -51,10 +51,10 @@ void VampireAttack::counterAttack(Unit* target) {
     std::cout << owner->getTitle()  << " is counterattacking " << target->getTitle() << std::endl;
     
     //VAMPIRE HEALING
-    if ( target->getHP() <= this->dmg ) {
+    if ( target->getHP() <= this->physDMG ) {
         this->owner->addHP(target->getHP() / 8);
     } else {
-        this->owner->addHP(this->dmg/8);
+        this->owner->addHP(this->physDMG/8);
     }
     
     //Vampire TURNING
@@ -65,7 +65,7 @@ void VampireAttack::counterAttack(Unit* target) {
     }
     
     //TARGET DAMAGE
-    target->takePhysDMG(this->dmg/2);
+    target->takePhysDMG(this->physDMG/2);
 }
 
 void VampireAttack::turnVampire(Unit* target) {
@@ -76,6 +76,6 @@ void VampireAttack::turnVampire(Unit* target) {
     if ( roll <= 5 ) {
         std::cout << target->getTitle() << " was turned into vampire!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
         target->setState(new VampireState(target, target->getTitle(), target->getHP(), target->getMaxHP()));
-        target->setAttack(new VampireAttack(target, target->getDMG()));
+        target->setAttack(new VampireAttack(target, target->getPhysDMG()));
     }
 }

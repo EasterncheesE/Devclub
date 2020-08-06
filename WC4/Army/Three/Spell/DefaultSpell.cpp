@@ -23,8 +23,8 @@ void DefaultSpell::useSpell(Spellcaster* owner, Unit* target) {
 }
 
 std::ostream& operator<<(std::ostream& out, DefaultSpell* spell) {
-    out << "DefaultSpellName: " << spell->getSpellName() << std::endl;
-    out << "DefaultSpellCost: " << spell->getManaCost() << std::endl;
-    out << "DefaultSpellDamage/Heal: " << spell->getSpellValue() << std::endl;
+    out << "SpellName: " << spell->getSpellName();
+    out << ". Mana Cost: " << spell->getManaCost();
+    out << ". Spell value effect: " << spell->getSpellValue() << std::endl;
     return out;
 }

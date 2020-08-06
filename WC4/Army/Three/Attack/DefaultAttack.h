@@ -8,12 +8,12 @@ class Unit;
 class DefaultAttack {
 protected:
         Unit* owner;
-        int dmg;
+        int physDMG;
 public:
-        DefaultAttack(Unit* owner, int dmg);
+        DefaultAttack(Unit* owner, int physDMG);
         virtual ~DefaultAttack();
         
-        int getDMG();
+        int getPhysDMG();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

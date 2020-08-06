@@ -18,7 +18,7 @@ void BerserkerAttack::attack(Unit* target) {
         std::cout << "BerserkerAttack::attack, target is alive." << std::endl;
     }
 
-    target->takePhysDMG(this->dmg);
-    target->takePhysDMG(this->dmg);
+    target->takePhysDMG(this->physDMG);
+    target->takePhysDMG(this->physDMG);
     target->counterAttack(this->owner);
 }

@@ -8,7 +8,7 @@ public:
         RogueAttack(Unit* owner, int dmg);
         ~RogueAttack();
         
-        int getDMG();
+        int getPhysDMG();
         
         void attack(Unit* target);
         void counterAttack(Unit* target);

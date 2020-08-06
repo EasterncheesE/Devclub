@@ -9,6 +9,8 @@ class NecromancerAttack : public DefaultMagicAttack {
 public:
         NecromancerAttack(Spellcaster* owner, int dmg);
         ~NecromancerAttack();
+        
+        void magicAttack(Unit* target);
 };
 
 

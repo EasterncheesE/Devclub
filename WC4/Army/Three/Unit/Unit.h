@@ -26,7 +26,7 @@ public:
         bool getIsWerewolf();
         bool getIsTurnImmune();
         bool getIsMagicImmune();
-        int getDMG();
+        int getPhysDMG();
 
         void setState(DefaultState* state);
         void setAttack(DefaultAttack* attack);

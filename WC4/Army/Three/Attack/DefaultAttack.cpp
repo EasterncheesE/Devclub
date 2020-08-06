@@ -1,13 +1,13 @@
 #include "DefaultAttack.h"
 
-DefaultAttack::DefaultAttack(Unit* owner, int dmg) {
+DefaultAttack::DefaultAttack(Unit* owner, int physDMG) {
     this->owner = owner;
-    this->dmg = dmg;
+    this->physDMG = physDMG;
 }
 DefaultAttack::~DefaultAttack() {}
 
-int DefaultAttack::getDMG() {
-    return this->dmg;
+int DefaultAttack::getPhysDMG() {
+    return this->physDMG;
 }
 
 void DefaultAttack::attack(Unit* target) {
@@ -24,7 +24,7 @@ void DefaultAttack::attack(Unit* target) {
         std::cout << "DefaultAttack::attack, target is alive." << std::endl;
     }
 
-    target->takePhysDMG(this->dmg);
+    target->takePhysDMG(this->physDMG);
     target->counterAttack(this->owner);
 }
 void DefaultAttack::counterAttack(Unit* target) {
@@ -38,5 +38,5 @@ void DefaultAttack::counterAttack(Unit* target) {
         return;
     }
     
-    target->takePhysDMG(this->dmg / 2);
+    target->takePhysDMG(this->physDMG / 2);
 }

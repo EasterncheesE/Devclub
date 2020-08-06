@@ -2,11 +2,12 @@
 #define DEFAULT_MAGIC_ATTACK_H
 
 #include "../Unit/Spellcaster.h"
+#include "../Attack/DefaultAttack.h"
 
 class Spellcaster;
 class Unit;
 
-class DefaultMagicAttack {
+class DefaultMagicAttack : public DefaultAttack {
 protected:
         Spellcaster* owner;
         int magicDMG;
@@ -15,6 +16,7 @@ public:
         ~DefaultMagicAttack();
         
         int getMagicDMG();
+        void regularAttack(Unit* target);
         void magicAttack(Unit* target);
 };
 

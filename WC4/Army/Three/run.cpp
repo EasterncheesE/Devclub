@@ -11,14 +11,14 @@
 
 int main() {
     srand (time(NULL));
-    Rogue* patrick = new Rogue("Patrick", 5000, 50);
-    Vampire* frank = new Vampire("Frank", 600, 250);
-    Soldier* vasya = new Soldier("Vasya", 1000, 100);
-    Spellcaster* petya = new Spellcaster("Petya", 500, 25, 500);
+    // Rogue* patrick = new Rogue("Patrick", 5000, 50);
+    // Vampire* frank = new Vampire("Frank", 600, 250);
+    // Soldier* vasya = new Soldier("Vasya", 1000, 100);
+    // Spellcaster* petya = new Spellcaster("Petya", 500, 25, 500);
     Necromancer* fedor = new Necromancer("Fedor", 500, 25, 500);
-    Vampire* may = new Vampire("May", 750, 200);
-    Berserker* ovald = new Berserker("Ovald", 1000, 150);
-    Werewolf* ody = new Werewolf("Ody", 750, 125);
+    // Vampire* may = new Vampire("May", 750, 200);
+    // Berserker* ovald = new Berserker("Ovald", 1000, 150);
+    // Werewolf* ody = new Werewolf("Ody", 750, 125);
     
     
     // std::cout << fedor << std::endl;
@@ -26,17 +26,26 @@ int main() {
     
     std::cout << fedor << std::endl;
     fedor->getSpellList();
-    fedor->attack(vasya);
+    
+    
+    std::cout << typeid(fedor).name() << std::endl;
+    fedor->attack(fedor);
+    fedor->attack(fedor);
+    fedor->attack(fedor);
+    fedor->attack(fedor);
+    fedor->attack(fedor);
+    // fedor->getSpellList();
+    // fedor->attack(vasya);
     // fedor->castSpell(fedor);
     
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    // for ( int i = 1; vasya->getHP() > 0 && ody->getHP() > 0; i++ ) {
+    // for ( int i = 1; vasya->getHP() > 0 && fedor->getHP() > 0; i++ ) {
     //     std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-    //     vasya->attack(ody);
+    //     vasya->attack(fedor);
     //     std::cout << std::endl;
-    //     ody->attack(vasya);
+    //     fedor->attack(vasya);
     // }
     
     // std::cout << std::endl << ody << std::endl;

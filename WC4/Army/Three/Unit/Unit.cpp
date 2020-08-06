@@ -36,8 +36,8 @@ bool Unit::getIsTurnImmune() {
 bool Unit::getIsMagicImmune() {
     return this->_state->getIsMagicImmune();
 }
-int Unit::getDMG() {
-    return this->_attack->getDMG();
+int Unit::getPhysDMG() {
+    return this->_attack->getPhysDMG();
 }
 
 void Unit::setState(DefaultState* _state) {
@@ -85,7 +85,7 @@ void Unit::counterAttack(Unit* target) {
 std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << "Unit name: " << unit->getTitle();
     out << ". Unit HP: " << unit->getHP() << "/" << unit->getMaxHP();
-    out << ". Unit DMG:" << unit->getDMG() << std::endl;
+    out << ". Unit DMG:" << unit->getPhysDMG() << std::endl;
     out << "Is vampire: " << unit->getIsVampire();
     out << ". Is werewolf: " << unit->getIsWerewolf();
     out << ". Turn immune: " << unit->getIsTurnImmune();
