@@ -1,14 +1,9 @@
 #include "Unit.h"
 
-Unit::Unit(std::string title, int hp) {
-    std::cout << "Unit constructor 1" << std::endl;
-    this->_state = new BaseState(title, hp);
-    this->_attack = new BaseAttack(this, 0);
-}
-Unit::Unit(std::string title, int hp, int physDMG) {
+Unit::Unit(std::string title, int hp, int dmg) {
     std::cout << "Unit constructor 2" << std::endl;
-    this->_state = new BaseState(title, hp);
-    this->_attack = new BaseAttack(this, physDMG);
+    this->_state = new BaseState(title, hp, this);
+    this->_attack = new BaseAttack(this, dmg);
 };
 Unit::~Unit() {
     std::cout << "Unit destructor" << std::endl;
@@ -18,10 +13,12 @@ Unit::~Unit() {
 
 bool Unit::checkIfDead() {
     if ( this->getHP() <= 0 ) {
-        // this->notify();
-        return 1;
+        std::cout << "Unit is dead, notifying observers" << std::endl;
+        this->notifyObservers();
+        this->notifyObservables();
+        return true;
     }
-    return 0;
+    return false;
 }
 
 std::string Unit::getTitle() {
@@ -34,7 +31,7 @@ int Unit::getMaxHP() {
     return this->_state->getMaxHP();
 }
 int Unit::getDMG() {
-    return this->_attack->getPhysDMG();
+    return this->_attack->getDMG();
 }
 
 BaseState* Unit::getState() {
@@ -74,7 +71,6 @@ void Unit::setIsWerewolf() {
     this->_state->setIsWerewolf();
 }
 
-    
 void Unit::attack(Unit* target) {
     this->_attack->attack(target);
 }

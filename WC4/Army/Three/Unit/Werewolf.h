@@ -10,8 +10,6 @@ class Werewolf : public Unit {
         Werewolf(std::string title, int hp, int dmg);
         ~Werewolf();
         
-        void checkIfDead();
-        
         void attack(Unit* target);
         void counterAttack(Unit* target);
     
