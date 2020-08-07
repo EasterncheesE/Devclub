@@ -4,6 +4,7 @@
 #include "DefaultState.h"
 
 class VampireState : public DefaultState {
+protected:
 public:
     VampireState(Unit* owner, std::string title, int hp);
     VampireState(Unit* owner, std::string title, int hp, int maxHP);

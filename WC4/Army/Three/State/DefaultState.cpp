@@ -79,6 +79,7 @@ void DefaultState::takePhysDMG(int value) {
     }
 }
 void DefaultState::takeMagicDMG(int value) {
+    std::cout << "DefaultState::takeMagicDMG" << std::endl;
     if ( this->checkIfDead() ) {
         std::cout << "You cannot damage dead unit" << std::endl;
         return;

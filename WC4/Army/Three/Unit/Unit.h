@@ -27,18 +27,19 @@ public:
         bool getIsTurnImmune();
         bool getIsMagicImmune();
         int getPhysDMG();
-
-        void setState(DefaultState* state);
-        void setAttack(DefaultAttack* attack);
-        void setTitle(std::string newTitle);
-        void addHP(int value);
-        void takePhysDMG(int value);
-        void takeMagicDMG(int value);
-        void setMaxHP(int vaue);
-        void setIsVampire();
-        void setIsWerewolf();
-        void setIsTurnImmune();
-        void setIsMagicImmune();
+        
+        virtual void setPhysDMG(int value);
+        virtual void setState(DefaultState* state);
+        virtual void setAttack(DefaultAttack* attack);
+        virtual void setTitle(std::string newTitle);
+        virtual void addHP(int value);
+        virtual void takePhysDMG(int value);
+        virtual void takeMagicDMG(int value);
+        virtual void setMaxHP(int vaue);
+        virtual void setIsVampire();
+        virtual void setIsWerewolf();
+        virtual void setIsTurnImmune();
+        virtual void setIsMagicImmune();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

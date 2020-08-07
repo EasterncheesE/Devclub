@@ -18,22 +18,12 @@ int main() {
     Necromancer* fedor = new Necromancer("Fedor", 500, 25, 500);
     // Vampire* may = new Vampire("May", 750, 200);
     // Berserker* ovald = new Berserker("Ovald", 1000, 150);
-    // Werewolf* ody = new Werewolf("Ody", 750, 125);
+    Werewolf* ody = new Werewolf("Ody", 750, 100);
     
     
     // std::cout << fedor << std::endl;
     // std::cout << may << std::endl;
     
-    std::cout << fedor << std::endl;
-    fedor->getSpellList();
-    
-    
-    std::cout << typeid(fedor).name() << std::endl;
-    fedor->attack(fedor);
-    fedor->attack(fedor);
-    fedor->attack(fedor);
-    fedor->attack(fedor);
-    fedor->attack(fedor);
     // fedor->getSpellList();
     // fedor->attack(vasya);
     // fedor->castSpell(fedor);
@@ -41,12 +31,12 @@ int main() {
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    // for ( int i = 1; vasya->getHP() > 0 && fedor->getHP() > 0; i++ ) {
-    //     std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-    //     vasya->attack(fedor);
-    //     std::cout << std::endl;
-    //     fedor->attack(vasya);
-    // }
+    for ( int i = 1; fedor->getHP() > 0 && ody->getHP() > 0; i++ ) {
+        std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
+        ody->attack(fedor);
+        std::cout << std::endl;
+        fedor->attack(ody);
+    }
     
     // std::cout << std::endl << ody << std::endl;
     // std::cout << std::endl << vasya << std::endl;

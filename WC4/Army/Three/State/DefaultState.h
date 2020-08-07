@@ -33,10 +33,10 @@ public:
         bool getIsMagicImmune();
 
         void setTitle(std::string newTitle);
-        void addHP(int value);
-        void takePhysDMG(int value);
-        void takeMagicDMG(int value);
-        void setMaxHP(int vaue);
+        virtual void addHP(int value);
+        virtual void takePhysDMG(int value);
+        virtual void takeMagicDMG(int value);
+        virtual void setMaxHP(int value);
         void setIsVampire();
         void setIsWerewolf();
         void setIsTurnImmune();

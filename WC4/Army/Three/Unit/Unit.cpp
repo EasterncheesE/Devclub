@@ -39,6 +39,9 @@ bool Unit::getIsMagicImmune() {
 int Unit::getPhysDMG() {
     return this->_attack->getPhysDMG();
 }
+void Unit::setPhysDMG(int value) {
+    this->_attack->setPhysDMG(value);
+}
 
 void Unit::setState(DefaultState* _state) {
     this->_state = _state;
