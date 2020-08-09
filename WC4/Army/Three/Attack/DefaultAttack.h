@@ -14,6 +14,10 @@ public:
         virtual ~DefaultAttack();
         
         int getPhysDMG();
+<<<<<<< HEAD
+=======
+        void setPhysDMG(int value);
+>>>>>>> a52914cb1549e56a60cd0878bcfd17de208b025b
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

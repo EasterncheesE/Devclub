@@ -10,6 +10,13 @@ int DefaultAttack::getPhysDMG() {
     return this->physDMG;
 }
 
+<<<<<<< HEAD
+=======
+void DefaultAttack::setPhysDMG(int value) {
+    this->physDMG = value;
+}
+
+>>>>>>> a52914cb1549e56a60cd0878bcfd17de208b025b
 void DefaultAttack::attack(Unit* target) {
     if ( this->owner->checkIfDead() ) {
         std::cout << "DefaultAttack::attack. " << this->owner->getTitle() << " is dead and cannot attack. " ;
