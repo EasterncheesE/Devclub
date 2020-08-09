@@ -10,12 +10,12 @@ class Unit;
 
 class VampireAttack : public DefaultAttack {
 public:
-        VampireAttack(Unit* owner, int dmg);
-        ~VampireAttack();
-        
-        void attack(Unit* target);
-        void counterAttack(Unit* target);
-        void turnVampire(Unit* target);
+    VampireAttack(Unit* owner, int dmg);
+    ~VampireAttack();
+    
+    void attack(Unit* target);
+    void counterAttack(Unit* target);
+    void turnVampire(Unit* target);
 };
 
 #endif // VAMPIRE_ATTACK_H

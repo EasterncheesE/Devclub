@@ -13,8 +13,8 @@ public:
         DefaultAttack(Unit* owner, int physDMG);
         virtual ~DefaultAttack();
         
-        int getPhysDMG();
-        void setPhysDMG(int value);
+        virtual int getPhysDMG();
+        virtual void setPhysDMG(int value);
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

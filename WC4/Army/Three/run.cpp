@@ -16,9 +16,10 @@ int main() {
     // Soldier* vasya = new Soldier("Vasya", 1000, 100);
     // Spellcaster* petya = new Spellcaster("Petya", 500, 25, 500);
     Necromancer* fedor = new Necromancer("Fedor", 500, 25, 500);
-    // Vampire* may = new Vampire("May", 750, 200);
+    Vampire* may = new Vampire("May", 750, 200);
     // Berserker* ovald = new Berserker("Ovald", 1000, 150);
     Werewolf* ody = new Werewolf("Ody", 750, 100);
+    
     
     
     // std::cout << fedor << std::endl;
@@ -37,11 +38,6 @@ int main() {
         std::cout << std::endl;
         fedor->attack(ody);
     }
-    
-    // std::cout << std::endl << ody << std::endl;
-    // std::cout << std::endl << vasya << std::endl;
-    // std::cout << std::endl << ovald << std::endl;
-    // std::cout << std::endl << may << std::endl;
     
     
     return 0;

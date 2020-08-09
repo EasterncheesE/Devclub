@@ -10,8 +10,9 @@ class WerewolfAttack;
 
 class Werewolf : public Unit {
 protected:
-    WerewolfState* _state;
-    WerewolfAttack* _attack;
+    bool isShapeshifted;
+    // WerewolfState* _state;
+    // WerewolfAttack* _attack;
 public:
     Werewolf(std::string title, int hp, int dmg);
     ~Werewolf();

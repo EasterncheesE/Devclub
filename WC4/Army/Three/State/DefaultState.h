@@ -19,28 +19,29 @@ protected:
         
 public:
         DefaultState(Unit* owner, std::string title, int hp);
-        ~DefaultState();
+        virtual ~DefaultState();
         
         bool checkIfDead();
         
-        Unit* getOwner();
-        std::string getTitle();
-        int getHP();
-        int getMaxHP();
-        bool getIsVampire();
-        bool getIsWerewolf();
-        bool getIsTurnImmune();
-        bool getIsMagicImmune();
+        virtual Unit* getOwner();
+        virtual std::string getTitle();
+        virtual int getHP();
+        virtual int getMaxHP();
+        virtual bool getIsVampire();
+        virtual bool getIsWerewolf();
+        virtual bool getIsTurnImmune();
+        virtual bool getIsMagicImmune();
 
-        void setTitle(std::string newTitle);
+        virtual void setTitle(std::string newTitle);
         virtual void addHP(int value);
         virtual void takePhysDMG(int value);
         virtual void takeMagicDMG(int value);
+        virtual void setHP(int value);
         virtual void setMaxHP(int value);
-        void setIsVampire();
-        void setIsWerewolf();
-        void setIsTurnImmune();
-        void setIsMagicImmune();
+        virtual void setIsVampire();
+        virtual void setIsWerewolf();
+        virtual void setIsTurnImmune();
+        virtual void setIsMagicImmune();
         
         
 };

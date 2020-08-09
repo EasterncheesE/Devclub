@@ -99,6 +99,9 @@ void DefaultState::takeMagicDMG(int value) {
         }
     }
 }
+void DefaultState::setHP(int value) {
+    this->HP = value;
+}
 
 void DefaultState::setMaxHP(int value) {
     this->maxHP = value;

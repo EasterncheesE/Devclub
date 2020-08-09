@@ -14,7 +14,7 @@ protected:
         int mpRegen;
 public:
         DefaultMagicState(Spellcaster* owner, std::string title, int hp, int mp);
-        ~DefaultMagicState();
+        virtual ~DefaultMagicState();
         
         int getMP();
         int getMaxMP();

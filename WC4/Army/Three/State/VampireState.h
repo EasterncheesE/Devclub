@@ -4,8 +4,10 @@
 #include "DefaultState.h"
 
 class VampireState : public DefaultState {
-protected:
+// protected:
+
 public:
+    bool tester;
     VampireState(Unit* owner, std::string title, int hp);
     VampireState(Unit* owner, std::string title, int hp, int maxHP);
     ~VampireState();

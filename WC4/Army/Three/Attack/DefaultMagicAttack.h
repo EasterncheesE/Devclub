@@ -13,7 +13,7 @@ protected:
         int magicDMG;
 public:
         DefaultMagicAttack(Spellcaster* owner, int dmg);
-        ~DefaultMagicAttack();
+        virtual ~DefaultMagicAttack();
         
         int getMagicDMG();
         void regularAttack(Unit* target);

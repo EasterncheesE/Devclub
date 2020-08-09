@@ -11,7 +11,7 @@ protected:
     int spellValue;
 public:
     DefaultSpell(std::string spellName, int manaCost, int spellValue);
-    ~DefaultSpell();
+    virtual ~DefaultSpell();
     
     std::string getSpellName();
     int getManaCost();
