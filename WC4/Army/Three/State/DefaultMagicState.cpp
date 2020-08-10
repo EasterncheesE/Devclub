@@ -1,7 +1,7 @@
 #include "DefaultMagicState.h"
 
 
-DefaultMagicState::DefaultMagicState(Spellcaster* owner, std::string title, int hp, int mp) : DefaultState(owner, title, hp) {
+DefaultMagicState::DefaultMagicState(Spellcaster* owner, int mp) {
     std::cout << "DefaultMagicState constructor" << std::endl;
     this->owner = owner;
     this->mp = mp;

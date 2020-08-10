@@ -26,6 +26,8 @@ public:
         bool getIsWerewolf();
         bool getIsTurnImmune();
         bool getIsMagicImmune();
+        bool getIsShapeshifted();
+        bool getIsUndead();
         int getPhysDMG();
         
         virtual void setPhysDMG(int value);
@@ -40,9 +42,12 @@ public:
         virtual void setIsWerewolf();
         virtual void setIsTurnImmune();
         virtual void setIsMagicImmune();
+        virtual void setIsUndead();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);
+        virtual void shapeshift();
+
 };
 
 std::ostream& operator<<(std::ostream& out, Unit* unit);

@@ -1,7 +1,7 @@
 #include "DefaultMagicAttack.h"
 
 
-DefaultMagicAttack::DefaultMagicAttack(Spellcaster* owner, int dmg) : DefaultAttack(owner, dmg) {
+DefaultMagicAttack::DefaultMagicAttack(Spellcaster* owner, int dmg) {
     this->owner = owner;
     this->magicDMG = dmg*2;
 }
@@ -11,7 +11,7 @@ int DefaultMagicAttack::getMagicDMG() {
     return this->magicDMG;
 }
 void DefaultMagicAttack::regularAttack(Unit* target) {
-    this->DefaultAttack::attack(target);
+    this->owner->attack(target);
 }
 
 void DefaultMagicAttack::magicAttack(Unit* target) {
@@ -32,6 +32,7 @@ void DefaultMagicAttack::magicAttack(Unit* target) {
         target->takeMagicDMG(this->magicDMG);
         this->owner->reduceMP(25);
     } else {
+        std::cout << "Not enough mana for magic attack" << std::endl;
         this->owner->chooseAction(target);
     }
 

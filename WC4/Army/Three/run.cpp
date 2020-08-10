@@ -5,8 +5,10 @@
 #include "./Unit/Necromancer.h"
 #include "./Unit/Berserker.h"
 #include "./Unit/Werewolf.h"
-#include "./Spell/Fireball.h"
-#include "./Spell/Heal.h"
+#include "./Unit/Healer.h"
+#include "./Unit/Priest.h"
+#include "./Spell/SpellList.h"
+
 
 
 int main() {
@@ -16,9 +18,11 @@ int main() {
     // Soldier* vasya = new Soldier("Vasya", 1000, 100);
     // Spellcaster* petya = new Spellcaster("Petya", 500, 25, 500);
     Necromancer* fedor = new Necromancer("Fedor", 500, 25, 500);
-    Vampire* may = new Vampire("May", 750, 200);
-    // Berserker* ovald = new Berserker("Ovald", 1000, 150);
+    Vampire* may = new Vampire("May", 750, 150);
+    Berserker* ovald = new Berserker("Ovald", 1000, 100);
     Werewolf* ody = new Werewolf("Ody", 750, 100);
+    Healer *healer = new Healer("Healer", 500, 25, 500);
+    
     
     
     
@@ -32,11 +36,11 @@ int main() {
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    for ( int i = 1; fedor->getHP() > 0 && ody->getHP() > 0; i++ ) {
+    for ( int i = 1; may->getHP() > 0 && healer->getHP() > 0; i++ ) {
         std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-        ody->attack(fedor);
+        healer->attack(may);
         std::cout << std::endl;
-        fedor->attack(ody);
+        may->attack(healer);
     }
     
     

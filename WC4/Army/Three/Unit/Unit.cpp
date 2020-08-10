@@ -36,9 +36,16 @@ bool Unit::getIsTurnImmune() {
 bool Unit::getIsMagicImmune() {
     return this->_state->getIsMagicImmune();
 }
+bool Unit::getIsShapeshifted() {
+    return this->_state->getIsShapeshifted();
+}
 int Unit::getPhysDMG() {
     return this->_attack->getPhysDMG();
 }
+bool Unit::getIsUndead() {
+    return this->_state->getIsUndead();
+}
+
 void Unit::setPhysDMG(int value) {
     this->_attack->setPhysDMG(value);
 }
@@ -84,6 +91,13 @@ void Unit::attack(Unit* target) {
 void Unit::counterAttack(Unit* target) {
     this->_attack->counterAttack(target);
 }
+void Unit::shapeshift() {
+    this->_state->shapeshift();
+}
+
+void Unit::setIsUndead() {
+    this->_state->setIsUndead();
+}
 
 std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << "Unit name: " << unit->getTitle();
@@ -93,6 +107,8 @@ std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << ". Is werewolf: " << unit->getIsWerewolf();
     out << ". Turn immune: " << unit->getIsTurnImmune();
     out << ". Magic Immune: " << unit->getIsMagicImmune();
+    out << ". Shapeshifted: " << unit->getIsShapeshifted();
+    out << ". Is undead: " << unit->getIsUndead();
     out << ". Is dead: " << unit->checkIfDead() << std::endl;
     return out;
 }

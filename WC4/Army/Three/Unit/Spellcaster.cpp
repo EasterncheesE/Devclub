@@ -2,31 +2,30 @@
 
 Spellcaster::Spellcaster(std::string title, int hp, int dmg, int mp) : Unit (title, hp, dmg) {
     std::cout << "Spellcaster Constructor" << std::endl;
-    this->_state = new DefaultMagicState(this, title, hp, mp);
-    this->_attack = new DefaultMagicAttack(this, dmg);
-    this->setIsTurnImmune();
+    this->_magicState = new DefaultMagicState(this, mp);
+    this->_magicAttack = new DefaultMagicAttack(this, dmg);
     this->_spellBook = new Spellbook(this);
 }
 Spellcaster::~Spellcaster() {
     std::cout << "Spellcaster destructor" << std::endl;
     delete (this->_state);
-    delete (this->_state);
+    delete (this->_magicState);
     delete (this->_attack);
-    delete (this->_attack);
+    delete (this->_magicAttack);
 }
 
 int Spellcaster::getMP() {
-    return this->_state->getMP();
+    return this->_magicState->getMP();
 }
 int Spellcaster::getMaxMP() {
-    return this->_state->getMaxMP();
+    return this->_magicState->getMaxMP();
 }
 int Spellcaster::getMPRegen() {
-    return this->_state->getMPRegen();
+    return this->_magicState->getMPRegen();
 }
 
 int Spellcaster::getMagicDMG() {
-    return this->_attack->getMagicDMG();
+    return this->_magicAttack->getMagicDMG();
 }
 
 void Spellcaster::getSpellList() {
@@ -37,13 +36,13 @@ void Spellcaster::addSpell(DefaultSpell* spell) {
 }
 
 void Spellcaster::addMP(int value) {
-    this->_state->addMP(value);
+    this->_magicState->addMP(value);
 }
 void Spellcaster::reduceMP(int value) {
-    this->_state->reduceMP(value);
+    this->_magicState->reduceMP(value);
 }
 void Spellcaster::regenMP() {
-    this->_state->regenMP();
+    this->_magicState->regenMP();
 }
 
 void Spellcaster::attack(Unit* target) {
@@ -54,7 +53,7 @@ void Spellcaster::regularAttack(Unit* target) {
     this->_attack->attack(target);
 }
 void Spellcaster::magicAttack(Unit* target) {
-    this->_attack->magicAttack(target);
+    this->_magicAttack->magicAttack(target);
 }
 
 void Spellcaster::counterAttack(Unit* target) {
@@ -65,7 +64,7 @@ void Spellcaster::chooseAction(Unit* target) {
     int choice = 0;
     
     std::cout << "Choose 1 for regular attack, 2 for magic attack, 3 for cast spell" << std::endl;
-    for ( std::cin >> choice; choice < 1 && choice > 3; )   {
+    for ( std::cin >> choice; choice < 1 || choice > 3; )   {
         if ( choice < 1 || choice > 3 ) {
             std::cout << "You must choose 1-3" << std::endl;
             std::cin.clear();
@@ -73,16 +72,17 @@ void Spellcaster::chooseAction(Unit* target) {
             std::cin >> choice;
         }
     }
-        if ( choice == 1 ) {
-            std::cout << "regular attack is chosen" << std::endl;
-            this->regularAttack(target);
-        } else if ( choice == 2) {
-            std::cout << "magic attack is chosen" << std::endl;
-            this->magicAttack(target);
-        } else if ( choice == 3 ) {
-                std::cout << "spell casting is chosen" << std::endl;
-                this->_spellBook->chooseSpell(target);
-        }
+    
+    if ( choice == 1 ) {
+        std::cout << "regular attack is chosen" << std::endl;
+        this->_attack->attack(target);
+    } else if ( choice == 2) {
+        std::cout << "magic attack is chosen" << std::endl;
+        this->_magicAttack->magicAttack(target);
+    } else if ( choice == 3 ) {
+        std::cout << "spell casting is chosen" << std::endl;
+        this->castSpell(target);
+    }
 }
 void Spellcaster::castSpell(Unit* target) {
     this->_spellBook->chooseSpell(target);

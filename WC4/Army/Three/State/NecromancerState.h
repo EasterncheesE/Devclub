@@ -5,7 +5,7 @@
 
 class NecromancerState : public DefaultMagicState {
 public:
-        NecromancerState(Spellcaster* owner, std::string title, int hp, int mp);
+        NecromancerState(Spellcaster* owner, int mp);
         ~NecromancerState();
 };
 

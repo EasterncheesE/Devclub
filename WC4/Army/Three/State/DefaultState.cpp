@@ -9,6 +9,7 @@ DefaultState::DefaultState(Unit* owner, std::string title, int hp) {
     this->isVampire = false;
     this->isWerewolf = false;
     this->isTurnImmune = false;
+    this->isShapeshifted = false;
     
 }
 DefaultState::~DefaultState() {}
@@ -44,7 +45,12 @@ bool DefaultState::getIsTurnImmune() {
 bool DefaultState::getIsMagicImmune() {
     return this->isMagicImmune;
 }
-
+bool DefaultState::getIsShapeshifted() {
+    return this->isShapeshifted;
+}
+bool DefaultState::getIsUndead() {
+    return this->isUndead;
+}
 void DefaultState::setTitle(std::string newTitle) {
     this->title = newTitle;
 }
@@ -85,7 +91,7 @@ void DefaultState::takeMagicDMG(int value) {
         return;
     } else {
         if ( this->isMagicImmune ) {
-            std::cout << "Unit is immune to magic and cannot be damaged by magic" << std::endl;
+            std::cout << "Unit is immune to magic and cannot be damaged by it" << std::endl;
             return;
         }
         if ( this->HP <= value ) {
@@ -117,4 +123,20 @@ void DefaultState::setIsTurnImmune() {
 }
 void DefaultState::setIsMagicImmune() {
     this->isMagicImmune = true;
+}
+void DefaultState::shapeshift() {
+    if ( this->isShapeshifted ) {
+        this->HP /= 1.5;
+        this->maxHP /= 1.5;
+        this->owner->setPhysDMG(this->owner->getPhysDMG() / 1.5);
+    } else {
+        this->HP *= 1.5;
+        this->maxHP *= 1.5;
+        this->owner->setPhysDMG(this->owner->getPhysDMG() * 1.5);
+    }
+    this->isShapeshifted = !(this->isShapeshifted);
+}
+
+void DefaultState::setIsUndead() {
+    this->isUndead = true;
 }

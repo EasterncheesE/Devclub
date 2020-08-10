@@ -73,7 +73,7 @@ void VampireAttack::turnVampire(Unit* target) {
     
     std::cout << "Vampire roll = " << roll << std::endl;
     
-    if ( roll <= 5 ) {
+    if ( roll <= 50 ) {
         std::cout << target->getTitle() << " was turned into vampire!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
         target->setState(new VampireState(target, target->getTitle(), target->getHP(), target->getMaxHP()));
         target->setAttack(new VampireAttack(target, target->getPhysDMG()));

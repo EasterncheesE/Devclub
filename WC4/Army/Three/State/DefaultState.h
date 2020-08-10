@@ -16,6 +16,8 @@ protected:
         bool isWerewolf;
         bool isTurnImmune;
         bool isMagicImmune;
+        bool isShapeshifted;
+        bool isUndead;
         
 public:
         DefaultState(Unit* owner, std::string title, int hp);
@@ -31,6 +33,8 @@ public:
         virtual bool getIsWerewolf();
         virtual bool getIsTurnImmune();
         virtual bool getIsMagicImmune();
+        virtual bool getIsShapeshifted();
+        virtual bool getIsUndead();
 
         virtual void setTitle(std::string newTitle);
         virtual void addHP(int value);
@@ -42,6 +46,8 @@ public:
         virtual void setIsWerewolf();
         virtual void setIsTurnImmune();
         virtual void setIsMagicImmune();
+        virtual void shapeshift();
+        virtual void setIsUndead();
         
         
 };

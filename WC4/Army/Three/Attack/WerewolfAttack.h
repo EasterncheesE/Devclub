@@ -13,7 +13,9 @@ public:
     ~WerewolfAttack();
 
     void attack(Unit* target);
+    void regularAttack(Unit* target);
     void counterAttack(Unit* target);
     void turnWerewolf(Unit* target);
+    void chooseAction(Unit* target);
 };
 #endif // WEREWOLF_ATTACK_H
