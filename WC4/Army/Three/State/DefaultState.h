@@ -18,6 +18,7 @@ protected:
         bool isMagicImmune;
         bool isShapeshifted;
         bool isUndead;
+        bool isPriest;
         
 public:
         DefaultState(Unit* owner, std::string title, int hp);
@@ -35,6 +36,7 @@ public:
         virtual bool getIsMagicImmune();
         virtual bool getIsShapeshifted();
         virtual bool getIsUndead();
+        virtual bool getIsPriest();
 
         virtual void setTitle(std::string newTitle);
         virtual void addHP(int value);
@@ -48,6 +50,7 @@ public:
         virtual void setIsMagicImmune();
         virtual void shapeshift();
         virtual void setIsUndead();
+        virtual void setIsPriest();
         
         
 };

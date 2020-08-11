@@ -45,6 +45,9 @@ int Unit::getPhysDMG() {
 bool Unit::getIsUndead() {
     return this->_state->getIsUndead();
 }
+bool Unit::getIsPriest() {
+    return this->_state->getIsPriest();
+}
 
 void Unit::setPhysDMG(int value) {
     this->_attack->setPhysDMG(value);
@@ -83,6 +86,9 @@ void Unit::setIsTurnImmune() {
 }
 void Unit::setIsMagicImmune() {
     this->_state->setIsMagicImmune();
+}
+void Unit::setIsPriest() {
+    this->_state->setIsPriest();
 }
 
 void Unit::attack(Unit* target) {

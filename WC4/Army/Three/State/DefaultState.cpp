@@ -10,6 +10,8 @@ DefaultState::DefaultState(Unit* owner, std::string title, int hp) {
     this->isWerewolf = false;
     this->isTurnImmune = false;
     this->isShapeshifted = false;
+    this->isUndead = false;
+    this->isPriest = false;
     
 }
 DefaultState::~DefaultState() {}
@@ -51,6 +53,11 @@ bool DefaultState::getIsShapeshifted() {
 bool DefaultState::getIsUndead() {
     return this->isUndead;
 }
+bool DefaultState::getIsPriest() {
+    return this->isPriest;
+}
+
+
 void DefaultState::setTitle(std::string newTitle) {
     this->title = newTitle;
 }
@@ -139,4 +146,7 @@ void DefaultState::shapeshift() {
 
 void DefaultState::setIsUndead() {
     this->isUndead = true;
+}
+void DefaultState::setIsPriest() {
+    this->isPriest = true;
 }

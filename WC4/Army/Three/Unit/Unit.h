@@ -28,6 +28,7 @@ public:
         bool getIsMagicImmune();
         bool getIsShapeshifted();
         bool getIsUndead();
+        bool getIsPriest();
         int getPhysDMG();
         
         virtual void setPhysDMG(int value);
@@ -43,6 +44,7 @@ public:
         virtual void setIsTurnImmune();
         virtual void setIsMagicImmune();
         virtual void setIsUndead();
+        virtual void setIsPriest();
         
         virtual void attack(Unit* target);
         virtual void counterAttack(Unit* target);

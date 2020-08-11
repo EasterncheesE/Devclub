@@ -4,6 +4,16 @@ Fireball::Fireball(int manaCost, int spellValue) : DefaultSpell("Fireball", mana
 Fireball::~Fireball() {}
 
 void Fireball::useSpell(Spellcaster* owner, Unit* target) {
-    owner->reduceMP(this->manaCost);
-    target->takeMagicDMG(this->spellValue);
+    std::cout << "Fireball::useSpell" << std::endl;
+    if ( owner->getMP() >= this->manaCost ) {
+        if ( owner->getIsPriest() && target->getIsUndead() ) {
+            owner->reduceMP(this->manaCost);
+            target->takeMagicDMG(this->spellValue*2);
+        } else {
+            owner->reduceMP(this->manaCost);
+            target->takeMagicDMG(this->spellValue);
+        }
+    } else {
+        std::cout << "Not enough mana to cast Fireball" << std::endl;
+    }
 }

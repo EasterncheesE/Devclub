@@ -4,6 +4,7 @@
 #include "DefaultMagicState.h"
 
 class PriestState : public DefaultMagicState {
+public:
     PriestState(Spellcaster* owner, int hp);
     ~PriestState();
 };

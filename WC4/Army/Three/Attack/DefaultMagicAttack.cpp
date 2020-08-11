@@ -3,7 +3,7 @@
 
 DefaultMagicAttack::DefaultMagicAttack(Spellcaster* owner, int dmg) {
     this->owner = owner;
-    this->magicDMG = dmg*2;
+    this->magicDMG = dmg * 2;
 }
 DefaultMagicAttack::~DefaultMagicAttack() {}
 
