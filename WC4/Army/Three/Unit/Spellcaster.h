@@ -1,9 +1,9 @@
 #ifndef SPELLCASTER_H
 #define SPELLCASTER_H
 
-#include "../State/DefaultMagicState.h"
-#include "../Attack/DefaultMagicAttack.h"
 #include "Unit.h"
+#include "../State/Magic/DefaultMagicState.h"
+#include "../Attack/Magic/DefaultMagicAttack.h"
 #include "../Spell/Spellbook.h"
 
 class DefaultMagicState;
@@ -25,10 +25,12 @@ public:
         int getMaxMP();
         int getMPRegen();
         int getMagicDMG();
+        MagicStateRole getMagicRole();
         
         void addMP(int value);
         void reduceMP(int value);
         void regenMP();
+        void setMagicRole(MagicStateRole role);
         
         void getSpellList();
         void addSpell(DefaultSpell* spell);

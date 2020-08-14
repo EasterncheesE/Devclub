@@ -2,13 +2,12 @@
 
 
 Priest::Priest(std::string title, int hp, int dmg, int mp) : Spellcaster(title, hp, dmg, mp) {
-this->_magicState = new PriestState(this, mp);
-this->_magicAttack = new PriestAttack(this, dmg);
+this->_magicState = new PriestMagicState(this, mp);
+this->_magicAttack = new PriestMagicAttack(this, dmg);
 this->addSpell(new Fireball(100,150));
 this->addSpell(new Heal(50,100));
-this->setIsTurnImmune();
-this->setIsPriest();
 }
+
 Priest::~Priest() {
 delete (this->_state);
 delete (this->_attack);

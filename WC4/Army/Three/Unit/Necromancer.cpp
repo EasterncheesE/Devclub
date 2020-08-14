@@ -3,10 +3,9 @@
 
 Necromancer::Necromancer(std::string title, int hp, int dmg, int mp) : Spellcaster(title, hp, dmg, mp) {
     std::cout << "Necromancer constructor" << std::endl;
-    this->_magicState = new NecromancerState(this, mp);
-    this->_magicAttack = new NecromancerAttack(this, dmg);
+    this->_magicState = new NecromancerMagicState(this, mp);
+    this->_magicAttack = new NecromancerMagicAttack(this, dmg);
     this->setIsUndead();
-    this->setIsTurnImmune();
     this->addSpell(new Fireball(100,150));
     this->addSpell(new Heal(50, 100));
 }

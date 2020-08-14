@@ -2,8 +2,9 @@
 #define BERSERKER_H
 
 #include "Unit.h"
-#include "../Attack/BerserkerAttack.h"
-#include "../State/BerserkerState.h"
+#include "../State/Phys/BerserkerPhysState.h"
+#include "../Attack/Phys/BerserkerPhysAttack.h"
+
 
 class Berserker : public Unit {
 public:

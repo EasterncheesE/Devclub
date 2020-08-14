@@ -2,11 +2,11 @@
 #define WEREWOLF_H
 
 #include "Unit.h"
-#include "../State/WerewolfState.h"
-#include "../Attack/WerewolfAttack.h"
+#include "../State/Phys/WerewolfPhysState.h"
+#include "../Attack/Phys/WerewolfPhysAttack.h"
 
-class WerewolfState;
-class WerewolfAttack;
+class WerewolfPhysState;
+class WerewolfPhysAttack;
 
 class Werewolf : public Unit {
 public:

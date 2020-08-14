@@ -6,7 +6,7 @@ Fireball::~Fireball() {}
 void Fireball::useSpell(Spellcaster* owner, Unit* target) {
     std::cout << "Fireball::useSpell" << std::endl;
     if ( owner->getMP() >= this->manaCost ) {
-        if ( owner->getIsPriest() && target->getIsUndead() ) {
+        if ( owner->getMagicRole() == MagicStateRole::priest && target->getIsUndead() ) {
             owner->reduceMP(this->manaCost);
             target->takeMagicDMG(this->spellValue*2);
         } else {

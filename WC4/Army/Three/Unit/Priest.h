@@ -2,8 +2,8 @@
 #define PRIEST_H
 
 #include "Spellcaster.h"
-#include "../State/PriestState.h"
-#include "../Attack/PriestAttack.h"
+#include "../State/Magic/PriestMagicState.h"
+#include "../Attack/Magic/PriestMagicAttack.h"
 #include "../Spell/Heal.h"
 #include "../Spell/Fireball.h"
 

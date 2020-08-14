@@ -2,15 +2,15 @@
 #define NECROMANCER_H
 
 #include "Spellcaster.h"
-#include "../State/NecromancerState.h"
-#include "../Attack/NecromancerAttack.h"
+#include "../State/Magic/NecromancerMagicState.h"
+#include "../Attack/Magic/NecromancerMagicAttack.h"
 #include "../Spell/Fireball.h"
 #include "../Spell/Heal.h"
 
 
 
-class NecromancerState;
-class NecromancerAttack;
+class NecromancerMagicState;
+class NecromancerMagicAttack;
 
 class Necromancer : public Spellcaster {
 public:

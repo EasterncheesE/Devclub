@@ -23,9 +23,11 @@ int Spellcaster::getMaxMP() {
 int Spellcaster::getMPRegen() {
     return this->_magicState->getMPRegen();
 }
-
 int Spellcaster::getMagicDMG() {
     return this->_magicAttack->getMagicDMG();
+}
+MagicStateRole Spellcaster::getMagicRole() {
+    return this->_magicState->getMagicRole();
 }
 
 void Spellcaster::getSpellList() {
@@ -43,6 +45,9 @@ void Spellcaster::reduceMP(int value) {
 }
 void Spellcaster::regenMP() {
     this->_magicState->regenMP();
+}
+void Spellcaster::setMagicRole(MagicStateRole role) {
+    this->_magicState->setMagicRole(role);
 }
 
 void Spellcaster::attack(Unit* target) {
@@ -96,10 +101,7 @@ std::ostream& operator<<(std::ostream& out, Spellcaster* spellcaster) {
     out << ". Spellcaster MP regen: " << spellcaster->getMPRegen();
     out << ". Spellcaster physDMG:" << spellcaster->getPhysDMG();
     out << ". Spellcaster magDMG:" << spellcaster->getMagicDMG() << std::endl;
-    out << "Is vampire: " << spellcaster->getIsVampire();
-    out << ". Is werewolf: " << spellcaster->getIsWerewolf();
-    out << ". Is turn immune: " << spellcaster->getIsTurnImmune();
-    out << ". Magic Immune: " << spellcaster->getIsMagicImmune();
+    out << "Role: " << spellcaster->getPhysRole() << "/" << spellcaster->getMagicRole();
     out << ". Is dead: " << spellcaster->checkIfDead() << std::endl;
     return out;
 }

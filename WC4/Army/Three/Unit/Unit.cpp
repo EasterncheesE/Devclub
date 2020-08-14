@@ -2,8 +2,8 @@
 
 Unit::Unit(std::string title, int hp, int dmg) {
     std::cout << "Unit constructor" << std::endl;
-    this->_state = new DefaultState(this, title, hp);
-    this->_attack = new DefaultAttack(this, dmg);
+    this->_state = new DefaultPhysState(this, title, hp);
+    this->_attack = new DefaultPhysAttack(this, dmg);
 }
 Unit::~Unit() {
     std::cout << "Unit destructor" << std::endl;
@@ -24,39 +24,24 @@ int Unit::getHP() {
 int Unit::getMaxHP() {
     return this->_state->getMaxHP();
 }
-bool Unit::getIsVampire() {
-    return this->_state->getIsVampire();
-}
-bool Unit::getIsWerewolf() {
-    return this->_state->getIsWerewolf();
-}
-bool Unit::getIsTurnImmune() {
-    return this->_state->getIsTurnImmune();
-}
-bool Unit::getIsMagicImmune() {
-    return this->_state->getIsMagicImmune();
-}
-bool Unit::getIsShapeshifted() {
-    return this->_state->getIsShapeshifted();
-}
 int Unit::getPhysDMG() {
     return this->_attack->getPhysDMG();
 }
 bool Unit::getIsUndead() {
     return this->_state->getIsUndead();
 }
-bool Unit::getIsPriest() {
-    return this->_state->getIsPriest();
+PhysStateRole Unit::getPhysRole() {
+    return this->_state->getPhysRole();
 }
 
 void Unit::setPhysDMG(int value) {
     this->_attack->setPhysDMG(value);
 }
 
-void Unit::setState(DefaultState* _state) {
+void Unit::setState(DefaultPhysState* _state) {
     this->_state = _state;
 }
-void Unit::setAttack(DefaultAttack* _attack) {
+void Unit::setAttack(DefaultPhysAttack* _attack) {
     this->_attack = _attack;
 }
 
@@ -75,20 +60,12 @@ void Unit::takeMagicDMG(int value) {
 void Unit::setMaxHP(int value) {
     this->_state->setMaxHP(value);
 }
-void Unit::setIsVampire() {
-    this->_state->setIsVampire();
+void Unit::setIsUndead() {
+    this->_state->setIsUndead();
 }
-void Unit::setIsWerewolf() {
-    this->_state->setIsWerewolf();
-}
-void Unit::setIsTurnImmune() {
-    this->_state->setIsTurnImmune();
-}
-void Unit::setIsMagicImmune() {
-    this->_state->setIsMagicImmune();
-}
-void Unit::setIsPriest() {
-    this->_state->setIsPriest();
+
+void Unit::setPhysRole(PhysStateRole role) {
+    this->_state->setPhysRole(role);
 }
 
 void Unit::attack(Unit* target) {
@@ -97,23 +74,11 @@ void Unit::attack(Unit* target) {
 void Unit::counterAttack(Unit* target) {
     this->_attack->counterAttack(target);
 }
-void Unit::shapeshift() {
-    this->_state->shapeshift();
-}
-
-void Unit::setIsUndead() {
-    this->_state->setIsUndead();
-}
 
 std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << "Unit name: " << unit->getTitle();
     out << ". Unit HP: " << unit->getHP() << "/" << unit->getMaxHP();
     out << ". Unit DMG:" << unit->getPhysDMG() << std::endl;
-    out << "Is vampire: " << unit->getIsVampire();
-    out << ". Is werewolf: " << unit->getIsWerewolf();
-    out << ". Turn immune: " << unit->getIsTurnImmune();
-    out << ". Magic Immune: " << unit->getIsMagicImmune();
-    out << ". Shapeshifted: " << unit->getIsShapeshifted();
     out << ". Is undead: " << unit->getIsUndead();
     out << ". Is dead: " << unit->checkIfDead() << std::endl;
     return out;

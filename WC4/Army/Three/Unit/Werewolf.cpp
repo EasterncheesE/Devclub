@@ -2,8 +2,8 @@
 
 Werewolf::Werewolf(std::string title, int hp, int dmg) : Unit(title, hp, dmg) {
     std::cout << "Werewolf constructor" << std::endl;
-    this->_state = new WerewolfState(this, title, hp);
-    this->_attack = new WerewolfAttack(this, dmg);
+    this->_state = new WerewolfPhysState(this, title, hp);
+    this->_attack = new WerewolfPhysAttack(this, dmg);
 }
 Werewolf::~Werewolf() {}
 
@@ -16,7 +16,7 @@ void Werewolf::counterAttack(Unit* target) {
 }
 
 void Werewolf::takeMagicDMG(int value) {
-    if (this->getIsShapeshifted()) {
+    if ( this->getPhysRole() == wolf ) {
         this->_state->takeMagicDMG(value*2);
     } else {
         this->_state->takeMagicDMG(value);

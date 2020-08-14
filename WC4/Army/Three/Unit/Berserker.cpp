@@ -1,8 +1,8 @@
 #include "Berserker.h"
 
 Berserker::Berserker(std::string title, int hp, int dmg) : Unit(title, hp, dmg) {
-    this->_state = new BerserkerState(this, title, hp);
-    this->_attack = new BerserkerAttack(this, dmg);
+    this->_state = new BerserkerPhysState(this, title, hp);
+    this->_attack = new BerserkerPhysAttack(this, dmg);
 }
 Berserker::~Berserker() {
     delete (this->_state);

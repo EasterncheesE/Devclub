@@ -1,8 +1,8 @@
 #include "Rogue.h"
 
 Rogue::Rogue(std::string title, int hp, int dmg) : Unit(title, hp, dmg) {
-    this->_state = new RogueState(this, title, hp);
-    this->_attack = new RogueAttack(this, dmg);
+    this->_state = new RoguePhysState(this, title, hp);
+    this->_attack = new RoguePhysAttack(this, dmg);
 }
 Rogue::~Rogue() {
     delete(this->_state);

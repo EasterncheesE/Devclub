@@ -2,8 +2,8 @@
 #define HEALER_H
 
 #include "Spellcaster.h"
-#include "../State/HealerState.h"
-#include "../Attack/HealerAttack.h"
+#include "../State/Magic/HealerMagicState.h"
+#include "../Attack/Magic/HealerMagicAttack.h"
 #include "../Spell/Heal.h"
 #include "../Spell/Fireball.h"
 
