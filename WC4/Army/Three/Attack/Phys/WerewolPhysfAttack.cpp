@@ -12,7 +12,7 @@ void WerewolfPhysAttack::chooseAction(Unit* target) {
     std::cout << "WerewolfPhysAttack::chooseAction" << std::endl;
     int choice = 0;
     
-    std::cout << "Choose 1 for regular attack, 2 for shapeshift, 3 for  nothing" << std::endl;
+    std::cout << "Choose 1 for regular attack, 2 for shapeshift, 3 for  nothing, 4 for stats" << std::endl;
     for ( std::cin >> choice; choice < 1 && choice > 3; ) {
         if ( choice < 1 || choice > 3 ) {
             std::cout << "You must choose 1-3" << std::endl;
@@ -26,7 +26,10 @@ void WerewolfPhysAttack::chooseAction(Unit* target) {
         this->regularAttack(target);
     } else if ( choice == 2) {
         std::cout << "shapeshifting is chosen" << std::endl;
-        // this->owner->shapeshift();
+        this->owner->shapeshift();
+    } else if ( choice == 4) {
+        std::cout << owner << std::endl;
+        this->chooseAction(target);
     } else {
         std::cout << "Skipping turn" << std::endl;
         return;

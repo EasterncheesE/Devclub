@@ -27,7 +27,7 @@ int main() {
     
     
     
-    std::cout << may << std::endl;
+    std::cout << ovald << std::endl;
     std::cout << priest << std::endl;
     
     // fedor->getSpellList();
@@ -37,11 +37,11 @@ int main() {
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    for ( int i = 1; may->getHP() > 0 && priest->getHP() > 0; i++ ) {
+    for ( int i = 1; ovald->getHP() > 0 && ody->getHP() > 0; i++ ) {
         std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-        priest->attack(may);
+        ody->attack(ovald);
         std::cout << std::endl;
-        may->attack(priest);
+        ovald->attack(ody);
     }
     
     

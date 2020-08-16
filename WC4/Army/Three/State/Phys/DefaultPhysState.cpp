@@ -77,22 +77,18 @@ void DefaultPhysState::takeMagicDMG(int value) {
     if ( this->checkIfDead() ) {
         std::cout << "You cannot damage dead unit" << std::endl;
         return;
+    }
+    if ( this->HP <= value ) {
+        std::cout << "Unit " << this->title << " was damaged for " << this->HP << " HP. He is dead now, notifying." << std::endl;
+        this->HP = 0;
+        this->owner->notifyObservables();
+        this->owner->notifyObservers();
     } else {
-        if ( this->physRole == berserker ) {
-            std::cout << "Unit is immune to magic and cannot be damaged by it" << std::endl;
-            return;
-        }
-        if ( this->HP <= value ) {
-            std::cout << "Unit " << this->title << " was damaged for " << this->HP << " HP. He is dead now, notifying." << std::endl;
-            this->HP = 0;
-            this->owner->notifyObservables();
-            this->owner->notifyObservers();
-        } else {
-            this->HP -= value;
-            std::cout << "Unit " << this->title << " was damaged for " << value << " HP. HP left: " << this->HP << "/" << this->maxHP << std::endl;
-        }
+        this->HP -= value;
+        std::cout << "Unit " << this->title << " was damaged for " << value << " HP. HP left: " << this->HP << "/" << this->maxHP << std::endl;
     }
 }
+
 void DefaultPhysState::setHP(int value) {
     this->HP = value;
 }

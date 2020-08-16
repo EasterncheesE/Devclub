@@ -13,10 +13,12 @@ public:
     Werewolf(std::string title, int hp, int dmg);
     ~Werewolf();
     
+    PhysStateRole getPhysRole();
     void attack(Unit* target);
     void counterAttack(Unit* target);
     void takeMagicDMG(int value);
+    void shapeshift();
 };
-
+std::ostream& operator<<(std::ostream& out, Werewolf* unit);
 
 #endif // WEREWOLF_H

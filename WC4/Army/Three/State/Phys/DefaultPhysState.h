@@ -39,7 +39,7 @@ public:
     virtual void setMaxHP(int value);
     virtual void setIsUndead();
     virtual void setPhysRole(PhysStateRole physRole);
-    
+    virtual void shapeshift();
     
 };
 

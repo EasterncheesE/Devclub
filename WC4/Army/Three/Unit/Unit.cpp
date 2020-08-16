@@ -75,11 +75,17 @@ void Unit::counterAttack(Unit* target) {
     this->_attack->counterAttack(target);
 }
 
+void Unit::shapeshift() {
+    this->_state->shapeshift();
+}
+
 std::ostream& operator<<(std::ostream& out, Unit* unit) {
     out << "Unit name: " << unit->getTitle();
     out << ". Unit HP: " << unit->getHP() << "/" << unit->getMaxHP();
     out << ". Unit DMG:" << unit->getPhysDMG() << std::endl;
+    out << "Role: " << unit->getPhysRole();
     out << ". Is undead: " << unit->getIsUndead();
     out << ". Is dead: " << unit->checkIfDead() << std::endl;
+
     return out;
 }

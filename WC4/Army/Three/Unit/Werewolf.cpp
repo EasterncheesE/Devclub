@@ -23,3 +23,10 @@ void Werewolf::takeMagicDMG(int value) {
     }
 
 }
+void Werewolf::shapeshift() {
+    this->_state->shapeshift();
+}
+
+PhysStateRole Werewolf::getPhysRole() {
+    return this->Werewolf::_state->getPhysRole();
+}

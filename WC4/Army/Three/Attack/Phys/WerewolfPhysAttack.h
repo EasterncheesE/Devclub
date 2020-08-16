@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include "DefaultPhysAttack.h"
+#include "../../State/Phys/WerewolfPhysState.h"
 #include "../../Unit/Werewolf.h"
 
 class Unit;

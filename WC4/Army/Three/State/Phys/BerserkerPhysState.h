@@ -7,6 +7,8 @@ class BerserkerPhysState : public DefaultPhysState {
 public:
         BerserkerPhysState(Unit* owner, std::string title, int hp);
         ~BerserkerPhysState();
+        
+        void takeMagicDMG(int value);
 };
 
 
