@@ -19,6 +19,5 @@ public:
     void takeMagicDMG(int value);
     void shapeshift();
 };
-std::ostream& operator<<(std::ostream& out, Werewolf* unit);
 
 #endif // WEREWOLF_H

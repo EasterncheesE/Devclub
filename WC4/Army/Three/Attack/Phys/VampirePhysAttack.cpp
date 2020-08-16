@@ -27,7 +27,7 @@ void VampirePhysAttack::attack(Unit* target) {
     }
    
     //Vampire TURNING
-    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf ) {
+    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf && target->getPhysRole() != wolf ) {
         this->turnVampire(target);
     } else {
         std::cout << "Target is immune to turning" << std::endl;
@@ -58,7 +58,7 @@ void VampirePhysAttack::counterAttack(Unit* target) {
     }
     
     //Vampire TURNING
-    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf ) {
+    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf && target->getPhysRole() != wolf ) {
         this->turnVampire(target);
     } else {
         std::cout << "Target is immune to turning" << std::endl;

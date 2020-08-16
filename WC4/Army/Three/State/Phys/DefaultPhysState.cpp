@@ -102,3 +102,5 @@ void DefaultPhysState::setIsUndead() {
 void DefaultPhysState::setPhysRole(PhysStateRole physRole) {
     this->physRole = physRole;
 }
+
+void DefaultPhysState::shapeshift() {}

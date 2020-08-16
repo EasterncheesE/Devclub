@@ -17,11 +17,15 @@ void WerewolfPhysState::shapeshift() {
         this->HP *= 1.5;
         this->maxHP *= 1.5;
         this->owner->setPhysDMG(this->owner->getPhysDMG() * 1.5);
+        this->owner->setPhysRole(wolf);
+        std::cout << "HP now: " << this->getHP() << "/" << this->getMaxHP() << std::endl;
     } else if ( this->physRole == wolf ) {
         this->HP /= 1.5;
         this->maxHP /= 1.5;
         this->owner->setPhysDMG(this->owner->getPhysDMG() / 1.5);
+        this->owner->setPhysRole(werewolf);
     }
+    std::cout << this->owner << std::endl;
 }
 
 void WerewolfPhysState::takeMagicDMG(int value) {
@@ -31,6 +35,7 @@ void WerewolfPhysState::takeMagicDMG(int value) {
         return;
     }
     if ( this->physRole == wolf ) {
+        std::cout << "Incoming damage " << value << std::endl;
         value *= 2;
     }
     if ( this->HP <= value ) {

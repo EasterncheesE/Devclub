@@ -16,12 +16,7 @@ void Werewolf::counterAttack(Unit* target) {
 }
 
 void Werewolf::takeMagicDMG(int value) {
-    if ( this->getPhysRole() == wolf ) {
-        this->_state->takeMagicDMG(value*2);
-    } else {
-        this->_state->takeMagicDMG(value);
-    }
-
+    this->_state->takeMagicDMG(value);
 }
 void Werewolf::shapeshift() {
     this->_state->shapeshift();

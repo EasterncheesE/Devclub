@@ -1,6 +1,6 @@
 #include "WerewolfPhysAttack.h"
 
-WerewolfPhysAttack::WerewolfPhysAttack(Unit* owner, int dmg) : DefaultPhysAttack(owner, dmg) {}
+WerewolfPhysAttack::WerewolfPhysAttack(Unit* owner, int dmg) : DefaultPhysAttack(owner, dmg){}
 WerewolfPhysAttack::~WerewolfPhysAttack() {}
 
 
@@ -13,9 +13,9 @@ void WerewolfPhysAttack::chooseAction(Unit* target) {
     int choice = 0;
     
     std::cout << "Choose 1 for regular attack, 2 for shapeshift, 3 for  nothing, 4 for stats" << std::endl;
-    for ( std::cin >> choice; choice < 1 && choice > 3; ) {
-        if ( choice < 1 || choice > 3 ) {
-            std::cout << "You must choose 1-3" << std::endl;
+    for ( std::cin >> choice; choice < 1 || choice > 4; ) {
+        if ( choice < 1 || choice > 4 ) {
+            std::cout << "You must choose 1-4" << std::endl;
             std::cin.clear();
             std::cin.ignore(1000, '\n');
             std::cin >> choice;
@@ -24,16 +24,16 @@ void WerewolfPhysAttack::chooseAction(Unit* target) {
     if ( choice == 1 ) {
         std::cout << "regular attack is chosen" << std::endl;
         this->regularAttack(target);
-    } else if ( choice == 2) {
+    } else if ( choice == 2 ) {
         std::cout << "shapeshifting is chosen" << std::endl;
         this->owner->shapeshift();
-    } else if ( choice == 4) {
-        std::cout << owner << std::endl;
-        this->chooseAction(target);
-    } else {
+    } else  if ( choice == 3 ) {
         std::cout << "Skipping turn" << std::endl;
         return;
-    }
+    } else if ( choice == 4 ) {
+        std::cout << owner << std::endl;
+        this->chooseAction(target);
+    } 
 }
 
 void WerewolfPhysAttack::regularAttack(Unit* target) {
@@ -56,7 +56,7 @@ void WerewolfPhysAttack::regularAttack(Unit* target) {
     this->owner->addHP(50);
    
     //Werewolf TURNING
-    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf ) {
+    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf && target->getPhysRole() != wolf ) {
         this->turnWerewolf(target);
     } else {
         std::cout << "Target is immune to turning" << std::endl;
@@ -83,7 +83,7 @@ void WerewolfPhysAttack::counterAttack(Unit* target) {
     this->owner->addHP(25);
     
     //Werewolf TURNING
-    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf ) {
+    if ( target->getIsUndead() != true && target->getPhysRole() != werewolf && target->getPhysRole() != wolf ) {
         this->turnWerewolf(target);
     } else {
         std::cout << "Target is immune to turning" << std::endl;

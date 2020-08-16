@@ -20,15 +20,15 @@ int main() {
     Necromancer* fedor = new Necromancer("Fedor", 500, 25, 500);
     Vampire* may = new Vampire("May", 750, 150);
     Berserker* ovald = new Berserker("Ovald", 1000, 100);
-    Werewolf* ody = new Werewolf("Ody", 750, 100);
-    Healer* healer = new Healer("Healer", 500, 25, 500);
+    Werewolf* ody = new Werewolf("Ody", 1000, 100);
+    Healer* healer = new Healer("Healer", 1000, 25, 500);
     Priest* priest = new Priest("Priest", 1000, 50, 500);
     
     
     
     
-    std::cout << ovald << std::endl;
-    std::cout << priest << std::endl;
+    std::cout << healer << std::endl;
+    std::cout << ody << std::endl;
     
     // fedor->getSpellList();
     // fedor->attack(vasya);
@@ -37,11 +37,11 @@ int main() {
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    for ( int i = 1; ovald->getHP() > 0 && ody->getHP() > 0; i++ ) {
+    for ( int i = 1; healer->getHP() > 0 && ody->getHP() > 0; i++ ) {
         std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-        ody->attack(ovald);
+        ody->attack(healer);
         std::cout << std::endl;
-        ovald->attack(ody);
+        healer->attack(ody);
     }
     
     

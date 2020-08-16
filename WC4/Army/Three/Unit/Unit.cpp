@@ -18,6 +18,7 @@ bool Unit::checkIfDead() {
 std::string Unit::getTitle() {
     return this->_state->getTitle();
 }
+
 int Unit::getHP() {
     return this->_state->getHP();
 }
