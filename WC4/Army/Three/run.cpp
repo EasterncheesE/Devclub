@@ -7,7 +7,9 @@
 #include "./Unit/Werewolf.h"
 #include "./Unit/Healer.h"
 #include "./Unit/Priest.h"
+#include "./Unit/Warlock.h"
 #include "./Spell/SpellList.h"
+
 
 
 
@@ -23,12 +25,20 @@ int main() {
     Werewolf* ody = new Werewolf("Ody", 1000, 100);
     Healer* healer = new Healer("Healer", 1000, 25, 500);
     Priest* priest = new Priest("Priest", 1000, 50, 500);
+    Warlock* warlock = new Warlock("Warlock", 1000, 50, 500);
+    Demon* demon = new Demon("Demon", 500, 50);
     
     
     
-    
+    std::cout << demon << std::endl;
+    std::cout << warlock << std::endl;
     std::cout << healer << std::endl;
-    std::cout << ody << std::endl;
+    
+    
+    warlock->addDemon();
+    warlock->addDemon();
+    warlock->getDemonList();
+    
     
     // fedor->getSpellList();
     // fedor->attack(vasya);
@@ -37,12 +47,12 @@ int main() {
     // for ( ; frank->getHP() > 0; ) {
     //     petya->attack(frank);
     // }
-    for ( int i = 1; healer->getHP() > 0 && ody->getHP() > 0; i++ ) {
-        std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
-        ody->attack(healer);
-        std::cout << std::endl;
-        healer->attack(ody);
-    }
+    // for ( int i = 1; healer->getHP() > 0 && ody->getHP() > 0; i++ ) {
+    //     std::cout << std::endl << "CYCLE NUMBER " << i << std::endl;
+    //     ody->attack(healer);
+    //     std::cout << std::endl;
+    //     healer->attack(ody);
+    // }
     
     
     return 0;

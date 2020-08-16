@@ -7,7 +7,7 @@ DefaultMagicState::DefaultMagicState(Spellcaster* owner, int mp) {
     this->mp = mp;
     this->maxMP = mp;
     this->mpRegen = mp / 10;
-    this->magicRole = MagicStateRole::spellcaster;
+    this->magicRole = spellcaster;
 }
 DefaultMagicState::~DefaultMagicState() {}
 

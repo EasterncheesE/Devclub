@@ -7,6 +7,7 @@
 
 
 class Demon : public Soldier {
+public:
     Demon(std::string title, int hp, int dmg);
     ~Demon();
 };
