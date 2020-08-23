@@ -1,6 +1,7 @@
 #include "Item.h"
 
 Item::Item(std::string itemName, Category* itemCategory) {
+    items->push_back(this);
     this->itemName = itemName;
     this->itemCategory = itemCategory;
     this->orderList = new std::vector<Order*>;
@@ -8,6 +9,7 @@ Item::Item(std::string itemName, Category* itemCategory) {
 }
 Item::~Item() {
     delete this->orderList;
+    Item::items->erase(std::remove(items->begin(), items->end(), this), items->end());
 }
 
 
@@ -35,8 +37,17 @@ void Item::removeOrder(Order* order) {
     this->orderList->erase(std::remove(this->orderList->begin(), this->orderList->end(), order), this->orderList->end());
 }
 
+void Item::showItems() {
+    std::vector<Item*>::iterator it = Item::items->begin();
+    
+    for ( ; it != items->end(); it++) {
+        std::cout << *it << std::endl;
+    }
+}
 
 std::ostream& operator<<(std::ostream& out, Item* item) {
     out << item->getItemName();
     return out;
 }
+
+std::vector<Item*>* Item::items = new std::vector<Item*>;

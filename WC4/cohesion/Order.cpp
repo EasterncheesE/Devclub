@@ -2,6 +2,7 @@
 #include <algorithm>
 
 Order::Order(std::string orderName, Customer* customer, Item* merch) {
+    orders->push_back(this);
     this->orderName = orderName;
     this->customer = customer;
     this->merchList = new std::vector<Item*>;
@@ -13,6 +14,7 @@ Order::Order(std::string orderName, Customer* customer, Item* merch) {
 
 Order::~Order() {
     delete this->merchList;
+    Order::orders->erase(std::remove(orders->begin(), orders->end(), this), orders->end());
 }
 
 std::string Order::getOrderName() {
@@ -38,6 +40,16 @@ void Order::removeMerch(Item* merch) {
     merchList->erase(std::remove(merchList->begin(), merchList->end(), merch), merchList->end());
     merch->removeOrder(this);
 }
+
+void Order::showOrders() {
+    std::vector<Order*>::iterator it = Order::orders->begin();
+    
+    for ( ; it != orders->end(); it++) {
+        std::cout << *it << std::endl;
+    }
+}
+
+std::vector<Order*>* Order::orders = new std::vector<Order*>;
 
 std::ostream& operator<<(std::ostream& out, Order* order) {
     out << order->getOrderName();

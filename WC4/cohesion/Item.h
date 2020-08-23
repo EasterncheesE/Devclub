@@ -10,6 +10,8 @@ class Category;
 class Order;
 
 class Item {
+private:
+    static std::vector<Item*>* items;
 public:
     std::string itemName;
     std::vector<Order*>* orderList;
@@ -24,6 +26,8 @@ public:
     
     void addOrder(Order* order);
     void removeOrder(Order* order);
+    
+    static void showItems();
 };
 
 std::ostream& operator<<(std::ostream& out, Item* item);

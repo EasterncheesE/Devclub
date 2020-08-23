@@ -1,127 +1,164 @@
 #include "Passport.h"
 
 Passport::Passport(std::string firstName, std::string lastName, int day, int month, int year) {
-    if ( lastNumber >= NUMBER_END ) {
-        if ( lastID[1] != "Z" ) {
-            lastID[1] += 1;
-        } else {
-            if ( lastID[0] != "Z" ) {
-                lastID[0] += 1;
-                lastID[1] = "A";
-            } else {
-                std::string newSeries;
-                
-                std::cout << "Looks like we came to the end of possible series, please manually input new series" << std::endl;
-                for ( std::cin >> newID; newID < ID_START || newID > ID_END ) {
-                    std::cout << "Please choose only 1 - 999 999" << std::endl;
-                    std::cin.clear();
-                    std::cin.ignore(1000, "\n");
-                    std::cin >> newID;
-                }
-                this->changeSeries(newID);
-            }
-    }
-    
+    nextCurrentNumber();
     this->firstName = firstName;
     this->lastName = lastName;
     try {
         validate(day, month, year);
-    } catch (InvalidDateExpection &e) {
-        std::cout << "e.text" << std::endl;
+    } catch (Exception* e) {
+        std::cout << e->text << std::endl;
         this->day = 1;
         this->month = 1;
         this->year = 1970;
+        this->passportSeries = currentSeries;
+        this->passportNumber = currentNumber;
+
         return;
     }
+    
     this->day = day;
     this->month = month;
     this->year = year;
     
-    lastNumber += 1;
-    
-    
+    this->passportSeries = currentSeries;
+    this->passportNumber = currentNumber;
 }
 
 Passport::~Passport() {}
 
-Passport* Passport::getPassportInfo() {
-    return this;
-}
-std::string Passport::getFirstName {
+std::string Passport::getFirstName() {
     return this->firstName;
 }
-std::string Passport::getLastName {
+std::string Passport::getLastName() {
     return this->lastName;
 }
-
-int Passport::getDay {
+int Passport::getDay() {
     return this->day;
 }
-int Passport::getMonth {
+int Passport::getMonth() {
     return this->month;
 }
-int Passport::getYear {
+int Passport::getYear() {
     return this->year;
 }
-
-std::string Passport::getID() {
-    return this->ID;
+std::string Passport::getPassportSeries() {
+    return this->passportSeries;
 }
-int Passport::getNumber() {
-    return this->number;
+int Passport::getPassportNumber() {
+    return this->passportNumber;
 }
 
 
 void Passport::validate(int day, int month, int year) {
-    int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
+ int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    
     if ( year % 400 == 0 || (year % 4 == 0 && year % 100 != 0) ) {
         daysInMonth[1] = 29;
     }
-
     if ( day < 1 || month < 1 || year < 1 ) {
-        throw InvalidDate("day, month or year cannot be < 1.");
+        throw new InvalidDateException("day, month or year cannot be < 1.");
     }
     if ( month > 12 ) {
-        throw InvalidDate("There are only 12 month in year.");
+        throw new InvalidDateException("There are only 12 month in year.");
     }
     if ( day > daysInMonth[month-1] ) {
-        throw InvalidDate("There are not so many days in this month.");
+        throw new InvalidDateException("There are not so many days in this month.");
     }
-    if ( year > 2147483647 ) {
-        throw InvalidDate("Sorry, our calendar is not that big.");
+    if ( year > 300000000 ) {
+        throw new InvalidDateException("Are you going to live forever?");
     }
-}   
+}
 
-std::string Passport::getLastID() {
-    return lastID;
+std::string Passport::getCurrentSeries() {
+    return currentSeries;
 }
-int Passport::getLastNumber() {
-    return lastNumber;
+int Passport::getCurrentNumber() {
+    return currentNumber;
 }
-static void Passport::changeSeries(std::string series) {
+void Passport::nextCurrentSeries() {
+    try {
+        if ( currentSeries[0] == SERIES_END && currentSeries[1] == SERIES_END ) {
+            currentSeries[0] = SERIES_START;
+            currentSeries[1] = SERIES_START;
+            currentNumber = NUMBER_START;
+            throw new OutOfPassportsException();
+        }
+    } catch (Exception* e) {
+        std::cout << e->text << std::endl;
+        return;
+    }
+    
+    if ( currentSeries[1] < SERIES_END ) {
+        currentSeries[1] += 1;
+    } else {
+        currentSeries[0] += 1;
+        currentSeries[1] = SERIES_START;
+        currentNumber = NUMBER_START;
+    }
+}
+
+void Passport::setCurrentSeries(std::string series) {
     int newNumber;
     
-    if ( series < SERIES_START || series > SERIES_END ) {
-        throw new WrongSeriesException("Series can only go from AA to ZZ");
-    } 
-    lastID = series;
+    if ( series.length() != 2) {
+        throw new InvalidSeriesException();
+    }
+    currentSeries[0] = series[0];
+    currentSeries[1] = series[1];
     
-    std::cout << "Please choose the starting number for this series (1 - 999 999)" << std::endl;
-    for ( std::cin >> newNumber; newNumber < NUMBER_START || newNumber > NUMBER_END ) {
-        std::cout << "Please choose only 1 - 999 999" << std::endl;
+    std::cout << "Please enter new starting number" << std::endl;
+    for ( std::cin >> newNumber; newNumber < NUMBER_START || newNumber > NUMBER_END ; ) {
+        std::cout << "Please choose from " << NUMBER_START << " to " << NUMBER_END << std::endl;
         std::cin.clear();
-        std::cin.ignore(1000, "\n");
+        std::cin.ignore(1000, '\n');
         std::cin >> newNumber;
     }
-    lastNumber = newNumber;
+    currentNumber = newNumber;
 }
 
+void Passport::nextCurrentNumber() {
+    if ( currentNumber >= NUMBER_END ) {
+        nextCurrentSeries();
+    } else {
+        currentNumber += 1;
+    }
+}
+
+void Passport::setCurrentNumber(int number) {
+    try { 
+            if ( number < NUMBER_START || number > NUMBER_END ) {
+                currentNumber = NUMBER_START;
+                throw new WrongNumberException();
+            }
+    } catch (Exception* e) {
+        std::cout << e->text << std::endl;
+        return;
+    }
+    currentNumber = number;
+    std::cout << currentNumber << std::endl;
+}
+
+int Passport::currentNumber = 0;
+std::string Passport::currentSeries = "AA";
 
 std::ostream& operator<<(std::ostream& out, Passport* passport) {
+    std::cout.fill('0');
     out << "Name: " << passport->getFirstName() << " " << passport->getLastName() << std::endl;
     out << "Date of birth: " << passport->getDay() << "." << passport->getMonth() << "." << passport->getYear() << std::endl;
-    out << "Passport Number:" << passport->getID() << " " << passport->getNumber() << std::endl;
+    if ( passport->getPassportNumber() < 10) {
+        out << "Passport Number: " << passport->getPassportSeries() << " 00000" << passport->getPassportNumber();
+    } else if ( passport->getPassportNumber() < 100) {
+        out << "Passport Number: " << passport->getPassportSeries() << " 0000" << passport->getPassportNumber();
+    } else if ( passport->getPassportNumber() < 1000) {
+        out << "Passport Number: " << passport->getPassportSeries() << " 000" << passport->getPassportNumber();
+    } else if ( passport->getPassportNumber() < 10000) {
+        out << "Passport Number: " << passport->getPassportSeries() << " 00" << passport->getPassportNumber();
+    } else if ( passport->getPassportNumber() < 100000) {
+        out << "Passport Number: " << passport->getPassportSeries() << " 0" << passport->getPassportNumber();
+    } else if ( passport->getPassportNumber() >= 100000) {
+        out << "Passport Number: " << passport->getPassportSeries() << passport->getPassportNumber();
+    }
     
     return out;
 }

@@ -10,6 +10,8 @@ class Customer;
 class Item;
 
 class Order {
+private:
+    static std::vector<Order*>* orders;
 public:
     std::string orderName;
     Customer* customer;
@@ -24,6 +26,8 @@ public:
     
     void addMerch(Item* merch);
     void removeMerch(Item* merch);
+    
+    static void showOrders();
     
 };
 

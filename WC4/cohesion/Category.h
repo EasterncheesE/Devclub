@@ -8,10 +8,12 @@
 class Item;
 
 class Category {
-public:
+private:
     std::string categoryName;
     std::vector<Item*>* itemList;
+    static std::vector<Category*>* categories;
     
+public:
     Category(std::string categoryName);
     ~Category();
     
@@ -20,6 +22,8 @@ public:
     
     void addItem(Item* item);
     void removeItem(Item* item);
+    
+    static void showCategories();
 };
 
 std::ostream& operator<<(std::ostream& out, Category* category);

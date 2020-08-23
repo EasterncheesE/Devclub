@@ -1,11 +1,13 @@
 #include "Category.h"
 
 Category::Category(std::string categoryName) {
+    categories->push_back(this);
     this->categoryName = categoryName;
     this->itemList = new std::vector<Item*>;
 }
 Category::~Category() {
     delete this->itemList;
+    Category::categories->erase(std::remove(categories->begin(), categories->end(), this), categories->end());
 }
 
 std::string Category::getCategoryName() {
@@ -27,6 +29,16 @@ void Category::addItem(Item* item) {
 void Category::removeItem(Item* item) {
     this->itemList->erase(std::remove(this->itemList->begin(), this->itemList->end(), item), this->itemList->end());
 }
+
+void Category::showCategories() {
+    std::vector<Category*>::iterator it = Category::categories->begin();
+    
+    for ( ; it != categories->end(); it++) {
+        std::cout << *it << std::endl;
+    }
+}
+
+std::vector<Category*>* Category::categories = new std::vector<Category*>;
 
 std::ostream& operator<<(std::ostream& out, Category* category) {
     out << category->getCategoryName();
