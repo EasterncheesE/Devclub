@@ -1,17 +1,17 @@
-#ifndef FACTORIAL_ITER_H
-#define FACTORIAL_ITER_H
+#ifndef FIBONACCI_ITER_H
+#define FIBONACCI_ITER_H
 
 #include <iostream>
 #include <vector>
 
-class FactorialIter {
+class FibonacciIter {
 private:
     int current;
     int limit;
-    std::vector<unsigned long long int> cache;
+    std::vector<int> cache;
 public:
-    FactorialIter(int limit);
-    ~FactorialIter();
+    FibonacciIter(int limit);
+    ~FibonacciIter();
     
     int getCurrent();
     unsigned long long int getFactorial();
@@ -25,7 +25,7 @@ public:
     void extend();
 };
 
-std::ostream& operator<<(std::ostream& out, FactorialIter& fIter);
+std::ostream& operator<<(std::ostream& out, FibonacciIter& fIter);
 
 
-#endif // FACTORIAL_ITER_H
+#endif // FIBONACCI_ITER_H

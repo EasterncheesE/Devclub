@@ -1,22 +1,22 @@
-#include "FactorialIter.h"
+#include "FibonacciIter.h"
 
 
-FactorialIter::FactorialIter(int limit) : limit(limit), current(1) {
+FibonacciIter::FibonacciIter(int limit) : limit(limit), current(1) {
     this->cache.push_back(1);
 }
 
-FactorialIter::~FactorialIter() {}
+FibonacciIter::~FibonacciIter() {}
 
 
-int FactorialIter::getCurrent() {
+int FibonacciIter::getCurrent() {
     return this->current;
 }
 
-unsigned long long int FactorialIter::getFactorial() {
+unsigned long long int FibonacciIter::getFactorial() {
     return this->cache[this->current-1];
 }
 
-void FactorialIter::next() {
+void FibonacciIter::next() {
     if ( this->end() ) {
         return;
     }
@@ -25,18 +25,18 @@ void FactorialIter::next() {
     
 }
 
-bool FactorialIter::end() {
+bool FibonacciIter::end() {
     return (this->current > limit);
 }
 
-void FactorialIter::operator++() {
+void FibonacciIter::operator++() {
     this->next();
 }
-void FactorialIter::operator++(int) {
+void FibonacciIter::operator++(int) {
     this->next();
 }
 
-std::ostream& operator<<(std::ostream& out, FactorialIter& fIter) {
+std::ostream& operator<<(std::ostream& out, FibonacciIter& fIter) {
     out << fIter.getCurrent();
     return out;
 }

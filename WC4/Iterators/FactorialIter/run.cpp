@@ -9,7 +9,7 @@ int main() {
     std::cout << fIter << std::endl;
     
     for ( int i = 0 ; !(fIter.end()); fIter++, i++) {
-        std::cout << i << " = " << fIter.getCurrentFactorial() << std::endl;
+        std::cout << i << " = " << fIter.getFactorial() << std::endl;
     }
     
     return 0;
