@@ -18,9 +18,6 @@ void Werewolf::counterAttack(Unit* target) {
 void Werewolf::takeMagicDMG(int value) {
     this->_state->takeMagicDMG(value);
 }
-void Werewolf::shapeshift() {
-    this->_state->shapeshift();
-}
 
 PhysStateRole Werewolf::getPhysRole() {
     return this->Werewolf::_state->getPhysRole();

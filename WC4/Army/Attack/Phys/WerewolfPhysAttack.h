@@ -18,5 +18,6 @@ public:
     void counterAttack(Unit* target);
     void turnWerewolf(Unit* target);
     void chooseAction(Unit* target);
+    void shapeshift();
 };
 #endif // WEREWOLF_ATTACK_H

@@ -58,6 +58,9 @@ void Unit::takePhysDMG(int value) {
 void Unit::takeMagicDMG(int value) {
     this->_state->takeMagicDMG(value);
 }
+void Unit::setHP(int value) {
+    this->_state->setHP(value);
+}
 void Unit::setMaxHP(int value) {
     this->_state->setMaxHP(value);
 }

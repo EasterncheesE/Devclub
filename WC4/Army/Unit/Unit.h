@@ -34,13 +34,13 @@ public:
     virtual void addHP(int value);
     virtual void takePhysDMG(int value);
     virtual void takeMagicDMG(int value);
-    virtual void setMaxHP(int vaue);
+    virtual void setHP(int value);
+    virtual void setMaxHP(int value);
     virtual void setIsUndead();
     virtual void setPhysRole(PhysStateRole role);
     
     virtual void attack(Unit* target);
     virtual void counterAttack(Unit* target);
-    virtual void shapeshift();
 };
 
 std::ostream& operator<<(std::ostream& out, Unit* unit);

@@ -12,7 +12,6 @@ public:
     WerewolfPhysState(Unit* owner, std::string title, int hp, int maxHP);
     ~WerewolfPhysState();
     
-    void shapeshift();
     void takeMagicDMG(int value);
 };
 

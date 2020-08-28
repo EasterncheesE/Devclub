@@ -11,23 +11,6 @@ WerewolfPhysState::WerewolfPhysState(Unit* owner, std::string title, int hp, int
 }
 WerewolfPhysState::~WerewolfPhysState() {}
 
-void WerewolfPhysState::shapeshift() {
-    if ( this->physRole == werewolf ) {
-        std::cout << "HP was: " << this->getHP() << "/" << this->getMaxHP() << std::endl;
-        this->HP *= 1.5;
-        this->maxHP *= 1.5;
-        this->owner->setPhysDMG(this->owner->getPhysDMG() * 1.5);
-        this->owner->setPhysRole(wolf);
-        std::cout << "HP now: " << this->getHP() << "/" << this->getMaxHP() << std::endl;
-    } else if ( this->physRole == wolf ) {
-        this->HP /= 1.5;
-        this->maxHP /= 1.5;
-        this->owner->setPhysDMG(this->owner->getPhysDMG() / 1.5);
-        this->owner->setPhysRole(werewolf);
-    }
-    std::cout << this->owner << std::endl;
-}
-
 void WerewolfPhysState::takeMagicDMG(int value) {
     std::cout << "WerewolfPhysState::takeMagicDMG" << std::endl;
     if ( this->checkIfDead() ) {

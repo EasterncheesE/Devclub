@@ -9,7 +9,7 @@ void WerewolfPhysAttack::attack(Unit* target) {
 }
 
 void WerewolfPhysAttack::chooseAction(Unit* target) {
-    std::cout << "WerewolfPhysAttack::chooseAction" << std::endl;
+    std::cout << "Unit " << this->owner->getTitle() << " WerewolfPhysAttack::chooseAction" << std::endl;
     int choice = 0;
     
     std::cout << "Choose 1 for regular attack, 2 for shapeshift, 3 for  nothing, 4 for stats" << std::endl;
@@ -26,7 +26,7 @@ void WerewolfPhysAttack::chooseAction(Unit* target) {
         this->regularAttack(target);
     } else if ( choice == 2 ) {
         std::cout << "shapeshifting is chosen" << std::endl;
-        this->owner->shapeshift();
+        this->shapeshift();
     } else  if ( choice == 3 ) {
         std::cout << "Skipping turn" << std::endl;
         return;
@@ -105,3 +105,19 @@ void WerewolfPhysAttack::turnWerewolf(Unit* target) {
     }
 }
 
+void WerewolfPhysAttack::shapeshift() {
+    if ( this->owner->getPhysRole() == werewolf ) {
+    std::cout << "HP was: " << this->owner->getHP() << "/" << this->owner->getMaxHP() << std::endl;
+    this->owner->setHP(this->owner->getHP() * 1.5);
+    this->owner->setMaxHP(this->owner->getMaxHP() * 1.5);
+    this->physDMG *= 1.5;
+    this->owner->setPhysRole(wolf);
+    std::cout << "HP now: " << this->owner->getHP() << "/" << this->owner->getMaxHP() << std::endl;
+} else if ( this->owner->getPhysRole() == wolf ) {
+    this->owner->setHP(this->owner->getHP() / 1.5);
+    this->owner->setMaxHP(this->owner->getMaxHP() / 1.5);
+    this->physDMG /= 1.5;
+    this->owner->setPhysRole(werewolf);
+}
+std::cout << this->owner << std::endl;
+}
