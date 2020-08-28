@@ -16,6 +16,7 @@ $(EXEC): $(OBJECTS)
 %.o: %.cpp
 	$(CC) $(CFLAGS) $< -o $@
 
+	
 clean:
 	rm -fv $(OBJECTS)
 	

@@ -2,11 +2,11 @@
 #define VAMPIRE_H
 
 #include "Unit.h"
-#include "../State/VampireState.h"
-#include "../Attack/VampireAttack.h"
+#include "../State/Phys/VampirePhysState.h"
+#include "../Attack/Phys/VampirePhysAttack.h"
 
-class VampireState;
-class VampireAttack;
+class VampirePhysState;
+class VampirePhysAttack;
 
 
 class Vampire : public Unit {

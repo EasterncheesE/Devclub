@@ -2,8 +2,8 @@
 #define ROGUE_H
 
 #include "Unit.h"
-#include "../Attack/RogueAttack.h"
-#include "../State/RogueState.h"
+#include "../Attack/Phys/RoguePhysAttack.h"
+#include "../State/Phys/RoguePhysState.h"
 
 class Rogue : public Unit {
 public:
