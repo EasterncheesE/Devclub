@@ -20,8 +20,9 @@ public:
     
     void operator++();
     void operator++(int);
+    
+    int operator*();
 };
 
-std::ostream& operator<<(std::ostream& out, GeoProgIter& iterator);
 
 #endif // GEO_PROG_ITER_H

@@ -8,9 +8,9 @@ private:
     int step;
     int counter;
     int current;
-    int repeats;
+    int limit;
 public:
-    AriProgIter(int start, int step, int repeats);
+    AriProgIter(int start, int step, int limit);
     ~AriProgIter();
     
     int getCurrent();
@@ -20,8 +20,9 @@ public:
     
     void operator++();
     void operator++(int);
+    
+    int operator*();
 };
 
-std::ostream& operator<<(std::ostream& out, AriProgIter& iterator);
 
 #endif // ARI_PROG_ITER_H

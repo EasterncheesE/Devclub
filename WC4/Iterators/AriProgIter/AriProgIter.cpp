@@ -1,6 +1,6 @@
 #include "AriProgIter.h"
 
-AriProgIter::AriProgIter(int start, int step, int repeats) : current(start), step(step), repeats(repeats), counter(0) {}
+AriProgIter::AriProgIter(int start, int step, int limit) : current(start), step(step), limit(limit), counter(0) {}
 AriProgIter::~AriProgIter() {}
 
 int AriProgIter::getCurrent() {
@@ -15,7 +15,7 @@ void AriProgIter::next() {
 }
 
 bool AriProgIter::end() {
-    return (this->counter >= this->repeats);
+    return (this->counter >= this->limit);
 }
 
 void AriProgIter::operator++() {
@@ -25,7 +25,6 @@ void AriProgIter::operator++(int) {
     this->next();
 }
 
-std::ostream& operator<<(std::ostream& out, AriProgIter& iterator) {
-    out << iterator.getCurrent();
-    return out;
+int AriProgIter::operator*() {
+    return this->getCurrent();
 }

@@ -8,7 +8,7 @@ class FactorialIter {
 private:
     int current;
     int limit;
-    std::vector<unsigned long long int> cache;
+    std::vector<unsigned long long int> factorials;
 public:
     FactorialIter(int limit);
     ~FactorialIter();
@@ -23,9 +23,9 @@ public:
     void operator++(int);
     
     void extend();
+    
+    unsigned long long int operator*();
 };
-
-std::ostream& operator<<(std::ostream& out, FactorialIter& fIter);
 
 
 #endif // FACTORIAL_ITER_H

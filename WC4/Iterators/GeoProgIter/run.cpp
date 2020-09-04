@@ -5,7 +5,7 @@ int main() {
     GeoProgIter iter(1, 5, 10);
     
     for ( ; !(iter.end()); iter++ ) {
-        std::cout << iter << std::endl;
+        std::cout << *iter << std::endl;
     }
     
     return 0;

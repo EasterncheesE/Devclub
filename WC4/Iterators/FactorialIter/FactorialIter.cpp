@@ -2,7 +2,7 @@
 
 
 FactorialIter::FactorialIter(int limit) : limit(limit), current(1) {
-    this->cache.push_back(1);
+    this->factorials.push_back(1);
 }
 
 FactorialIter::~FactorialIter() {}
@@ -13,14 +13,14 @@ int FactorialIter::getCurrent() {
 }
 
 unsigned long long int FactorialIter::getFactorial() {
-    return this->cache[this->current-1];
+    return this->factorials[this->current-1];
 }
 
 void FactorialIter::next() {
     if ( this->end() ) {
         return;
     }
-    this->cache.insert(this->cache.begin() + this->current, this->cache[this->current-1] * this->current);
+    this->factorials.insert(this->factorials.begin() + this->current, this->factorials[this->current-1] * this->current);
     this->current += 1;
     
 }
@@ -36,7 +36,6 @@ void FactorialIter::operator++(int) {
     this->next();
 }
 
-std::ostream& operator<<(std::ostream& out, FactorialIter& fIter) {
-    out << fIter.getCurrent();
-    return out;
+unsigned long long int FactorialIter::operator*() {
+    return this->getFactorial();
 }

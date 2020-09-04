@@ -7,25 +7,26 @@
 class FibonacciIter {
 private:
     int current;
-    int limit;
-    std::vector<int> cache;
+    std::vector<int> fibsPositive;
+    std::vector<int> fibsNegative;
 public:
     FibonacciIter(int limit);
     ~FibonacciIter();
     
+    long long int getFibonacci(int value);
     int getCurrent();
-    unsigned long long int getFactorial();
     
     void next();
-    bool end();
+    void prev();
+    void setCurrent();
     
     void operator++();
     void operator++(int);
+    void operator--();
+    void operator--(int);
     
-    void extend();
+    long long int operator*();
+    
 };
-
-std::ostream& operator<<(std::ostream& out, FibonacciIter& fIter);
-
 
 #endif // FIBONACCI_ITER_H

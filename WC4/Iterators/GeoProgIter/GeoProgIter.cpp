@@ -25,7 +25,6 @@ void GeoProgIter::operator++(int) {
     this->next();
 }
 
-std::ostream& operator<<(std::ostream& out, GeoProgIter& iterator) {
-    out << iterator.getCurrent();
-    return out;
+int GeoProgIter::operator*() {
+    return this->getCurrent();
 }

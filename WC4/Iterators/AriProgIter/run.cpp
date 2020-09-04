@@ -5,7 +5,7 @@ int main() {
     AriProgIter iter(1, 2, 10);
     
     for ( ; !(iter.end()); iter++ ) {
-        std::cout << iter << std::endl;
+        std::cout << *iter << std::endl;
     }
     
     
