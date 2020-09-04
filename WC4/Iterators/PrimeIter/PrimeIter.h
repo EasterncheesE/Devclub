@@ -6,7 +6,7 @@
 #include <cmath>
 
 class PrimeIter {
-private:
+public:
     int current;
     int counter;
     std::vector<long long int> primes;
@@ -14,23 +14,21 @@ public:
     PrimeIter(int limit);
     ~PrimeIter();
     
-    long long int getPrime();
     int getCurrent();
+    long long int getPrime();
+    bool over();
     
     void next();
     void prev();
     void setCurrent();
-    
-    
-    
     void operator++();
     void operator++(int);
     void operator--();
     void operator--(int);
     
+    long long int operator*();
+    
 };
-
-std::ostream& operator<<(std::ostream& out, PrimeIter& fIter);
 
 
 #endif // PRIME_ITER_H

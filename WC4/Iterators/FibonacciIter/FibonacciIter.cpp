@@ -41,7 +41,7 @@ void FibonacciIter::next() {
         
         std::cout << temp << std::endl;
         this->fibsNegative.insert(this->fibsNegative.begin() + temp, this->getFibonacci(this->current));
-        std::cout << "NEGATIVE" << std::endl;
+        // std::cout << "NEGATIVE" << std::endl;
     } else {
         this->fibsPositive.insert(this->fibsPositive.begin() + this->current, this->getFibonacci(this->current));
     }
@@ -54,13 +54,13 @@ void FibonacciIter::prev() {
     if ( this->current < 0 ) {
         int temp = -(this->current);
         
-        std::cout << temp << " PREV NEGATIVE" << std::endl;
+        // std::cout << temp << " PREV NEGATIVE" << std::endl;
         this->fibsNegative.insert(this->fibsNegative.begin() + temp, this->getFibonacci(this->current));
     } else {
         this->fibsPositive.insert(this->fibsPositive.begin() + this->current, this->getFibonacci(this->current));
     }
 
-    std::cout << "PREV FINISHED" << std::endl;
+    // std::cout << "PREV FINISHED" << std::endl;
     
 }
 
@@ -88,13 +88,13 @@ void FibonacciIter::setCurrent() {
     if ( this->current < 0 ) {
         int temp = -value;
         
-        std::cout << temp << " Set NEGATIVE" << std::endl;
+        // std::cout << temp << " Set NEGATIVE" << std::endl;
         this->fibsNegative.insert(this->fibsNegative.begin() + temp, this->getFibonacci(this->current));
     } else {
         this->fibsPositive.insert(this->fibsPositive.begin() + this->current, this->getFibonacci(this->current));
     }
     
-    std::cout << "Set finished" << std::endl;
+    // std::cout << "Set finished" << std::endl;
     
 }
 

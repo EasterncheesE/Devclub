@@ -5,8 +5,16 @@
 int main() {
     FibonacciIter fIter(0);
     
+    // std::cout << "Positive testing" << std::endl;
+    // for ( ; fIter.getCurrent() < 20; fIter.next()) {
+    //     std::cout << fIter.getCurrent() << " = " << *fIter << std::endl;
+    // }
     
-    std::cout << fIter.getCurrent() << " = " << *fIter << std::endl;
+    // std::cout << std::endl << "Negative testing" << std::endl;
+    // for ( ; fIter.getCurrent() > -20 ; fIter.prev()) {
+    //     std::cout << fIter.getCurrent() << " = " << *fIter << std::endl;
+    // }
+    
     
     for ( ; ; ) {
         int choice;
