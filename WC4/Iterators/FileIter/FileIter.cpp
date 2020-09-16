@@ -18,7 +18,6 @@ std::string FileIter::getCurrent() {
 }
 void FileIter::next() {
     if ( this->end() ) {
-        std::cout << "End of file reached" << std::endl;
         return;
     }
     std::getline(sourceFile, current);

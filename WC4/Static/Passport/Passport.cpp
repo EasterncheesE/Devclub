@@ -136,7 +136,6 @@ void Passport::setCurrentNumber(int number) {
         return;
     }
     currentNumber = number;
-    std::cout << currentNumber << std::endl;
 }
 
 int Passport::currentNumber = 0;

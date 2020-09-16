@@ -6,7 +6,7 @@ int main() {
 
     Passport::setCurrentNumber(500231);
     
-    Passport* p1 = new Passport("Vasya", "Pupkin", 29, 2, 2021);
+    Passport* p1 = new Passport("Vasya", "Pupkin", 29, 1, 2021);
     std::cout << p1 << std::endl;
     
     // Passport::nextCurrentSeries();

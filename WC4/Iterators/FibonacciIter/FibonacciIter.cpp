@@ -3,9 +3,7 @@
 FibonacciIter::FibonacciIter(int current) :  current(current) {
     if ( this->current == 0) {
         this->fibsPositive.insert(this->fibsPositive.begin(), 0);
-        std::cout << "Positive inserted" << std::endl;
         this->fibsNegative.insert(this->fibsNegative.begin(), 0);
-        std::cout << "Negative inserted" << std::endl;
     }
     if ( this->current < 0 ) {
         this->fibsNegative.insert(this->fibsNegative.begin() - this->current, this->getFibonacci(this->current));

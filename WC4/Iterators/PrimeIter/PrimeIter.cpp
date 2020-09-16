@@ -5,12 +5,9 @@ PrimeIter::PrimeIter(int current) :  current(current), primes({2}) {
 
     for ( ; this->counter < this->current-1; ) {
         long long int temp = this->primes[this->counter] + 1;
-        // std::cout << "FIRST CYCLE STARTS" << std::endl;
         
         for ( int j = 0; primes[j] <= sqrt(temp); ) {
-            // std::cout << "SECOND CYCLE STARTS" << std::endl;
             if ( temp % primes[j] == 0 ) {
-                // std::cout << "TEMP is not prime" << std::endl;
                 j = 0;
                 temp += 1;
             } else {
@@ -18,10 +15,8 @@ PrimeIter::PrimeIter(int current) :  current(current), primes({2}) {
             }
         }
         this->counter += 1;
-        std::cout << "inserting " << temp << " to position " << counter << std::endl;
         this->primes.insert(this->primes.begin() + this->counter, temp);
 
-        // std::cout << "SIZE = " << primes.size() << std::endl;
     }
     
 }
@@ -43,20 +38,14 @@ bool PrimeIter::over() {
 void PrimeIter::next() {
     this->current += 1;
     
-    std::cout << "COUNTER = " << counter << " CURRENT = " << this->current << std::endl;
-    
     if ( this->counter + 1 > this->current ) {
-        std::cout << this->current << " is already filled" << std::endl;
         return;
     }
     for ( ; this->counter < this->current-1; ) {
         long long int temp = this->primes[this->counter] + 1;
-        // std::cout << "FIRST CYCLE STARTS" << std::endl;
         
         for ( int j = 0; primes[j] <= sqrt(temp); ) {
-            // std::cout << "SECOND CYCLE STARTS" << std::endl;
             if ( temp % primes[j] == 0 ) {
-                // std::cout << "TEMP is not prime" << std::endl;
                 j = 0;
                 temp += 1;
             } else {
@@ -64,10 +53,8 @@ void PrimeIter::next() {
             }
         }
         this->counter += 1;
-        std::cout << "inserting " << temp << " to position " << counter << std::endl;
         this->primes.insert(this->primes.begin() + this->counter, temp);
 
-        // std::cout << "SIZE = " << primes.size() << std::endl;
     }
 
 }
@@ -100,20 +87,15 @@ void PrimeIter::setCurrent() {
     int value;
     
     std::cout << "Please type in value to set" << std::endl;
-    
     std::cin >> value;
     this->current = value;
     
     if ( this->current > this->counter ) {
-        std::cout << "CURRENT > COUNTER" << std::endl;
         for ( ; this->counter < this->current-1; ) {
             long long int temp = this->primes[this->counter] + 1;
-            // std::cout << "FIRST CYCLE STARTS" << std::endl;
         
             for ( int j = 0; primes[j] <= sqrt(temp); ) {
-                // std::cout << "SECOND CYCLE STARTS" << std::endl;
                 if ( temp % primes[j] == 0 ) {
-                    // std::cout << "TEMP is not prime" << std::endl;
                     j = 0;
                     temp += 1;
                 } else {
@@ -121,10 +103,8 @@ void PrimeIter::setCurrent() {
                 }
             }
             this->counter += 1;
-            std::cout << "inserting " << temp << " to position " << counter << std::endl;
             this->primes.insert(this->primes.begin() + this->counter, temp);
 
-        // std::cout << "SIZE = " << primes.size() << std::endl;
         }
     }
 }
